@@ -3,10 +3,10 @@
 //
 
 #include <io_untaek_animal_NativeAdapter.h>
-#include "libavdevice/version.h"
+#include <libavdevice/version.h>
 
 JNIEXPORT jint JNICALL Java_io_untaek_animal_NativeAdapter_hello (JNIEnv *env, jobject obj) {
-    return LIBAVUTIL_VERSION_MAJOR;
+    return LIBAVDEVICE_VERSION_MAJOR;
 }
 
 JNIEXPORT jstring JNICALL Java_io_untaek_animal_NativeAdapter_helloWorld

@@ -13,12 +13,13 @@ import com.google.firebase.auth.FirebaseAuth
 import io.untaek.animal.tab.TabLoginFragment
 import io.untaek.animal.tab.TabMyPageFragment
 import io.untaek.animal.tab.TabTimelineFragment
+import io.untaek.animal.tab.TabUploadFragment
 import kotlinx.android.synthetic.main.activity_tabs.*
 
 enum class Tab {
     Timeline,
     Rank,
-    Post,
+    Upload,
     MyPage,
     Login,
 }
@@ -31,9 +32,11 @@ class TabsActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_rank -> {
+                changeTab(Tab.Timeline)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_post -> {
+                changeTab(Tab.Upload)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_my_page -> {
@@ -66,15 +69,15 @@ class TabsActivity : AppCompatActivity() {
 
             }
         }
-        Toast.makeText(this, "${NativeAdapter().helloWorld()}", Toast::LENGTH_SHORT.get()).show()
 
-        Toast.makeText(this, "${NativeAdapter().hello()}", Toast::LENGTH_SHORT.get()).show()
+        Toast.makeText(this, "${NativeAdapter().hello()}", Toast.LENGTH_SHORT).show()
     }
 
     private fun changeTab(tab: Tab): Fragment {
         val fragment = when(tab) {
             Tab.Timeline -> TabTimelineFragment.instance()
             Tab.MyPage -> TabMyPageFragment.instance()
+            Tab.Upload -> TabUploadFragment.instance()
             Tab.Login -> TabLoginFragment.instance()
             else -> throw IndexOutOfBoundsException("Unexpected fragment index.") }
 
