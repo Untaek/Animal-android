@@ -1,13 +1,10 @@
 package io.untaek.animal
 
-import android.app.Fragment
-import android.content.Context
+import android.support.v4.app.Fragment
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.View
-import android.widget.Button
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import io.untaek.animal.tab.TabLoginFragment
@@ -81,7 +78,9 @@ class TabsActivity : AppCompatActivity() {
             Tab.Login -> TabLoginFragment.instance()
             else -> throw IndexOutOfBoundsException("Unexpected fragment index.") }
 
-        fragmentManager
+
+
+        supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.frame_tab_container, fragment)
                 .commitAllowingStateLoss()

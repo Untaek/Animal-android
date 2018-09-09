@@ -1,155 +1,111 @@
 package io.untaek.animal.tab
 
 import android.Manifest
-import android.app.Fragment
-import android.content.Context
+import android.app.Activity.RESULT_OK
+import android.support.v4.app.Fragment
+import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.SurfaceTexture
-import android.hardware.camera2.*
-import android.media.ImageReader
+import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.HandlerThread
 import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
 import android.util.Log
-import android.util.Size
 import android.view.*
+import android.widget.FrameLayout
+import io.untaek.animal.EditMediaActivity
 import io.untaek.animal.R
-import kotlinx.android.synthetic.main.tab_upload.*
+import io.untaek.animal.component.Camera
 import kotlinx.android.synthetic.main.tab_upload.view.*
-import java.io.File
-import java.util.*
 
-const val PERMISSION_REQUEST_CAMERA = 100
+const val PERMISSION_ALL = 99
+const val REQUEST_MEDIA_URI = 200
 
-class TabUploadFragment: Fragment(), ActivityCompat.OnRequestPermissionsResultCallback {
+class TabUploadFragment: Fragment(), Camera.Callback {
 
-    private lateinit var cameraDevice: CameraDevice
-    private lateinit var surfaceView: SurfaceView
     private lateinit var textureView: TextureView
-    private lateinit var previewRequestBuilder: CaptureRequest.Builder
-    private lateinit var thread: HandlerThread
-    private lateinit var threadHandler: Handler
-    private lateinit var surface: Surface
+    private lateinit var camera: Camera
 
-    private val surfaceTextureListener = object : TextureView.SurfaceTextureListener {
-        override fun onSurfaceTextureAvailable(texture: SurfaceTexture, width: Int, height: Int) {
-        }
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        Log.d("onRequestPermissions ", permissions.contentToString())
+        if(requestCode == PERMISSION_ALL) {
+            if(grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                textureView.surfaceTextureListener = camera.surfaceTextureListener
+                Log.d("onRequestPermissions ", grantResults.contentToString())
+                Log.d("onRequestPermissions ", grantResults.joinToString { " " })
 
-        override fun onSurfaceTextureSizeChanged(texture: SurfaceTexture, width: Int, height: Int) {
-        }
-
-        override fun onSurfaceTextureDestroyed(texture: SurfaceTexture) = true
-
-        override fun onSurfaceTextureUpdated(texture: SurfaceTexture) = Unit
-
-    }
-
-    private val cameraStateCallback = object: CameraDevice.StateCallback(){
-        override fun onOpened(camera: CameraDevice?) {
-            Log.d("camera2State: ", "onOpened")
-            cameraDevice = camera!!
-
-            textureView.surfaceTexture.setDefaultBufferSize(500, 500)
-            surface = Surface(textureView.surfaceTexture)
-
-            cameraDevice.createCaptureSession(Collections.singletonList(surface), cameraCaptureSessionCallback, threadHandler)
-
-            previewRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
-            previewRequestBuilder.addTarget(surface)
-        }
-
-        override fun onDisconnected(camera: CameraDevice?) {
-            Log.d("camera2State: ", "onDisconnected")
-        }
-
-        override fun onError(camera: CameraDevice?, error: Int) {
-            Log.d("camera2State: ", "onError")
+            }
+            else {
+                Log.d("onRequestPermissions ", "Permission denied!!")
+            }
+            return
         }
     }
 
-    private val cameraCaptureSessionCallback = object: CameraCaptureSession.StateCallback() {
-        override fun onConfigureFailed(session: CameraCaptureSession?) {
-
-        }
-
-        override fun onConfigured(session: CameraCaptureSession?) {
-            Log.d("camera2State: ", "onConfigured")
-            previewRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_VIDEO)
-            val previewRequest = previewRequestBuilder.build()
-            session?.setRepeatingRequest(previewRequest, cameraCaptureCallback, threadHandler)
-        }
+    override fun onCameraReady(cameraSurface: Camera) {
+        Log.d("camera", "ready!")
+        cameraSurface.openCamera()
+    }
+    override fun onRecordingStart() {}
+    override fun onRecordingStop(path: String) {
+        Log.d("onRecordingStop ", "recording finished. $path")
+        openEditActivity(path)
     }
 
-    private val cameraCaptureCallback = object: CameraCaptureSession.CaptureCallback() {
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val permissionDenied = arrayOf(
+                Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO
+        ).filter { ActivityCompat.checkSelfPermission(activity!!, it) == PackageManager.PERMISSION_DENIED }
+                .toTypedArray()
+
+        if(permissionDenied.isNotEmpty()){
+            requestPermissions(permissionDenied, PERMISSION_ALL)
+        }
+
+        camera = Camera(activity!!, this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val root = inflater!!.inflate(R.layout.tab_upload, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val root = inflater.inflate(R.layout.tab_upload, container, false)
 
-        val openCamera = root.open_camera
-        val openGallery = root.open_gallery
+        textureView = root.textureView
 
-        openCamera.setOnClickListener { v ->
-            v.visibility = View.INVISIBLE
-            openGallery.visibility = View.INVISIBLE
+        if(::camera.isInitialized){
+            textureView.surfaceTextureListener = camera.surfaceTextureListener
         }
 
-        thread = HandlerThread("CameraBackground").also { it.start() }
-        threadHandler = Handler(thread.looper)
-
-        this.textureView = root.textureView
-        this.textureView.surfaceTextureListener = object: TextureView.SurfaceTextureListener {
-            override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
-            }
-
-            override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
-                Log.d("surfaceTextureState: ", "onSurfaceTextureDestroyed")
-                return true
-            }
-
-            override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
-                val cameraManager: CameraManager = activity.getSystemService(Context.CAMERA_SERVICE) as CameraManager
-                val cameraList = cameraManager.cameraIdList
-
-                var cameraId = ""
-                for(id in cameraList) {
-                    val cameraChar = cameraManager.getCameraCharacteristics(id)
-                    if(cameraChar.get(CameraCharacteristics.LENS_FACING)
-                            == CameraCharacteristics.LENS_FACING_BACK)
-                        cameraId = id
-                }
-
-                if(ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-                    ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.CAMERA), PERMISSION_REQUEST_CAMERA)
-                }
-
-                try {
-                    cameraManager.openCamera(cameraId, cameraStateCallback, threadHandler)
-                } catch (e: SecurityException) {
-                    Log.d("PERMISSION!", e.toString())
-                }            }
-
+        root.btn_gallery.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/* video/*"
+            startActivityForResult(intent, REQUEST_MEDIA_URI)
         }
 
-
+        root.btn_record.setOnClickListener {
+            camera.updateRecordState()
+        }
 
         return root
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        thread.quit()
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_MEDIA_URI) {
+            if (resultCode == RESULT_OK) {
+                val uri: Uri = data?.data!!
+                Log.d("onActivityResult: ", "URI: " + uri.toString())
+                openEditActivity(uri.toString())
+            }
+        }
+    }
+
+    private fun openEditActivity(path: String) {
+        val intent = Intent(activity, EditMediaActivity::class.java).apply {
+            putExtra("path", path)
+        }
+        startActivity(intent)
     }
 
     companion object {

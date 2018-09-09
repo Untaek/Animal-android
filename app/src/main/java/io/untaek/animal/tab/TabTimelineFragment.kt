@@ -1,6 +1,6 @@
 package io.untaek.animal.tab
 
-import android.app.Fragment
+import android.support.v4.app.Fragment
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -8,12 +8,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.firebase.ui.auth.AuthUI
 import com.google.firebase.firestore.FirebaseFirestore
 import io.untaek.animal.R
 import io.untaek.animal.component.BasicTimelineAdapter
-import io.untaek.animal.firebase.Fire
-import kotlinx.android.synthetic.main.tab_timeline.*
 import kotlinx.android.synthetic.main.tab_timeline.view.*
 
 const val RC_SIGN_IN = 123
@@ -44,10 +41,10 @@ class TabTimelineFragment: Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val adapter = BasicTimelineAdapter(activity, items)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val adapter = BasicTimelineAdapter(activity!!, items)
 
-        val root = inflater!!.inflate(R.layout.tab_timeline, container, false)
+        val root = inflater.inflate(R.layout.tab_timeline, container, false)
         FirebaseFirestore.getInstance().collection("posts")
                 .get().addOnSuccessListener { snapshot ->
                     val posts = snapshot.toObjects(Post::class.java)

@@ -2,44 +2,37 @@
 <FrameLayout
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <TextureView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/textureView"/>
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/frame_upload">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        >
-        <LinearLayout
+        android:orientation="vertical">
+        <TextureView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/textureView"
             android:layout_weight="1"
-            android:background="#00ff00"
-            android:gravity="center"
-            android:id="@+id/open_camera"
-            >
-            <TextView
+            />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="#f0f">
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Camera"
+                android:text="Shot"
+                android:layout_gravity="center"
+                android:id="@+id/btn_record"
                 />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#00f0f0"
-            android:gravity="center"
-            android:id="@+id/open_gallery">
-            <TextView
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Gallery"/>
-
-        </LinearLayout>
+                android:text="Gallery"
+                android:layout_gravity="right |center"
+                android:id="@+id/btn_gallery"
+                />
+        </FrameLayout>
     </LinearLayout>
 </FrameLayout>

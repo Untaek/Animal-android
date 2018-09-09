@@ -1,6 +1,6 @@
 package io.untaek.animal.tab
 
-import android.app.Fragment
+import android.support.v4.app.Fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,8 +12,9 @@ import io.untaek.animal.firebase.Fire
 import kotlinx.android.synthetic.main.tab_my_page.*
 
 class TabLoginFragment: Fragment() {
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val root = inflater!!.inflate(R.layout.tab_login, container, false)
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val root = inflater.inflate(R.layout.tab_login, container, false)
 
         startActivityForResult(
                 AuthUI.getInstance()
