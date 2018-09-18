@@ -23,6 +23,22 @@ JNIEXPORT jint JNICALL Java_io_untaek_animal_NativeAdapter_hello
 JNIEXPORT jstring JNICALL Java_io_untaek_animal_NativeAdapter_helloWorld
   (JNIEnv *, jobject);
 
+/*
+ * Class:     io_untaek_animal_NativeAdapter
+ * Method:    getThumbnails
+ * Signature: (Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_io_untaek_animal_NativeAdapter_getThumbnails
+  (JNIEnv *, jclass, jstring);
+
+/*
+ * Class:     io_untaek_animal_NativeAdapter
+ * Method:    cut
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_io_untaek_animal_NativeAdapter_cut
+  (JNIEnv *, jclass);
+
 #ifdef __cplusplus
 }
 #endif

@@ -2,11 +2,14 @@ package io.untaek.animal.tab
 
 import android.Manifest
 import android.app.Activity.RESULT_OK
+import android.content.ContentResolver
 import android.support.v4.app.Fragment
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.util.Log
 import android.view.*
@@ -15,29 +18,40 @@ import io.untaek.animal.EditMediaActivity
 import io.untaek.animal.R
 import io.untaek.animal.component.Camera
 import kotlinx.android.synthetic.main.tab_upload.view.*
+import java.io.File
+import java.net.URI
 
 const val PERMISSION_ALL = 99
+const val PERMISSION_EXTERNAL_STORAGE = 100
 const val REQUEST_MEDIA_URI = 200
 
 class TabUploadFragment: Fragment(), Camera.Callback {
 
     private lateinit var textureView: TextureView
     private lateinit var camera: Camera
+    private lateinit var filePath: String
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         Log.d("onRequestPermissions ", permissions.contentToString())
-        if(requestCode == PERMISSION_ALL) {
-            if(grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-                textureView.surfaceTextureListener = camera.surfaceTextureListener
-                Log.d("onRequestPermissions ", grantResults.contentToString())
-                Log.d("onRequestPermissions ", grantResults.joinToString { " " })
-
+        when(requestCode) {
+            PERMISSION_ALL -> {
+                if(grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                    textureView.surfaceTextureListener = camera.surfaceTextureListener
+                }
+                else {
+                    Log.d("onRequestPermissions ", "Permission denied!!")
+                }
             }
-            else {
-                Log.d("onRequestPermissions ", "Permission denied!!")
+            PERMISSION_EXTERNAL_STORAGE -> {
+                if(grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                    openEditActivity()
+                }
+                else {
+                    Log.d("onRequestPermissions ", "Permission denied!!")
+                }
             }
-            return
         }
+        return
     }
 
     override fun onCameraReady(cameraSurface: Camera) {
@@ -46,8 +60,10 @@ class TabUploadFragment: Fragment(), Camera.Callback {
     }
     override fun onRecordingStart() {}
     override fun onRecordingStop(path: String) {
+        filePath = path
+
         Log.d("onRecordingStop ", "recording finished. $path")
-        openEditActivity(path)
+        openEditActivity()
     }
 
 
@@ -77,8 +93,12 @@ class TabUploadFragment: Fragment(), Camera.Callback {
         }
 
         root.btn_gallery.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/* video/*"
+
+            val intent = Intent(Intent.ACTION_PICK).apply {
+                type = "*/*"
+                putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("video/*", "images/*"))
+            }
+
             startActivityForResult(intent, REQUEST_MEDIA_URI)
         }
 
@@ -96,14 +116,34 @@ class TabUploadFragment: Fragment(), Camera.Callback {
             if (resultCode == RESULT_OK) {
                 val uri: Uri = data?.data!!
                 Log.d("onActivityResult: ", "URI: " + uri.toString())
-                openEditActivity(uri.toString())
+                val cursor = context?.contentResolver?.query(uri, arrayOf(MediaStore.Images.Media.DATA), null, null, null)?.apply {
+                    moveToFirst()
+                }
+                Log.d("onActivityResult: ", "cursor: " + cursor?.columnNames?.contentDeepToString())
+                filePath = cursor?.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))!!
+
+                cursor.close()
+
+                Log.d("onActivityResult: ", "File path: " + filePath)
+                val permissionDenied = arrayOf(
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                ).filter { ActivityCompat.checkSelfPermission(activity!!, it) == PackageManager.PERMISSION_DENIED }
+                        .toTypedArray()
+
+                if(permissionDenied.isNotEmpty()){
+                    requestPermissions(permissionDenied, PERMISSION_EXTERNAL_STORAGE)
+                }
+                else {
+                    openEditActivity()
+                }
             }
         }
     }
 
-    private fun openEditActivity(path: String) {
+    private fun openEditActivity() {
         val intent = Intent(activity, EditMediaActivity::class.java).apply {
-            putExtra("path", path)
+            putExtra("path", filePath)
         }
         startActivity(intent)
     }

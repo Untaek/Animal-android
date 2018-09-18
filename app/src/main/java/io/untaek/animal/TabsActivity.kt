@@ -67,7 +67,6 @@ class TabsActivity : AppCompatActivity() {
             }
         }
 
-        Toast.makeText(this, "${NativeAdapter().hello()}", Toast.LENGTH_SHORT).show()
     }
 
     private fun changeTab(tab: Tab): Fragment {

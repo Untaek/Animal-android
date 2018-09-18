@@ -33,7 +33,8 @@ class TabMyPageFragment: Fragment() {
             FirebaseAuth.getInstance().signOut()
         }
 
-        return root    }
+        return root
+    }
 
     override fun onResume() {
         Log.d("fragment resumed", "TabMyPageFragment")
