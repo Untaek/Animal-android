@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/splashActivity">
+
+    <activity
+        android:id="@+id/splashActivity"
+        android:name="io.untaek.animal.SplashActivity"
+        android:label="SplashActivity" />
+    <activity
+        android:id="@+id/tabsActivity"
+        android:name="io.untaek.animal.TabsActivity"
+        android:label="activity_tabs"
+        tools:layout="@layout/activity_tabs" />
+    <fragment
+        android:id="@+id/tabTimelineFragment"
+        android:name="io.untaek.animal.tab.TabTimelineFragment"
+        android:label="TabTimelineFragment" ></fragment>
+    <fragment
+        android:id="@+id/tabUploadFragment"
+        android:name="io.untaek.animal.tab.TabUploadFragment"
+        android:label="TabUploadFragment" >
+        <action
+            android:id="@+id/action_tabUploadFragment_to_editMediaActivity"
+            app:destination="@id/editMediaActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/tabLoginFragment"
+        android:name="io.untaek.animal.tab.TabLoginFragment"
+        android:label="TabLoginFragment" />
+    <fragment
+        android:id="@+id/tabMyPageFragment"
+        android:name="io.untaek.animal.tab.TabMyPageFragment"
+        android:label="tab_my_page"
+        tools:layout="@layout/tab_my_page" />
+    <activity
+        android:id="@+id/editMediaActivity"
+        android:name="io.untaek.animal.EditMediaActivity"
+        android:label="activity_edit_media"
+        tools:layout="@layout/activity_edit_media" />
+</navigation>

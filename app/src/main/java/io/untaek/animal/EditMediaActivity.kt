@@ -2,6 +2,7 @@ package io.untaek.animal
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Point
 import android.media.MediaMetadata
 import android.media.MediaMetadataRetriever
 import android.media.ThumbnailUtils
@@ -23,8 +24,9 @@ class EditMediaActivity : AppCompatActivity() {
         val path = intent.getStringExtra("path")
         //val thumbnail = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Video.Thumbnails.MICRO_KIND)
         //imageView.setImageBitmap(thumbnail)
-        //imageView.setImageBitmap(getThumbnails(path))
-        NativeAdapter.getThumbnails(path)
+        imageView.setImageBitmap(getThumbnails(path))
+        //NativeAdapter.getThumbnails(path)
+        //getThumbnails(path)
     }
 
     fun getThumbnails(path: String): Bitmap {
@@ -46,6 +48,12 @@ class EditMediaActivity : AppCompatActivity() {
 
         var w = 0
         var h = 0
+
+        val display = windowManager.defaultDisplay
+        val size = Point()
+        display.getSize(size)
+
+        Log.d("size", "${size.x}")
 
         if(width > height){
             h = height
@@ -81,6 +89,7 @@ class EditMediaActivity : AppCompatActivity() {
             canvas.drawBitmap(thumbnails[i], (w2/length*i).toFloat(), 0f, null)
         }
 
-        return bitmap
+
+        return Bitmap.createScaledBitmap(bitmap, size.x, size.x/10 / 9 * 16, true)
     }
 }

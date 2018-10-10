@@ -5,13 +5,21 @@
   /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/android/ffmpeg-android/include/libavutil/version.h \
   /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/android/ffmpeg-android/include/libavutil/macros.h \
   /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/android/ffmpeg-android/include/libavcodec/avcodec.h \
+  /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include/errno.h \
   /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/android/ffmpeg-android/include/libavutil/samplefmt.h \
   /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/android/ffmpeg-android/include/libavutil/avutil.h \
   /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/android/ffmpeg-android/include/libavutil/common.h \
+  /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include/inttypes.h \
+  /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include/limits.h \
+  /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include/math.h \
+  /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include/stdio.h \
+  /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include/stdlib.h \
+  /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include/string.h \
   /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/android/ffmpeg-android/include/libavutil/attributes.h \
   /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/android/ffmpeg-android/include/libavutil/avconfig.h \
   /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/android/ffmpeg-android/include/libavutil/mem.h \
   /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/android/ffmpeg-android/include/libavutil/error.h \
+  /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include/stddef.h \
   /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/android/ffmpeg-android/include/libavutil/rational.h \
   /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/android/ffmpeg-android/include/libavutil/mathematics.h \
   /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/android/ffmpeg-android/include/libavutil/intfloat.h \
@@ -40,11 +48,25 @@
 
 /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/android/ffmpeg-android/include/libavcodec/avcodec.h:
 
+/Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include/errno.h:
+
 /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/android/ffmpeg-android/include/libavutil/samplefmt.h:
 
 /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/android/ffmpeg-android/include/libavutil/avutil.h:
 
 /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/android/ffmpeg-android/include/libavutil/common.h:
+
+/Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include/inttypes.h:
+
+/Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include/limits.h:
+
+/Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include/math.h:
+
+/Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include/stdio.h:
+
+/Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include/stdlib.h:
+
+/Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include/string.h:
 
 /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/android/ffmpeg-android/include/libavutil/attributes.h:
 
@@ -53,6 +75,8 @@
 /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/android/ffmpeg-android/include/libavutil/mem.h:
 
 /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/android/ffmpeg-android/include/libavutil/error.h:
+
+/Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include/stddef.h:
 
 /Users/im-untaek/Library/Android/sdk/ndk-bundle/sources/android/ffmpeg-android/include/libavutil/rational.h:
 

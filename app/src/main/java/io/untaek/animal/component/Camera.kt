@@ -116,12 +116,12 @@ class Camera(val context: Context, val callback: Callback): TextureView.SurfaceT
         mediaRecorder = MediaRecorder().apply {
             setVideoSource(MediaRecorder.VideoSource.SURFACE)
             setAudioSource(MediaRecorder.AudioSource.MIC)
-            setOutputFormat(MediaRecorder.OutputFormat.WEBM)
+            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setOutputFile(path)
             setVideoEncodingBitRate(10000000)
             setVideoFrameRate(30)
             setVideoSize(1280, 720)
-            setVideoEncoder(MediaRecorder.VideoEncoder.VP8)
+            setVideoEncoder(MediaRecorder.VideoEncoder.H264)
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             prepare()
         }
