@@ -13,6 +13,7 @@ import java.util.*
 class Fire(private val context: Context) {
     class Auth(private val context: Context) {
         fun connectionChecker() {
+
         }
 
         fun sendEmailLink(email: String) {

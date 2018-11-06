@@ -42,30 +42,20 @@ class TabTimelineFragment: Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val adapter = BasicTimelineAdapter(activity!!, items)
+        val adapter = BasicTimelineAdapter(activity!!)
 
         val root = inflater.inflate(R.layout.tab_timeline, container, false)
-        FirebaseFirestore.getInstance().collection("posts")
-                .get().addOnSuccessListener { snapshot ->
-                    val posts = snapshot.toObjects(Post::class.java)
-                    for(post: Post in posts) {
-                        items.add(post)
-                        items.add(post)
-                        items.add(post)
-                        items.add(post)
-                        items.add(post)
-                        items.add(post)
-                        items.add(post)
-
-                        adapter.notifyDataSetChanged()
-                        Log.d("post: ", post.toString())
-                    }
-                }
+//        FirebaseFirestore.getInstance().collection("posts")
+//                .get().addOnSuccessListener { snapshot ->
+//                    val posts = snapshot.toObjects(Post::class.java)
+//                }
 
         val recyclerView = root.recyclerView_timeline
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager::VERTICAL.get(), false)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = layoutManager
+
+        adapter.updateList()
 
         return root
     }
