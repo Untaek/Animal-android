@@ -30,9 +30,9 @@ class BasicTimelineAdapter(private val context: Context, private val items: Muta
         Log.d("holder", "")
         //holder.video.setMediaController(MediaController(context))
 //        holder.video.setVideoURI(Uri.parse("https://firebasestorage.googleapis.com/v0/b/animal-f6c09.appspot.com/o/1536092616210_gen.webm?alt=media&token=db50c08d-586a-4c75-a408-08a7cf7c9be4"))
-        Glide.with(context)
-                .load("https://firebasestorage.googleapis.com/v0/b/animal-f6c09.appspot.com/o/1536092333316_gen.webp?alt=media&token=659e3ae0-8fc9-490f-8f93-71afe66a0d6f")
-                .into(holder.image)
+//        Glide.with(context)
+//                .load("https://firebasestorage.googleapis.com/v0/b/animal-f6c09.appspot.com/o/1536092333316_gen.webp?alt=media&token=659e3ae0-8fc9-490f-8f93-71afe66a0d6f")
+//                .into(holder.image)
     }
 
 
@@ -40,6 +40,5 @@ class BasicTimelineAdapter(private val context: Context, private val items: Muta
 
         val description = itemView.textView_description1
         val video = itemView.surfaceView
-        val image = itemView.imageView
     }
 }

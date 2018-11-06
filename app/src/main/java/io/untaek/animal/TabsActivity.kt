@@ -7,10 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import io.untaek.animal.tab.TabLoginFragment
-import io.untaek.animal.tab.TabMyPageFragment
-import io.untaek.animal.tab.TabTimelineFragment
-import io.untaek.animal.tab.TabUploadFragment
+import io.untaek.animal.tab.*
 import kotlinx.android.synthetic.main.activity_tabs.*
 
 enum class Tab {
@@ -29,7 +26,7 @@ class TabsActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_rank -> {
-                changeTab(Tab.Timeline)
+                changeTab(Tab.Rank)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_post -> {
@@ -63,21 +60,18 @@ class TabsActivity : AppCompatActivity() {
             }else {
                 changeTab(Tab.MyPage)
                 Log.d("Auth", "Signed in")
-
             }
         }
-
     }
 
     private fun changeTab(tab: Tab): Fragment {
         val fragment = when(tab) {
             Tab.Timeline -> TabTimelineFragment.instance()
+            Tab.Rank -> TabRankingFragment.instance()
             Tab.MyPage -> TabMyPageFragment.instance()
             Tab.Upload -> TabUploadFragment.instance()
             Tab.Login -> TabLoginFragment.instance()
-            else -> throw IndexOutOfBoundsException("Unexpected fragment index.") }
-
-
+        }
 
         supportFragmentManager
                 .beginTransaction()
