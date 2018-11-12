@@ -12,10 +12,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-        <!--<VideoView-->
-            <!--android:id="@+id/videoView"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="300dp" />-->
         <SurfaceView
             android:layout_width="match_parent"
             android:layout_height="300dp"
@@ -33,12 +29,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="title" />
 
             <TextView
                 android:id="@+id/textView_pet_name"
