@@ -1,4 +1,4 @@
-//package io.untaek.animal.tab
+//package io.untaekPost.animal.tab
 //
 //import android.Manifest
 //import android.app.Activity.RESULT_OK
@@ -14,9 +14,9 @@
 //import android.util.Log
 //import android.view.*
 //import android.widget.FrameLayout
-//import io.untaek.animal.EditMediaActivity
-//import io.untaek.animal.R
-//import io.untaek.animal.component.Camera
+//import io.untaekPost.animal.EditMediaActivity
+//import io.untaekPost.animal.R
+//import io.untaekPost.animal.component.Camera
 //import kotlinx.android.synthetic.main.tab_upload.view.*
 //import java.io.File
 //import java.net.URI

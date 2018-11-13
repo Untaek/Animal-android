@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("io.untaek.animal", appContext.packageName)
+        assertEquals("io.untaekPost.animal", appContext.packageName)
     }
 }

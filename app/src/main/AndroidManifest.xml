@@ -17,11 +17,6 @@
         <activity
             android:name=".TabsActivity"
             android:label="@string/title_activity_tabs">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".SplashActivity">
             <intent-filter>
@@ -31,9 +26,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".EditMediaActivity" />
-        <activity android:name=".TimelineDetailActivity" />
+        <activity android:name=".PostDetailActivity" />
         <activity android:name=".UserDetailActivity" />
         <activity android:name=".UploadActivity"></activity>
+        <activity android:name=".TimelineDetailActivity" />
     </application>
 
 </manifest>

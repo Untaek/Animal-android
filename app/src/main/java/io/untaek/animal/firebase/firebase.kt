@@ -34,7 +34,7 @@ class Fire(private val context: Context) {
                     .setUrl("https://animalauth.page.link")
                     .setHandleCodeInApp(true)
                     .setAndroidPackageName(
-                            "com.untaek.animal",
+                            "com.untaekPost.animal",
                             true,
                             "19"
                     )
