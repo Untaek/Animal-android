@@ -8,14 +8,15 @@
     <FrameLayout
         android:id="@+id/frame_image_container"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
+        android:minHeight="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
         <SurfaceView
+            android:id="@+id/surfaceView"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:id="@+id/surfaceView"/>
+            android:layout_height="100dp" />
     </FrameLayout>
 
     <LinearLayout

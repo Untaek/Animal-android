@@ -6,11 +6,24 @@ import android.util.Log
 import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.FirebaseAuth
 import com.firebase.ui.auth.AuthUI
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.util.*
 
 
 class Fire(private val context: Context) {
+
+    fun toggleLike(postId: String) {
+        FirebaseFirestore.getInstance()
+                .runTransaction {
+                    
+                }
+    }
+
+    fun toggleFollow() {
+
+    }
+
     class Auth(private val context: Context) {
         fun connectionChecker() {
 
