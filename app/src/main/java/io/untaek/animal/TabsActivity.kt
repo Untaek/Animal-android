@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import io.untaek.animal.tab.*
 import kotlinx.android.synthetic.main.activity_tabs.*
@@ -19,6 +18,7 @@ enum class Tab {
 }
 
 class TabsActivity : AppCompatActivity() {
+
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_timeline -> {
@@ -67,7 +67,7 @@ class TabsActivity : AppCompatActivity() {
     private fun changeTab(tab: Tab): Fragment {
         val fragment = when(tab) {
             Tab.Timeline -> TabTimelineFragment.instance()
-            Tab.Rank -> TabRankingFragment.instance()
+            Tab.Rank -> TabRankingFragment_.instance()
             Tab.MyPage -> TabMyPageFragment.instance()
             Tab.Upload -> TabUploadFragment.instance()
             Tab.Login -> TabLoginFragment.instance()

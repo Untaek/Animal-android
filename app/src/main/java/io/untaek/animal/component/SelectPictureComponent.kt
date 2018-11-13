@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import io.untaek.animal.R
-import io.untaek.animal.TimelineDetailActivity
 import io.untaek.animal.UploadActivity
 
 class SelectPictureComponent: ConstraintLayout, View.OnClickListener {

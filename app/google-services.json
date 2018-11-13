@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:877795668080:android:f23247be86d89424",
         "android_client_info": {
-          "package_name": "com.untaek.animal"
+          "package_name": "io.untaek.animal"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "877795668080-fcp4i0ncdc2ad5c0t2vjplu7bpmv7n71.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.untaek.animal",
+            "package_name": "io.untaek.animal",
             "certificate_hash": "3ce697a751c5f0fc03c8693ee154ed2b8e770194"
           }
         },

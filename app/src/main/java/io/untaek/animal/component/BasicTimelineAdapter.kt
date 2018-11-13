@@ -2,19 +2,14 @@ package io.untaek.animal.component
 
 import android.content.Context
 import android.content.Intent
-import android.media.MediaCodec
-import android.media.MediaFormat
-import android.net.Uri
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.SurfaceView
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import io.untaek.animal.R
-import io.untaek.animal.TimelineDetailActivity
+import io.untaek.animal.PostDetailActivity
 import io.untaek.animal.UserDetailActivity
 import io.untaek.animal.firebase.PostInTimeline
 import io.untaek.animal.firebase.dummy
@@ -63,7 +58,7 @@ class BasicTimelineAdapter(private val context: Context) : RecyclerView.Adapter<
 
         init {
             description.setOnClickListener {
-                val intent = Intent(context, TimelineDetailActivity::class.java).apply {
+                val intent = Intent(context, PostDetailActivity::class.java).apply {
                     putExtra("data", items[adapterPosition])
                 }
                 context.startActivity(intent)

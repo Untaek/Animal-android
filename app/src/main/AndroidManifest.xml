@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".EditMediaActivity" />
-        <activity android:name=".TimelineDetailActivity" />
+        <activity android:name=".PostDetailActivity" />
         <activity android:name=".UserDetailActivity" />
         <activity android:name=".UploadActivity"></activity>
     </application>
