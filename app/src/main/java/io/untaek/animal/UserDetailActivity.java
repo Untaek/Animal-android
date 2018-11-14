@@ -1,14 +1,24 @@
 package io.untaek.animal;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Source;
+
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,17 +29,19 @@ import io.untaek.animal.firebase.UserDetail;
 import io.untaek.animal.firebase.dummy;
 
 public class UserDetailActivity extends AppCompatActivity {
+    FirebaseFirestore db;
+    DocumentReference docRef;
+
 
     List<List<PostInTimeline>> userPost = null;
     UserDetail user;
-    boolean findFlag = false;
-    String userId = null;
+    String uploaderId = null;
     int userPosition = 0;
 
     List<UserDetailListViewItem> itemList;
 
     public UserDetailActivity() {
-
+        db = FirebaseFirestore.getInstance();
     }
 
     @Override
@@ -37,24 +49,47 @@ public class UserDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_detail);
 
-        userId = getIntent().getExtras().getString("userId");
-        userPosition = 0;
-        for(UserDetail user : dummy.INSTANCE.getUsersDetail()){
-            if(user.getId().equals(userId)){
-                break;
-            }
-            userPosition++;
-        }
+        DocumentSnapshot documentSnapshot =(DocumentSnapshot)getIntent().getSerializableExtra("documentSnapshot");
+
+        //uploaderId = getIntent().getExtras().getString("uploaderId");
+        uploaderId = "dbsdlswp";
+
+//        docRef = db.collection("users").document(uploaderId);
+//        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if(task.isSuccessful()){
+//                    DocumentSnapshot document = task.getResult();
+//                    textViewSetText(document);
+//                    Log.d("ㅋㅋㅋ", "Cached document data : "+document.getData());
+//
+//                }else{
+//                    Log.d("ㅋㅋㅋ","Cached get failed : "+task.getException());
+//                }
+//            }
+//        });
+
+        textViewSetText(documentSnapshot);
+
+//        userPosition = 0;
+//
+//        for(UserDetail user : dummy.INSTANCE.getUsersDetail()){
+//            if(user.getId().equals(uploaderId)){
+//                break;
+//            }
+//            userPosition++;
+//        }
 
         // itemlist 초기화 함수
-        defineItemList(dummy.INSTANCE.getUsersPost().get(userPosition));
-        user = dummy.INSTANCE.getUsersDetail().get(userPosition);
+//        defineItemList(dummy.INSTANCE.getUsersPost().get(userPosition));
+//        user = dummy.INSTANCE.getUsersDetail().get(userPosition);
 
-        textViewSetText();
-        ListView listView = findViewById(R.id.user_detail_listView);
 
-        UserDetailListViewAdapter userDetailListViewAdapter = new UserDetailListViewAdapter(this, itemList);
-        listView.setAdapter(userDetailListViewAdapter);
+//        textViewSetText();
+//        ListView listView = findViewById(R.id.user_detail_listView);
+//
+//        UserDetailListViewAdapter userDetailListViewAdapter = new UserDetailListViewAdapter(this, itemList);
+//        listView.setAdapter(userDetailListViewAdapter);
     }
 
     List<UserDetailListViewItem> defineItemList(List<List<PostInTimeline>> user){
@@ -69,7 +104,7 @@ public class UserDetailActivity extends AppCompatActivity {
         return  itemList;
     }
 
-    private void textViewSetText(){
+    private void textViewSetText(DocumentSnapshot documentSnapshot){
         TextView userName = findViewById(R.id.user_detail_user_name);
         ImageView userImage = findViewById(R.id.user_detail_user_image);
         TextView postCount = findViewById(R.id.user_detail_post_count);
@@ -77,11 +112,11 @@ public class UserDetailActivity extends AppCompatActivity {
         TextView likeCount = findViewById(R.id.user_detail_likes_count);
 
 
-        userName.setText(user.getUserName());
-        userImage.setImageResource(user.getImgResource());
-        postCount.setText(""+ user.getPosts());
-        followCount.setText(""+ user.getFollows());
-        likeCount.setText(""+ user.getTotalLikes());
+        userName.setText(documentSnapshot.get("name").toString());
+        userImage.setImageURI(Uri.parse(documentSnapshot.get("photoURL").toString()));
+        postCount.setText(documentSnapshot.get("total_posts").toString());
+        followCount.setText(documentSnapshot.get("total_followers").toString());
+        likeCount.setText(documentSnapshot.get("total_likes").toString());
     }
 
 }

@@ -24,7 +24,9 @@
             android:id="@+id/tab_rank_grid_hotpost"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:layout_weight="1"
+            android:gravity="center"
             android:numColumns="3"
             android:scrollbars="none|horizontal|vertical">
 

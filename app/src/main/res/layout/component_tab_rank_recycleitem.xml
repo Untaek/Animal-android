@@ -9,5 +9,6 @@
         android:id="@+id/tab_rank_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         app:srcCompat="@drawable/com_facebook_button_icon_blue" />
 </LinearLayout>

@@ -18,8 +18,10 @@
             android:id="@+id/user_detail_user_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:layout_weight="3"
-            android:text="TextView" />
+            android:gravity="center"
+            android:text="name" />
 
         <ImageView
             android:id="@+id/user_detail_user_image"
@@ -51,7 +53,7 @@
                     android:id="@+id/user_detail_label_post"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="TextView" />
+                    android:text="post" />
 
                 <TextView
                     android:id="@+id/user_detail_post_count"
@@ -70,7 +72,7 @@
                     android:id="@+id/user_detail_label_follow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="TextView" />
+                    android:text="follow" />
 
                 <TextView
                     android:id="@+id/user_detail_follow_count"
@@ -89,7 +91,7 @@
                     android:id="@+id/user_detail_label_likes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="TextView" />
+                    android:text="like" />
 
                 <TextView
                     android:id="@+id/user_detail_likes_count"

@@ -32,3 +32,15 @@ data class Comment(
         val text:String
 ): Serializable
 
+data class UserDetail_(
+        val id: String,
+        val userName : String,
+        val photoURL : String,
+        val total_posts: Int,
+        val total_likes: Int,
+        val total_followers: Int,
+        val posts : List<String>,
+        val follow : List<String>,
+        val like : List<String>
+):Serializable
+
