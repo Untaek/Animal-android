@@ -5,7 +5,6 @@ import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.SurfaceView
 import android.view.TextureView
 import android.view.ViewGroup
 import android.widget.*
@@ -16,7 +15,7 @@ import io.untaek.animal.firebase.Post
 import io.untaek.animal.firebase.dummy
 import kotlinx.android.synthetic.main.item_timeline.view.*
 
-class BasicTimelineAdapter(private val context: Context) : RecyclerView.Adapter<BasicTimelineAdapter.ViewHolder>() {
+class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<TimelineAdapter.ViewHolder>() {
     var items: ArrayList<Post>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(parent, items!!)
