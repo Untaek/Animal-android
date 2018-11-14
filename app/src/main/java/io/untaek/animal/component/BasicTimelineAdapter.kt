@@ -40,7 +40,6 @@ class BasicTimelineAdapter(private val context: Context) : RecyclerView.Adapter<
         holder.user_name.text = item.userName
         holder.pet_name.text = item.petName
         holder.likes.text = item.likes.toString()
-        //holder.viewer.load("1536092616210_gen.webm")
     }
 
     fun updateList() {
@@ -55,7 +54,7 @@ class BasicTimelineAdapter(private val context: Context) : RecyclerView.Adapter<
         val pet_name: TextView = itemView.textView_pet_name
         val likes: TextView = itemView.textView_like
         val container: FrameLayout = itemView.frame_image_container
-        //val viewer: Viewer = Viewer(surfaceView)
+        val viewer: Viewer = Viewer(surfaceView)
 
         val context: Context = parent.context
 

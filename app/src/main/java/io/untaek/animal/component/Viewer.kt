@@ -1,6 +1,7 @@
 package io.untaek.animal.component
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
@@ -8,11 +9,13 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.widget.Toast
 import com.google.firebase.storage.FirebaseStorage
+import io.untaek.animal.firebase.Content
+import io.untaek.animal.firebase.Fire
+import io.untaek.animal.firebase.Type
 import java.io.File
 
 class Viewer(val surfaceView: SurfaceView) : SurfaceHolder.Callback, MediaPlayer.OnPreparedListener {
     private val context: Context = surfaceView.context
-    private val tempFile: File  = File.createTempFile("1536092616210_gen", "webm")
     private val mediaPlayer: MediaPlayer = MediaPlayer().also {
         it.setOnPreparedListener(this)
     }
@@ -20,20 +23,15 @@ class Viewer(val surfaceView: SurfaceView) : SurfaceHolder.Callback, MediaPlayer
         it.addCallback(this)
     }
 
-    fun load(path: String) {
-        FirebaseStorage.getInstance().reference
-                .child(path)
-                .getFile(tempFile)
-                .addOnSuccessListener {
-                    Log.d("DONE", "firebase OnSuccess")
-                    mediaPlayer.setDataSource(tempFile.path)
-                    mediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING)
-                    mediaPlayer.prepareAsync()
-                    Toast.makeText(context, it.totalByteCount.toString(), Toast.LENGTH_SHORT).show()
-                }
-                .addOnFailureListener {
-                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-                }
+    fun sourceChange(content: Content){
+        surfaceHolder.setFixedSize(content.w, content.h)
+
+        if (content.type == Type.Image) {
+
+        }
+        else if (content.type == Type.Video) {
+
+        }
     }
 
     fun release() {
@@ -67,6 +65,5 @@ class Viewer(val surfaceView: SurfaceView) : SurfaceHolder.Callback, MediaPlayer
     override fun surfaceCreated(holder: SurfaceHolder?) {
         Log.d("DONE", "surfaceCreated")
         mediaPlayer.setDisplay(surfaceHolder)
-        load("1536092616210_gen.webm")
     }
 }

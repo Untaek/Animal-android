@@ -25,6 +25,8 @@ class TabTimelineFragment: Fragment() {
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager::VERTICAL.get(), false)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = layoutManager
+        recyclerView.recycledViewPool.setMaxRecycledViews(0, 10)
+        recyclerView.setItemViewCacheSize(10)
 
         adapter.updateList()
 

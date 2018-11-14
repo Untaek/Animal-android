@@ -1,9 +1,12 @@
 package io.untaek.animal.firebase
 
 import io.untaek.animal.R
+import java.util.*
 import kotlin.collections.ArrayList
 
 object dummy {
+
+    val post = Post("sdf" ,User("sdf", "sdfsdf", "xcvxcv"), "svdvdvdvdf", Content(Type.Image, 200, 300, "svsvdvs"), mapOf(), 0L, 0, arrayListOf(), Date())
 
     val postComment: List<Comment> =
             arrayListOf(
@@ -120,6 +123,4 @@ object dummy {
                     PostInTimeline("SDF235SD", R.mipmap.ic_launcher, "BBB", "3", "untaek", "333", "정말루 귀엽당 ㅎ", 123),
                     PostInTimeline("VR1F2342", R.mipmap.ic_launcher, "BBB", "3", "untaek", "333", "못생겼당 ㅋ", 54)
             )
-
-
 }

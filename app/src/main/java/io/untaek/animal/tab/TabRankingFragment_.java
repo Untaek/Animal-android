@@ -52,8 +52,6 @@ public class TabRankingFragment_ extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        Toast.makeText(getContext(), "aa", Toast.LENGTH_LONG).show();
         View view = inflater.inflate(R.layout.tab_rank, container, false);
 
         GridView gridview = view.findViewById(R.id.tab_rank_grid_hotpost);
