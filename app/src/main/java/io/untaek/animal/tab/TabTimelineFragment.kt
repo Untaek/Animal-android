@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import com.google.firebase.firestore.FirebaseFirestore
 import io.untaek.animal.R
 import io.untaek.animal.component.BasicTimelineAdapter
+import io.untaek.animal.component.TimelineLayoutManager
 import kotlinx.android.synthetic.main.tab_timeline.view.*
 
 const val RC_SIGN_IN = 123
@@ -22,11 +23,15 @@ class TabTimelineFragment: Fragment() {
         val root = inflater.inflate(R.layout.tab_timeline, container, false)
 
         val recyclerView = root.recyclerView_timeline
-        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager::VERTICAL.get(), false)
+        val layoutManager = TimelineLayoutManager(activity, LinearLayoutManager::VERTICAL.get(), false)
+        layoutManager.setExtraLayoutSpace(activity?.windowManager?.defaultDisplay?.height!!)
+
         recyclerView.adapter = adapter
         recyclerView.layoutManager = layoutManager
-        recyclerView.recycledViewPool.setMaxRecycledViews(0, 10)
-        recyclerView.setItemViewCacheSize(10)
+        recyclerView.recycledViewPool.setMaxRecycledViews(0, 30)
+        recyclerView.setItemViewCacheSize(30)
+        recyclerView.isDrawingCacheEnabled = true
+        recyclerView.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
 
         adapter.updateList()
 

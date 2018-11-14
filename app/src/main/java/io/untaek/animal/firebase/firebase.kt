@@ -1,8 +1,11 @@
 package io.untaek.animal.firebase
 
+import android.app.Activity
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Point
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.Log
 import com.bumptech.glide.Glide
@@ -258,9 +261,12 @@ class Fire: FirebaseAuth.AuthStateListener {
     }
 
     fun loadActualContent(content: Content, context: Context, callback: Callback) {
+        Log.d("LoadContent", "Try to load $content")
+
         if(content.type == Type.Image) {
             storage().reference.child(content.url).downloadUrl
                     .addOnSuccessListener { uri ->
+                        Log.d(TAG, "uri $uri")
                         Glide.with(context)
                                 .asBitmap()
                                 .load(uri)
@@ -275,24 +281,28 @@ class Fire: FirebaseAuth.AuthStateListener {
                                         return true
                                     }
                                 })
+                                .submit(content.w, content.h)
                     }
                     .addOnFailureListener {
                         callback.onFail(it)
                     }
         }
         else if (content.type == Type.Video) {
-            val file = File(content.url)
-            val fileName = content.url.split(".")
+            val file = File(context.cacheDir, content.url)
+
+            Log.d("Video file", file.absolutePath)
 
             if(file.exists()) {
+                Log.d("Video file", "exist")
                 callback.onResult(file)
             }
             else {
-                val tempFile = File.createTempFile(fileName[0], fileName[1], context.cacheDir)
+                file.createNewFile()
                 storage().reference.child(content.url)
-                        .getFile(tempFile)
+                        .getFile(file)
+                        .addOnProgressListener {  }
                         .addOnSuccessListener {
-                            callback.onResult(tempFile)
+                            callback.onResult(file)
                         }
                         .addOnFailureListener{
                             callback.onFail(it)
@@ -300,8 +310,6 @@ class Fire: FirebaseAuth.AuthStateListener {
             }
         }
     }
-
-
 
     class Auth(private val context: Context) {
         fun connectionChecker() {

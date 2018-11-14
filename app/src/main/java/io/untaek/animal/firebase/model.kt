@@ -40,13 +40,13 @@ data class Content(
         val h: Int = 0,
         val w: Int = 0,
         val url: String = ""
-)
+): Serializable
 
 data class User(
         val id: String = "0",
         val name: String = "0",
         val picture_url: String = "0"
-)
+): Serializable
 
 data class Post(
         val id: String = "0",
@@ -58,14 +58,14 @@ data class Post(
         val totalComments: Int = 0,
         val comments: ArrayList<Comment2> = arrayListOf(),
         val timeStamp: Date = Date()
-)
+): Serializable
 
 data class Comment2(
         val commentId: String = "0",
         val user: User = User(),
         val timeStamp: Date = Date(),
         val text: String = "0"
-)
+): Serializable
 
 data class NewPost(
         val user: User,
