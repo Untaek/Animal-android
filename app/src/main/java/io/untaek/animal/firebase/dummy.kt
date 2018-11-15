@@ -1,9 +1,28 @@
 package io.untaek.animal.firebase
 
 import io.untaek.animal.R
+import java.util.*
 import kotlin.collections.ArrayList
 
 object dummy {
+
+    val post = Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Image, 600, 800, "hahaha.jpg"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date())
+
+    val postList = ArrayList<Post>().apply {
+        add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Image, 600, 800, "hahaha.jpg"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
+        add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Video, 1000, 600, "hoho.mp4"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
+        add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Image, 600, 800, "hahaha.jpg"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
+        add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Video, 1100, 800, "hoho.mp4"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
+        add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Video, 600, 800, "hoho.mp4"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
+        add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Image, 600, 800, "hahaha.jpg"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
+        add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Image, 600, 800, "hahaha.jpg"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
+        add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Image, 600, 800, "hahaha.jpg"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
+        add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Image, 600, 800, "hahaha.jpg"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
+        add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Image, 600, 800, "hahaha.jpg"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
+        add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Image, 600, 800, "hahaha.jpg"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
+        add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Video, 600, 800, "hoho.mp4"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
+
+    }
 
     val postComment: List<Comment> =
             arrayListOf(
@@ -120,6 +139,4 @@ object dummy {
                     PostInTimeline("SDF235SD", R.mipmap.ic_launcher, "BBB", "3", "untaek", "333", "정말루 귀엽당 ㅎ", 123),
                     PostInTimeline("VR1F2342", R.mipmap.ic_launcher, "BBB", "3", "untaek", "333", "못생겼당 ㅋ", 54)
             )
-
-
 }

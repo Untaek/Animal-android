@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.untaek.animal">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -17,6 +18,9 @@
         <activity
             android:name=".TabsActivity"
             android:label="@string/title_activity_tabs">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+            </intent-filter>
         </activity>
         <activity android:name=".SplashActivity">
             <intent-filter>
@@ -28,8 +32,19 @@
         <activity android:name=".EditMediaActivity" />
         <activity android:name=".PostDetailActivity" />
         <activity android:name=".UserDetailActivity" />
-        <activity android:name=".UploadActivity"></activity>
+        <activity android:name=".UploadActivity"/>
         <activity android:name=".TimelineDetailActivity" />
+        
+        <provider
+            android:authorities="io.untaek.animal.fileprovider"
+            android:name="android.support.v4.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_provider_paths"/>
+        </provider>
     </application>
 
 </manifest>
