@@ -1,18 +1,10 @@
 package io.untaek.animal
 
-import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.widget.LinearLayout
 import android.widget.Toast
-import io.untaek.animal.R.id.*
-import io.untaek.animal.component.PostDetailCommentListViewAdapter
 import io.untaek.animal.firebase.PostInTimeline
 import kotlinx.android.synthetic.main.activity_post_detail.*
-import kotlinx.android.synthetic.main.activity_post_detail.view.*
 
 class PostDetailActivity : AppCompatActivity() {
 
@@ -31,8 +23,9 @@ class PostDetailActivity : AppCompatActivity() {
         post_detail_text.text = data.description
         post_detail_tag.text = data.userName
 
-        post_detail_comment_recycler.layoutManager = GridLayoutManager(this, 1) as RecyclerView.LayoutManager?
-        post_detail_comment_recycler.adapter = PostDetailCommentListViewAdapter(data.postCommentList, this)
+//        post_detail_comment_recycler.layoutManager = GridLayoutManager(this, 1) as RecyclerView.LayoutManager?
+//        post_detail_comment_recycler.adapter = TimelineDetailCommentRecyclerViewAdapter(data.postCommentList, this)
+
 
 
 //        FirebaseStorage.getInstance().reference

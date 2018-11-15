@@ -30,6 +30,7 @@ class TabTimelineFragment: Fragment() {
         layoutManager = TimelineLayoutManager(activity, LinearLayoutManager::VERTICAL.get(), false)
         layoutManager.setExtraLayoutSpace(activity?.windowManager?.defaultDisplay?.height!!)
         decorator = TimelineDecorator()
+
         recyclerView.adapter = adapter
         recyclerView.layoutManager = layoutManager
         recyclerView.addItemDecoration(decorator)

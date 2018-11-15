@@ -21,7 +21,7 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(parent, items!!)
 
     override fun getItemCount(): Int {
-        return items!!.size
+        return items!!.size+1
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -43,7 +43,7 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
     }
 
     class ViewHolder(parent: ViewGroup, items: ArrayList<Post>): RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_timeline,  parent, false)) {
-        val description: TextView = itemView.textView_description
+        val description: TextView = itemView.textView_description_timeline_detail
         val textureView: TextureView = itemView.textureView
         val user_name: TextView = itemView.textView_name
         val pet_name: TextView = itemView.textView_pet_name
@@ -64,8 +64,8 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
 
             user_name.setOnClickListener {
                 val intent = Intent(context, UserDetailActivity::class.java).apply {
-
                 }
+
             }
 
             pet_name.setOnClickListener {

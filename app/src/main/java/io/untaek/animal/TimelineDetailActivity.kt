@@ -1,12 +1,9 @@
 package io.untaek.animal
 
-import android.graphics.SurfaceTexture
-import android.media.MediaPlayer
-import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Surface
-import android.view.TextureView
+import android.support.v7.widget.GridLayoutManager
+import io.untaek.animal.component.TimelineDetailCommentRecyclerViewAdapter
 import io.untaek.animal.component.Viewer
 import io.untaek.animal.firebase.Post
 import kotlinx.android.synthetic.main.activity_timeline_detail.*
@@ -26,9 +23,12 @@ class TimelineDetailActivity : AppCompatActivity() {
                 changeSource(post.content)
             }
 
-            textView_description.text = post.description
-            textView_user_name.text = post.user.name
-            textView_tags.text = post.tags.values.map { s -> "#$s " }.reduce { acc, s -> acc + s }
+
+
+            recyclerView_comments.layoutManager = GridLayoutManager(this, 1)
+            recyclerView_comments.adapter = TimelineDetailCommentRecyclerViewAdapter(post, this)
+
+
 
             button_go_back.setOnClickListener { finish() }
         }

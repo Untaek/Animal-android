@@ -14,11 +14,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <TextureView
             android:id="@+id/textureView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="100dp"/>
+            android:minHeight="100dp" />
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
@@ -47,7 +48,7 @@
                 android:textSize="12sp"/>
 
             <TextView
-                android:id="@+id/textView_description"
+                android:id="@+id/textView_description_timeline_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="description"
