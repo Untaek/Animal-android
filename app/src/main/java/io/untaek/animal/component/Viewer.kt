@@ -53,7 +53,7 @@ class Viewer(val textureView: TextureView, val imageView: ImageView) : MediaPlay
     }
 
     private fun resize(content: Content) {
-        val ratio = 0.7
+        val ratio = 0.6
 
         val p = Point()
         (context as Activity).windowManager.defaultDisplay.getSize(p)
