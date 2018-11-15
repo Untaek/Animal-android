@@ -12,14 +12,11 @@ object dummy {
         add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Image, 300, 165, "dg1.jpg"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
         add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Video, 1000, 600, "hoho.mp4"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
         add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Image, 1080, 1920, "dg2.jpg"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
-        add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Video, 1100, 800, "hoho.mp4"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
-        add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Video, 600, 800, "hoho.mp4"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
+        add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Video, 720, 1280, "gg.mp4"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
+        add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Video, 720, 1280, "ㅎㅇ.mp4"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
         add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Image, 600, 800, "hahaha.jpg"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
         add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Image, 600, 800, "hahaha.jpg"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
         add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Image, 300, 165, "dg1.jpg"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
-        add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Image, 600, 800, "hahaha.jpg"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
-        add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Image, 600, 800, "hahaha.jpg"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
-        add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Image, 600, 800, "hahaha.jpg"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
         add(Post("sdf" ,User("sdf", "sdfsdf", "hahaha.jpg"), "svdvdvdvdf", Content(Type.Video, 600, 800, "hoho.mp4"), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 0, arrayListOf(), Date()))
 
     }

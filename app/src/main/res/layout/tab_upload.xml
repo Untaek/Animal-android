@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.constraint.ConstraintLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
@@ -10,6 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        app:target="gallery"
+        app:text="Select picture"
+        app:icon="@drawable/ic_image_black_24dp"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <io.untaek.animal.component.SelectPictureComponent
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:target="camera"
+        app:text="Capture from camera"
+        app:icon="@drawable/ic_photo_camera_black_24dp"
+        app:layout_constraintTop_toBottomOf="@id/select_picture"
+        />
 
 </android.support.constraint.ConstraintLayout>

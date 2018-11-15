@@ -191,8 +191,8 @@ class Fire: FirebaseAuth.AuthStateListener {
      *
      */
 
-    fun newPost(content: Content, tags: Map<String, String>, description: String, uri: Uri, callback: Callback, progressCallback: ProgressCallback?) {
-        storage().reference.child(content.url).putFile(uri)
+    fun newPost(content: Content, tags: Map<String, String>, description: String, fileUri: Uri, callback: Callback, progressCallback: ProgressCallback?) {
+        storage().reference.child(content.url).putFile(fileUri)
                 .addOnSuccessListener { _ ->
                     val post = NewPost(
                             user(),

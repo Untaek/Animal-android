@@ -34,7 +34,7 @@ class TabTimelineFragment: Fragment() {
         recyclerView.addItemDecoration(decorator)
         recyclerView.setHasFixedSize(true)
         recyclerView.recycledViewPool.setMaxRecycledViews(0, 30)
-        recyclerView.setItemViewCacheSize(30)
+        //recyclerView.setItemViewCacheSize(30)
         recyclerView.isDrawingCacheEnabled = true
         recyclerView.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
 
