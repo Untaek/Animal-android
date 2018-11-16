@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout4"
+        android:layout_width="90dp"
+        android:layout_height="90dp">
+
+        <ImageView
+            android:id="@+id/userimage_timeline_detail_comment_recyclerview_item"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="1"
+            android:src="@android:drawable/btn_dialog"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/username_timeline_detail_comment_recyclerview_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="20dp"
+            android:text="userName"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/userimage_timeline_detail_comment_recyclerview_item" />
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/text_timeline_detail_comment_recyclerview_item"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_weight="3"
+        android:text="TextView"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/constraintLayout4"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/timestamp_timeline_detail_comment_recyclerview_item"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="20dp"
+        android:layout_weight="1"
+        android:gravity="right"
+        android:text="TextView"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/constraintLayout4"
+        app:layout_constraintTop_toBottomOf="@+id/text_timeline_detail_comment_recyclerview_item" />
+
+</android.support.constraint.ConstraintLayout>
