@@ -1,4 +1,4 @@
-package io.untaek.animal.component
+package io.untaek.animal.legacy
 
 import android.content.Context
 import android.graphics.Bitmap

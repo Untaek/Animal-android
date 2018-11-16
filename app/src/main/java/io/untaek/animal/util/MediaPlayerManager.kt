@@ -1,4 +1,4 @@
-package io.untaek.animal.component
+package io.untaek.animal.util
 
 import android.media.MediaPlayer
 import android.net.Uri

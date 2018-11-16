@@ -2,24 +2,18 @@
 //
 //import android.Manifest
 //import android.app.Activity.RESULT_OK
-//import android.content.ContentResolver
-//import android.support.v4.app.Fragment
 //import android.content.Intent
 //import android.content.pm.PackageManager
 //import android.net.Uri
 //import android.os.Bundle
-//import android.provider.DocumentsContract
 //import android.provider.MediaStore
 //import android.support.v4.app.ActivityCompat
+//import android.support.v4.app.Fragment
 //import android.util.Log
-//import android.view.*
-//import android.widget.FrameLayout
-//import io.untaekPost.animal.EditMediaActivity
-//import io.untaekPost.animal.R
-//import io.untaekPost.animal.component.Camera
-//import kotlinx.android.synthetic.main.tab_upload.view.*
-//import java.io.File
-//import java.net.URI
+//import android.view.LayoutInflater
+//import android.view.TextureView
+//import android.view.View
+//import android.view.ViewGroup
 //
 //const val PERMISSION_ALL = 99
 //const val PERMISSION_EXTERNAL_STORAGE = 100

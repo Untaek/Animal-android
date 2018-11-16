@@ -19,7 +19,10 @@ import kotlinx.android.synthetic.main.item_timeline.view.*
 class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<TimelineAdapter.ViewHolder>() {
     var items: ArrayList<Post>? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(parent, items!!)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        Log.d("TimelineAdapter", "viewType: $viewType")
+        return ViewHolder(parent, items!!)
+    }
 
     override fun getItemCount(): Int {
         return items!!.size

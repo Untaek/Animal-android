@@ -1,4 +1,4 @@
-package io.untaek.animal.tab;
+package io.untaek.animal.legacy;
 
 
 import android.content.Intent;
@@ -6,28 +6,21 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.untaek.animal.PostDetailActivity;
 import io.untaek.animal.R;
-import io.untaek.animal.UserDetailActivity;
 import io.untaek.animal.component.TabRankingFragmentListViewAdapter;
 import io.untaek.animal.component.TabRankingFragmentListViewItem;
 import io.untaek.animal.component.TabRankingGridAdapter;
-import io.untaek.animal.component.TabRankingRecyclerAdapter;
-import io.untaek.animal.component.UserDetailListViewItem;
 import io.untaek.animal.firebase.PostInTimeline;
 import io.untaek.animal.firebase.dummy;
 

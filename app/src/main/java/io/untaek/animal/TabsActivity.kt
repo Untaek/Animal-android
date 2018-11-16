@@ -6,6 +6,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
+import io.untaek.animal.legacy.TabRankingFragment_
 import io.untaek.animal.tab.*
 import kotlinx.android.synthetic.main.activity_tabs.*
 
