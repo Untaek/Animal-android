@@ -67,7 +67,7 @@ class TabsActivity : AppCompatActivity() {
     private fun changeTab(tab: Tab): Fragment {
         val fragment = when(tab) {
             Tab.Timeline -> TabTimelineFragment.instance()
-            Tab.Rank -> TabRankingFragment_.instance()
+            Tab.Rank -> TabRankingFragment.instance()
             Tab.MyPage -> TabMyPageFragment.instance()
             Tab.Upload -> TabUploadFragment.instance()
             Tab.Login -> TabLoginFragment.instance()

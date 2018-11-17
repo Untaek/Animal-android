@@ -22,7 +22,10 @@
                 <action android:name="android.intent.action.VIEW"/>
             </intent-filter>
         </activity>
-        <activity android:name=".SplashActivity">
+        <activity
+            android:name=".SplashActivity"
+            android:theme="@style/SplashTheme"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,7 +34,8 @@
         </activity>
         <activity android:name=".EditMediaActivity" />
         <activity android:name=".PostDetailActivity" />
-        <activity android:name=".UserDetailActivity" />
+        <activity android:name=".UserDetailActivity_kotlin" />
+
         <activity android:name=".UploadActivity"/>
         <activity android:name=".TimelineDetailActivity" />
         

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SelectPictureComponent">
+        <attr name="text" format="string"/>
+        <attr name="icon" format="reference"/>
+        <attr name="target" format="enum">
+            <enum name="gallery" value="0"/>
+            <enum name="camera" value="1"/>
+        </attr>
+    </declare-styleable>
+</resources>

@@ -1,4 +1,4 @@
-package io.untaek.animal.component
+package io.untaek.animal.legacy
 
 import android.content.Context
 import android.graphics.SurfaceTexture
@@ -6,10 +6,7 @@ import android.hardware.camera2.*
 import android.media.MediaRecorder
 import android.util.Size
 import android.view.Surface
-import android.view.SurfaceHolder
-import android.view.SurfaceView
 import android.view.TextureView
-import android.opengl.ETC1.getWidth
 import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log

@@ -8,19 +8,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import io.untaek.animal.R
 import io.untaek.animal.firebase.Comment2
 import io.untaek.animal.firebase.Post
 import io.untaek.animal.firebase.User
+import io.untaek.animal.firebase.dummy
 import io.untaek.animal.firebase.dummy.post
 import kotlinx.android.synthetic.main.component_timeline_detail_comment_recyclerview_header.view.*
 import kotlinx.android.synthetic.main.component_timeline_detail_comment_recyclerview_item.view.*
 import java.util.*
 
 
-class TimelineDetailCommentRecyclerViewAdapter (val post : Post, val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-
+class TimelineDetailPostRecyclerViewAdapter (val post : Post, val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     fun postupdate() {
         post.comments.add(Comment2("sadf", User("sfd", "asdasfd", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQitUl14tC2Ld3WVEUU0fXNoRx_oGQjgCf8QLXi-gKlbr0EJFKRFDO9OfYj"), Date(), "asdsaf"))
         post.comments.add(Comment2("sadf", User("sfd", "asdasfd", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQitUl14tC2Ld3WVEUU0fXNoRx_oGQjgCf8QLXi-gKlbr0EJFKRFDO9OfYj"), Date(), "asdsaf"))
@@ -41,7 +41,7 @@ class TimelineDetailCommentRecyclerViewAdapter (val post : Post, val context: Co
             holder.textViewPostDecription.text = post.description
             holder.textViewPostTags.text = post.tags.values.reduce { acc, s -> acc+s }
             holder.textViewPostTimeStamp.text = timeCalculateFunction(post.timeStamp)
-            holder.imageViewPostUserIamge.setImageResource(R.mipmap.ic_launcher)
+            Glide.with(context).load(Uri.parse(post.content.url)).apply(RequestOptions()).into(holder.imageViewPostUserIamge)
             holder.textViewUPostUserName.text = post.user.name
         } else {
             holder as ViewHolderComment
@@ -112,24 +112,24 @@ class TimelineDetailCommentRecyclerViewAdapter (val post : Post, val context: Co
             return ViewHolderComment(view)
         }
     }
+
+
+    class ViewHolderComment(view : View) : RecyclerView.ViewHolder(view) {
+
+        val commentImage = view.userimage_timeline_detail_comment_recyclerview_item
+        val commentUserName = view.username_timeline_detail_comment_recyclerview_item
+        val commentText = view.text_timeline_detail_comment_recyclerview_item
+        val commentTime = view.timestamp_timeline_detail_comment_recyclerview_item
+
+        // Holds the TextView that will add each animal to
+    }
+    class ViewHolderPost(view : View) : RecyclerView.ViewHolder(view){
+        val textViewPostDecription = view.textView_description_timeline_detail
+        val textViewPostTags = view.textView_tags_timeline_detail
+        val textViewPostTimeStamp = view.textView_timestamp_timeline_detail
+        val imageViewPostUserIamge = view.imageView_user_image_timeline_detail
+        val textViewUPostUserName = view.textView_user_name_timeline_detail
+    }
+
 }
 
-
-
-class ViewHolderComment(view : View) : RecyclerView.ViewHolder(view) {
-
-    val commentImage = view.userimage_timeline_detail_comment_recyclerview_item
-    val commentUserName = view.username_timeline_detail_comment_recyclerview_item
-    val commentText = view.text_timeline_detail_comment_recyclerview_item
-    val commentTime = view.timestamp_timeline_detail_comment_recyclerview_item
-
-    // Holds the TextView that will add each animal to
-}
-class ViewHolderPost(view : View) : RecyclerView.ViewHolder(view){
-    val textViewPostDecription = view.textView_description_timeline_detail
-    val textViewPostTags = view.textView_tags_timeline_detail
-    val textViewPostTimeStamp = view.textView_timestamp_timeline_detail
-    val imageViewPostUserIamge = view.imageView_user_image_timeline_detail
-    val textViewUPostUserName = view.textView_user_name_timeline_detail
-
-}

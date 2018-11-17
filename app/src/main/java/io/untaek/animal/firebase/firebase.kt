@@ -4,9 +4,11 @@ import android.app.Activity
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Point
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.provider.MediaStore
 import android.util.Log
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -20,11 +22,12 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.storage.FirebaseStorage
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.lang.Exception
 import java.util.*
 
-const val POSTS = "posts"
+const val POSTS = "totalPosts"
 const val USERS = "users"
 const val LIKES = "likes"
 const val TOTAL_LIKES = "total_likes"
@@ -191,8 +194,18 @@ class Fire: FirebaseAuth.AuthStateListener {
      *
      */
 
-    fun newPost(content: Content, tags: Map<String, String>, description: String, uri: Uri, callback: Callback, progressCallback: ProgressCallback?) {
-        storage().reference.child(content.url).putFile(uri)
+    fun newPost(context: Context, tags: Map<String, String>, description: String, contentUri: Uri, callback: Callback, progressCallback: ProgressCallback?) {
+
+        val url = "UserID_${Date().time}.jpg"
+        val op = BitmapFactory.Options().apply {
+            inJustDecodeBounds = true
+        }
+        BitmapFactory.decodeStream(context.contentResolver.openInputStream(contentUri), null, op)
+        Log.d("StepWriteDetailFragment", "Size of image is ${op.outWidth} ${op.outHeight}")
+
+        val content = Content(Type.Image, op.outWidth, op.outHeight, url)
+
+        storage().reference.child(content.url).putStream(context.contentResolver.openInputStream(contentUri))
                 .addOnSuccessListener { _ ->
                     val post = NewPost(
                             user(),

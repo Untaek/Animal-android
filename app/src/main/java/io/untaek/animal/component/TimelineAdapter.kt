@@ -10,18 +10,22 @@ import android.view.ViewGroup
 import android.widget.*
 import io.untaek.animal.R
 import io.untaek.animal.TimelineDetailActivity
-import io.untaek.animal.UserDetailActivity
+import io.untaek.animal.UserDetailActivity_kotlin
 import io.untaek.animal.firebase.Post
 import io.untaek.animal.firebase.dummy
+import io.untaek.animal.util.Viewer
 import kotlinx.android.synthetic.main.item_timeline.view.*
 
 class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<TimelineAdapter.ViewHolder>() {
     var items: ArrayList<Post>? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(parent, items!!)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        Log.d("TimelineAdapter", "viewType: $viewType")
+        return ViewHolder(parent, items!!)
+    }
 
     override fun getItemCount(): Int {
-        return items!!.size+1
+        return items!!.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -30,6 +34,7 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
 
         val item = items!![position]
 
+        holder.imageView
         holder.description.text = item.description
         holder.user_name.text = item.user.name
         holder.pet_name.text = "dog"
@@ -63,7 +68,7 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
             }
 
             user_name.setOnClickListener {
-                val intent = Intent(context, UserDetailActivity::class.java).apply {
+                val intent = Intent(context, UserDetailActivity_kotlin::class.java).apply {
                 }
 
             }

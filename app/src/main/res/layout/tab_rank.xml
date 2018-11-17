@@ -4,46 +4,81 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:isScrollContainer="false"
     android:orientation="vertical"
-    tools:context="io.untaek.animal.tab.TabRankingFragment">
+    android:overScrollMode="always"
+    android:scrollbars="vertical"
+    app:layout_scrollFlags="scroll"
+    tools:context="io.untaek.animal.tab.TabRankingFragment_java">
 
-    <LinearLayout
+
+    <!--<TextView-->
+    <!--android:id="@+id/tab_rank_label_hotpost"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginStart="10dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:layout_marginEnd="10dp"-->
+    <!--android:layout_weight="8"-->
+    <!--android:gravity="center"-->
+    <!--android:text="Hottest Post"-->
+    <!--app:layout_constraintEnd_toEndOf="parent"-->
+    <!--app:layout_constraintStart_toStartOf="parent"-->
+    <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--<GridView-->
+    <!--android:id="@+id/tab_rank_grid_hotpost"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:layout_marginStart="10dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:layout_marginEnd="10dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:gravity="center"-->
+    <!--android:numColumns="3"-->
+    <!--android:overScrollMode="always"-->
+    <!--android:scrollbars="none|vertical"-->
+    <!--app:layout_constraintEnd_toEndOf="parent"-->
+    <!--app:layout_constraintHorizontal_bias="0.0"-->
+    <!--app:layout_constraintStart_toStartOf="parent"-->
+    <!--app:layout_constraintTop_toBottomOf="@+id/tab_rank_label_hotpost">-->
+
+
+    <!--</GridView>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/textView_userRank_label_tab_rank_user_rank"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginStart="10dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:layout_marginEnd="10dp"-->
+    <!--android:gravity="center"-->
+    <!--android:text="TextView"-->
+    <!--app:layout_constraintEnd_toEndOf="parent"-->
+    <!--app:layout_constraintStart_toStartOf="parent"-->
+    <!--app:layout_constraintTop_toBottomOf="@+id/tab_rank_grid_hotpost" />-->
+
+    <!--<ListView-->
+    <!--android:id="@+id/tab_rank_listView"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginStart="10dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:layout_marginEnd="10dp"-->
+    <!--android:layout_marginBottom="10dp"-->
+    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--app:layout_constraintEnd_toEndOf="parent"-->
+    <!--app:layout_constraintStart_toStartOf="parent"-->
+    <!--app:layout_constraintTop_toBottomOf="@+id/textView_userRank_label_tab_rank_user_rank" />-->
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView_tab_rank"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tab_rank_label_hotpost"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="8"
-            android:text="Hottest Post" />
-
-        <GridView
-            android:id="@+id/tab_rank_grid_hotpost"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:numColumns="3"
-            android:scrollbars="none|horizontal|vertical">
-
-        </GridView>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <ListView
-            android:id="@+id/tab_rank_listView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
-
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </LinearLayout>

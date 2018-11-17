@@ -2,7 +2,6 @@ package io.untaek.animal.tab
 
 import android.support.v4.app.Fragment
 import android.os.Bundle
-import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -36,7 +35,7 @@ class TabTimelineFragment: Fragment() {
         recyclerView.addItemDecoration(decorator)
         recyclerView.setHasFixedSize(true)
         recyclerView.recycledViewPool.setMaxRecycledViews(0, 30)
-        recyclerView.setItemViewCacheSize(30)
+        //recyclerView.setItemViewCacheSize(30)
         recyclerView.isDrawingCacheEnabled = true
         recyclerView.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
 
