@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaCodec
+import android.media.MediaMetadataRetriever
 import android.media.ThumbnailUtils
 import android.net.Uri
 import android.support.v4.content.FileProvider
@@ -30,22 +31,33 @@ object UploadManager: RequestListener<File> {
         return false
     }
 
-    fun createThumbnail(context: Context, uri: Uri){
-        val op = BitmapFactory.Options().apply {
-            inSampleSize = 4
-            inJustDecodeBounds = true
+    fun getSize(context: Context, uri: Uri): Pair<Int, Int> {
+        val mime = context.contentResolver.getType(uri)
+        val type = mime.split("/")[0]
+
+        var width = -1
+        var height = -1
+
+        if(type == "image") {
+            val op = BitmapFactory.Options().apply {
+                inJustDecodeBounds = true
+            }
+            BitmapFactory.decodeStream(context.contentResolver.openInputStream(uri), null, op)
+
+            width = op.outWidth
+            height = op.outHeight
         }
-        val bm = BitmapFactory.decodeStream(context.contentResolver.openInputStream(uri), null, op)
+        else if (type == "video") {
+            val mr = MediaMetadataRetriever()
+            mr.setDataSource(context, uri)
+            width = mr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH).toInt()
+            height = mr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT).toInt()
+        }
+
+        return Pair(width, height)
     }
 
-    fun resize(context: Context, uri: Uri) {
-        Glide.with(context)
-                .asFile()
-                .load(uri)
-                .apply(RequestOptions().override(640))
-                .addListener(this)
-                .submit()
-    }
+    fun getMime(context: Context, uri: Uri) = context.contentResolver.getType(uri)!!
 
     fun createTempUri(context: Context, ext: String): Uri {
         val tempFile = File.createTempFile(Date().time.toString(), ext)

@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.component_select_picture.view.*
 class SelectPictureComponent: ConstraintLayout, View.OnClickListener {
     lateinit var icon: Drawable
     lateinit var text: String
-    var target: Int = GALLERY
+    var target: Int = IMAGE
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
@@ -27,7 +27,7 @@ class SelectPictureComponent: ConstraintLayout, View.OnClickListener {
             try{
                 icon = getDrawable(R.styleable.SelectPictureComponent_icon)
                 text = getString(R.styleable.SelectPictureComponent_text)
-                target = getInt(R.styleable.SelectPictureComponent_target, GALLERY)
+                target = getInt(R.styleable.SelectPictureComponent_target, IMAGE)
             } finally {
                 recycle()
             }
@@ -50,8 +50,9 @@ class SelectPictureComponent: ConstraintLayout, View.OnClickListener {
     }
 
     companion object {
-        const val TARGET = "target"
-        const val GALLERY = 0
-        const val CAMERA = 1
+        const val TARGET = "TARGET"
+        const val IMAGE = 0
+        const val VIDEO = 1
+        const val CAMERA = 2
     }
 }

@@ -10,9 +10,7 @@ import io.untaek.animal.R
 class TabUploadFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val v = inflater.inflate(R.layout.tab_upload, container, false)
-
-        return v
+        return inflater.inflate(R.layout.tab_upload, container, false)
     }
 
     companion object {

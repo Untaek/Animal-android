@@ -23,7 +23,9 @@ class TimelineDetailActivity : AppCompatActivity() {
 
             textView_description.text = post.description
             textView_user_name.text = post.user.name
-            textView_tags.text = post.tags.values.map { s -> "#$s " }.reduce { acc, s -> acc + s }
+            textView_tags.text = if (post.tags.isNotEmpty())
+                post.tags.values.map { s -> "#$s " }.reduce { acc, s -> acc + s }
+            else ""
 
             button_go_back.setOnClickListener { finish() }
         }

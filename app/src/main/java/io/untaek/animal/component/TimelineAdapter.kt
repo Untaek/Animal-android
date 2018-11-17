@@ -8,31 +8,37 @@ import android.view.LayoutInflater
 import android.view.TextureView
 import android.view.ViewGroup
 import android.widget.*
+import com.google.firebase.firestore.DocumentSnapshot
 import io.untaek.animal.R
 import io.untaek.animal.TimelineDetailActivity
 import io.untaek.animal.UserDetailActivity
+import io.untaek.animal.firebase.Fire
 import io.untaek.animal.firebase.Post
 import io.untaek.animal.firebase.dummy
 import io.untaek.animal.util.Viewer
 import kotlinx.android.synthetic.main.item_timeline.view.*
+import java.lang.Exception
 
-class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<TimelineAdapter.ViewHolder>() {
-    var items: ArrayList<Post>? = null
+class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<TimelineAdapter.ViewHolder>(), Fire.Callback<Pair<DocumentSnapshot?, List<Post>>> {
+
+    private val items: MutableList<Post> = mutableListOf()
+    private lateinit var lastSeen: DocumentSnapshot
+    private var loading = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         Log.d("TimelineAdapter", "viewType: $viewType")
-        return ViewHolder(parent, items!!)
+        return ViewHolder(parent, items)
     }
 
     override fun getItemCount(): Int {
-        return items!!.size
+        return items.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         Log.d("holder", "")
 
-        val item = items!![position]
+        val item = items[position]
 
         holder.description.text = item.description
         holder.user_name.text = item.user.name
@@ -42,11 +48,31 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
     }
 
     fun updateList() {
-        items = dummy.postList
+        if(!loading){
+            loading = !loading
+            if(items.size == 0){
+                Fire.getInstance().getFirstPostPage(this)
+            }
+            else {
+                Fire.getInstance().getPostPage(lastSeen,this)
+            }
+        }
+    }
+
+    override fun onResult(data: Pair<DocumentSnapshot?, List<Post>>) {
+        loading = !loading
+        if (data.first != null) {
+            lastSeen = data.first!!
+        }
+        items.addAll(data.second)
         notifyDataSetChanged()
     }
 
-    class ViewHolder(parent: ViewGroup, items: ArrayList<Post>): RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_timeline,  parent, false)) {
+    override fun onFail(e: Exception) {
+
+    }
+
+    class ViewHolder(parent: ViewGroup, items: MutableList<Post>): RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_timeline,  parent, false)) {
         val description: TextView = itemView.textView_description
         val textureView: TextureView = itemView.textureView
         val user_name: TextView = itemView.textView_name

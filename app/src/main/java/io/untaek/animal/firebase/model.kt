@@ -36,7 +36,7 @@ data class Comment(
 ): Serializable
 
 data class Content(
-        val type: Type = Type.Image,
+        val mime: String = "",
         val h: Int = 0,
         val w: Int = 0,
         val url: String = ""

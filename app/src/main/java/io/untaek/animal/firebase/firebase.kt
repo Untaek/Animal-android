@@ -22,6 +22,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.storage.FirebaseStorage
+import io.untaek.animal.util.UploadManager
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.lang.Exception
@@ -44,8 +45,8 @@ class Fire: FirebaseAuth.AuthStateListener {
     /**
      * For receiving result of method
      */
-    interface Callback {
-        fun onResult(data: Any)
+    interface Callback<T> {
+        fun onResult(data: T)
         fun onFail(e: Exception)
     }
 
@@ -194,16 +195,12 @@ class Fire: FirebaseAuth.AuthStateListener {
      *
      */
 
-    fun newPost(context: Context, tags: Map<String, String>, description: String, contentUri: Uri, callback: Callback, progressCallback: ProgressCallback?) {
+    fun newPost(context: Context, tags: Map<String, String>, description: String, contentUri: Uri, callback: Callback<Any>, progressCallback: ProgressCallback?) {
+        val resolution = UploadManager.getSize(context, contentUri)
+        val mime = UploadManager.getMime(context, contentUri)
+        val url = "UserID_${Date().time}.${if (mime.startsWith("image")) "jpg" else "mp4"}"
 
-        val url = "UserID_${Date().time}.jpg"
-        val op = BitmapFactory.Options().apply {
-            inJustDecodeBounds = true
-        }
-        BitmapFactory.decodeStream(context.contentResolver.openInputStream(contentUri), null, op)
-        Log.d("StepWriteDetailFragment", "Size of image is ${op.outWidth} ${op.outHeight}")
-
-        val content = Content(Type.Image, op.outWidth, op.outHeight, url)
+        val content = Content(mime, resolution.first, resolution.second, url)
 
         storage().reference.child(content.url).putStream(context.contentResolver.openInputStream(contentUri))
                 .addOnSuccessListener { _ ->
@@ -218,7 +215,7 @@ class Fire: FirebaseAuth.AuthStateListener {
                     )
 
                     val fs = fs()
-                    fs.firestoreSettings = firestoreSettings
+                    //fs.firestoreSettings = firestoreSettings
                     fs.collection(POSTS).add(post)
                             .addOnSuccessListener {
                                 Log.d("firestore", "added ${it.id}")
@@ -237,28 +234,28 @@ class Fire: FirebaseAuth.AuthStateListener {
                 }
     }
 
-    fun getFirstPostPage(callback: Callback){
+    fun getFirstPostPage(callback: Callback<Pair<DocumentSnapshot?, List<Post>>>){
         fs().collection(POSTS)
                 .orderBy("timeStamp")
                 .limit(5)
                 .get()
-                .addOnSuccessListener {
-                    callback.onResult(it.documents)
+                .addOnSuccessListener { qs ->
+                    callback.onResult(Pair(if (!qs.isEmpty) qs.documents.last() else null, qs.documents.map { it.toObject(Post::class.java)!! }))
                 }
     }
 
-    fun getPostPage(lastSeen: DocumentSnapshot, callback: Callback) {
+    fun getPostPage(lastSeen: DocumentSnapshot, callback: Callback<Pair<DocumentSnapshot?, List<Post>>>) {
         fs().collection(POSTS)
                 .orderBy("timeStamp")
                 .limit(5)
                 .startAt(lastSeen)
                 .get()
-                .addOnSuccessListener {
-                    callback.onResult(it.documents)
+                .addOnSuccessListener { qs ->
+                    callback.onResult(Pair(qs.documents.lastOrNull(), qs.documents.map { it.toObject(Post::class.java)!!}))
                 }
     }
 
-    fun postDetail(postId: String, callback: Callback) {
+    fun postDetail(postId: String, callback: Callback<Post>) {
         fs().collection(POSTS).document(postId).get()
                 .addOnSuccessListener { snap ->
                     Log.d("Post", "${snap.id} ${snap.data?.size}")
@@ -273,10 +270,12 @@ class Fire: FirebaseAuth.AuthStateListener {
                 }
     }
 
-    fun loadActualContent(content: Content, context: Context, callback: Callback) {
+    fun loadActualContent(content: Content, context: Context, callback: Callback<Any>) {
         Log.d("LoadContent", "Try to load $content")
 
-        if(content.type == Type.Image) {
+        val type = content.mime.split("/")[0]
+
+        if(type == "image") {
             storage().reference.child(content.url).downloadUrl
                     .addOnSuccessListener { uri ->
                         Log.d(TAG, "uri $uri")
@@ -300,7 +299,7 @@ class Fire: FirebaseAuth.AuthStateListener {
                         callback.onFail(it)
                     }
         }
-        else if (content.type == Type.Video) {
+        else if (type == "video") {
             val file = File(context.cacheDir, content.url)
 
             Log.d("Video file", file.absolutePath)
