@@ -16,13 +16,13 @@ class TabLoginFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.tab_login, container, false)
 
-        startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setAvailableProviders(Fire.Auth.getDefaultProviders())
-                        .setIsSmartLockEnabled(false)
-                        .setLogo(R.drawable.ic_launcher_background)
-                        .build(), RC_SIGN_IN)
+//        startActivityForResult(
+//                AuthUI.getInstance()
+//                        .createSignInIntentBuilder()
+//                        .setAvailableProviders(Fire.Auth.getDefaultProviders())
+//                        .setIsSmartLockEnabled(false)
+//                        .setLogo(R.drawable.ic_launcher_background)
+//                        .build(), RC_SIGN_IN)
         return root
     }
 
