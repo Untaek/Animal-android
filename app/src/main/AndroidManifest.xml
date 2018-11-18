@@ -35,6 +35,7 @@
         <activity android:name=".EditMediaActivity" />
         <activity android:name=".PostDetailActivity" />
         <activity android:name=".UserDetailActivity" />
+
         <activity android:name=".UploadActivity"/>
         <activity android:name=".TimelineDetailActivity" />
         

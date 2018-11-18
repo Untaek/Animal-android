@@ -104,11 +104,11 @@
 //    }
 //
 //
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, postInTimelineList: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, postInTimelineList)
 //        if (requestCode == REQUEST_MEDIA_URI) {
 //            if (resultCode == RESULT_OK) {
-//                val uri: Uri = data?.data!!
+//                val uri: Uri = postInTimelineList?.postInTimelineList!!
 //                Log.d("onActivityResult: ", "URI: " + uri.toString())
 //                val cursor = context?.contentResolver?.query(uri, arrayOf(MediaStore.Images.Media.DATA), null, null, null)?.apply {
 //                    moveToFirst()

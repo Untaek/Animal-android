@@ -28,7 +28,7 @@ import java.io.File
 import java.lang.Exception
 import java.util.*
 
-const val POSTS = "posts"
+const val POSTS = "totalPosts"
 const val USERS = "users"
 const val LIKES = "likes"
 const val TOTAL_LIKES = "total_likes"

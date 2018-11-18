@@ -2,17 +2,23 @@ package io.untaek.animal
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import io.untaek.animal.util.Viewer
+import android.support.v7.widget.GridLayoutManager
+import io.untaek.animal.component.MyCallBack
+import io.untaek.animal.component.MyOnScrollListener
+import io.untaek.animal.component.TimelineDetailPostRecyclerViewAdapter
 import io.untaek.animal.firebase.Post
+import io.untaek.animal.util.Viewer
 import kotlinx.android.synthetic.main.activity_timeline_detail.*
 
-class TimelineDetailActivity : AppCompatActivity() {
+class TimelineDetailActivity : AppCompatActivity(), MyCallBack {
     private lateinit var post: Post
     private lateinit var viewer: Viewer
+    private lateinit var timelineDetailPostRecyclerViewAdapter: TimelineDetailPostRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_timeline_detail)
+
 
         intent.getSerializableExtra("data")?.let { d ->
             post = d as Post
@@ -21,14 +27,18 @@ class TimelineDetailActivity : AppCompatActivity() {
                 changeSource(post.content)
             }
 
-            textView_description.text = post.description
-            textView_user_name.text = post.user.name
-            textView_tags.text = if (post.tags.isNotEmpty())
-                post.tags.values.map { s -> "#$s " }.reduce { acc, s -> acc + s }
-            else ""
+            recyclerview_comments_timeline_detail.layoutManager = GridLayoutManager(this, 1)
+            timelineDetailPostRecyclerViewAdapter = TimelineDetailPostRecyclerViewAdapter(post, this)
+
+            recyclerview_comments_timeline_detail.adapter = timelineDetailPostRecyclerViewAdapter
+            recyclerview_comments_timeline_detail.addOnScrollListener(MyOnScrollListener(timelineDetailPostRecyclerViewAdapter, post.comments, this))
 
             button_go_back.setOnClickListener { finish() }
         }
+    }
+
+    override fun callback() {
+        timelineDetailPostRecyclerViewAdapter.update()
     }
 
     override fun onDestroy() {
