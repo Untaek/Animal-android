@@ -56,10 +56,14 @@ class UploadActivity : AppCompatActivity() {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if(requestCode == REQUEST_TAKE_PHOTO)
+        if(requestCode == REQUEST_TAKE_PHOTO){
             PermissionHelper.handleRequestResult(permissions, grantResults, {
-                startActivityForResult(mIntent, requestCode)
+                Intent(MediaStore.ACTION_IMAGE_CAPTURE).also {
+                    it.putExtra(MediaStore.EXTRA_OUTPUT, contentUri)
+                    startActivityForResult(it, requestCode)
+                }
             }, null)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

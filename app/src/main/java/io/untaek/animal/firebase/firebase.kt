@@ -240,7 +240,7 @@ class Fire: FirebaseAuth.AuthStateListener {
                 .limit(5)
                 .get()
                 .addOnSuccessListener { qs ->
-                    callback.onResult(Pair(if (!qs.isEmpty) qs.documents.last() else null, qs.documents.map { it.toObject(Post::class.java)!! }))
+                    callback.onResult(Pair(qs.documents.lastOrNull(), qs.documents.map { it.toObject(Post::class.java)!! }))
                 }
     }
 

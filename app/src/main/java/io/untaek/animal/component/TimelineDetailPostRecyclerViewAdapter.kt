@@ -39,7 +39,7 @@ class TimelineDetailPostRecyclerViewAdapter (val post : Post, val context: Conte
         if (holder.itemViewType == 0) {
             holder as ViewHolderPost
             holder.textViewPostDecription.text = post.description
-            holder.textViewPostTags.text = post.tags.values.reduce { acc, s -> acc+s }
+            holder.textViewPostTags.text = if (post.tags.isNotEmpty()) post.tags.values.map { s -> "#$s " }.reduce { acc, s -> acc + s } else ""
             holder.textViewPostTimeStamp.text = timeCalculateFunction(post.timeStamp)
             Glide.with(context).load(Uri.parse(post.content.url)).apply(RequestOptions()).into(holder.imageViewPostUserIamge)
             holder.textViewUPostUserName.text = post.user.name
@@ -101,11 +101,6 @@ class TimelineDetailPostRecyclerViewAdapter (val post : Post, val context: Conte
         val view : View
         if( viewType== 0){
             view = LayoutInflater.from(context).inflate(R.layout.component_timeline_detail_comment_recyclerview_header,parent,false)
-
-            view.textView_description_timeline_detail.setText(post.description)
-            view.textView_user_name_timeline_detail.setText(post.user.name)
-            view.textView_tags_timeline_detail.setText(post.tags.values.map { s -> "#$s " }.reduce { acc, s -> acc + s })
-
             return ViewHolderPost(view)
         }else {
             view = LayoutInflater.from(context).inflate(R.layout.component_timeline_detail_comment_recyclerview_item, parent, false)
