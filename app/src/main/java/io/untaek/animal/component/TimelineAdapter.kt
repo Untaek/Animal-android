@@ -48,7 +48,7 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
     }
 
     class ViewHolder(parent: ViewGroup, items: ArrayList<Post>): RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_timeline,  parent, false)) {
-        val description: TextView = itemView.textView_description_timeline_detail
+        val description: TextView = itemView.textView_description_timeline_item
         val textureView: TextureView = itemView.textureView
         val user_name: TextView = itemView.textView_name
         val pet_name: TextView = itemView.textView_pet_name
