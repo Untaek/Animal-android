@@ -33,7 +33,7 @@ class TimelineDetailActivity : AppCompatActivity(), MyCallBack {
             recyclerview_comments_timeline_detail.adapter = timelineDetailPostRecyclerViewAdapter
             recyclerview_comments_timeline_detail.addOnScrollListener(MyOnScrollListener(timelineDetailPostRecyclerViewAdapter, post.comments, this))
 
-            button_go_back.setOnClickListener { finish() }
+            button_go_back_timeline_detail.setOnClickListener { finish() }
         }
     }
 

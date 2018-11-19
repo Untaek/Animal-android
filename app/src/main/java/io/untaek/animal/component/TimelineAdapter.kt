@@ -14,7 +14,6 @@ import io.untaek.animal.TimelineDetailActivity
 import io.untaek.animal.UserDetailActivity
 import io.untaek.animal.firebase.Fire
 import io.untaek.animal.firebase.Post
-import io.untaek.animal.firebase.dummy
 import io.untaek.animal.util.Viewer
 import kotlinx.android.synthetic.main.item_timeline.view.*
 import java.lang.Exception
@@ -73,7 +72,7 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
     }
 
     class ViewHolder(parent: ViewGroup, items: MutableList<Post>): RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_timeline,  parent, false)) {
-        val description: TextView = itemView.textView_description
+        val description: TextView = itemView.textView_description_timeline_detail_header
         val textureView: TextureView = itemView.textureView
         val user_name: TextView = itemView.textView_name
         val pet_name: TextView = itemView.textView_pet_name

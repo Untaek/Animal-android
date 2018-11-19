@@ -37,7 +37,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView_description_timeline_item"
+            android:id="@+id/textView_description_timeline_detail_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -47,14 +47,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView_tags_timeline_detail"
+            android:id="@+id/textView_tags_timeline_detail_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="Tag..........................................................."
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView_description_timeline_item" />
+            app:layout_constraintTop_toBottomOf="@+id/textView_description_timeline_detail_header" />
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
@@ -70,7 +70,7 @@
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
 
         <TextView
-            android:id="@+id/textView_timestamp_timeline_detail"
+            android:id="@+id/textView_timestamp_timeline_detail_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TextView"
@@ -78,7 +78,7 @@
             tools:layout_editor_absoluteY="8dp" />
 
         <ImageView
-            android:id="@+id/imageView_user_image_timeline_detail"
+            android:id="@+id/imageView_user_image_timeline_detail_header"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginTop="8dp"
@@ -89,7 +89,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView_user_name_timeline_detail"
+            android:id="@+id/textView_user_name_timeline_detail_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -97,7 +97,7 @@
             android:layout_marginBottom="8dp"
             android:text="User name"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView_user_image_timeline_detail"
+            app:layout_constraintStart_toEndOf="@+id/imageView_user_image_timeline_detail_header"
             app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

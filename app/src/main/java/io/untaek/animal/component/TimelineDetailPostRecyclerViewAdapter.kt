@@ -13,8 +13,6 @@ import io.untaek.animal.R
 import io.untaek.animal.firebase.Comment2
 import io.untaek.animal.firebase.Post
 import io.untaek.animal.firebase.User
-import io.untaek.animal.firebase.dummy
-import io.untaek.animal.firebase.dummy.post
 import kotlinx.android.synthetic.main.component_timeline_detail_comment_recyclerview_header.view.*
 import kotlinx.android.synthetic.main.component_timeline_detail_comment_recyclerview_item.view.*
 import java.util.*
@@ -119,11 +117,11 @@ class TimelineDetailPostRecyclerViewAdapter (val post : Post, val context: Conte
         // Holds the TextView that will add each animal to
     }
     class ViewHolderPost(view : View) : RecyclerView.ViewHolder(view){
-        val textViewPostDecription = view.textView_description_timeline_detail
-        val textViewPostTags = view.textView_tags_timeline_detail
-        val textViewPostTimeStamp = view.textView_timestamp_timeline_detail
-        val imageViewPostUserIamge = view.imageView_user_image_timeline_detail
-        val textViewUPostUserName = view.textView_user_name_timeline_detail
+        val textViewPostDecription = view.textView_description_timeline_detail_header
+        val textViewPostTags = view.textView_tags_timeline_detail_header
+        val textViewPostTimeStamp = view.textView_timestamp_timeline_detail_header
+        val imageViewPostUserIamge = view.imageView_user_image_timeline_detail_header
+        val textViewUPostUserName = view.textView_user_name_timeline_detail_header
     }
 
 }
