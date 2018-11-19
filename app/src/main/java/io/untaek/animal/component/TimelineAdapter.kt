@@ -21,7 +21,7 @@ import java.lang.Exception
 
 class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<TimelineAdapter.ViewHolder>(), Fire.Callback<Pair<DocumentSnapshot?, List<Post>>> {
 
-    private val items: MutableList<Post> = mutableListOf()
+    private val items: ArrayList<Post> = arrayListOf()
     private lateinit var lastSeen: DocumentSnapshot
     private var loading = false
 
@@ -59,6 +59,8 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
         }
     }
 
+    fun getItems() = items
+
     override fun onResult(data: Pair<DocumentSnapshot?, List<Post>>) {
         loading = !loading
         if (data.first != null) {
@@ -72,7 +74,7 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
 
     }
 
-    class ViewHolder(parent: ViewGroup, items: MutableList<Post>): RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_timeline,  parent, false)) {
+    class ViewHolder(parent: ViewGroup, items: ArrayList<Post>): RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_timeline,  parent, false)) {
         val description: TextView = itemView.textView_description
         val textureView: TextureView = itemView.textureView
         val user_name: TextView = itemView.textView_name
@@ -103,7 +105,7 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
             }
 
             likes.setOnClickListener {
-
+                
             }
         }
     }

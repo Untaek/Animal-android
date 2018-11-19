@@ -1,5 +1,6 @@
 package io.untaek.animal.tab
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -14,8 +15,13 @@ class TabUploadFragment: Fragment() {
     }
 
     companion object {
+        @SuppressLint("StaticFieldLeak")
+        private var THIS: TabUploadFragment? = null
         fun instance(): TabUploadFragment {
-            return TabUploadFragment()
+            if(THIS == null) {
+                THIS = TabUploadFragment()
+            }
+            return THIS!!
         }
     }
 }
