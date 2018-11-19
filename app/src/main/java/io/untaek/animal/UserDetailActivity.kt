@@ -21,6 +21,8 @@ class UserDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_user_detail)
 
         Log.e("ㅋㅋㅋ", "이동완료 !")
+
+
         intent.getSerializableExtra("data")?.let { d ->
             user = d as UserDetail
 

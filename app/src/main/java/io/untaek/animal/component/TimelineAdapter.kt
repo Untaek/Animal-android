@@ -2,12 +2,16 @@ package io.untaek.animal.component
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.OvalShape
+import android.net.Uri
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.TextureView
 import android.view.ViewGroup
 import android.widget.*
+import com.bumptech.glide.Glide
 import com.google.firebase.firestore.DocumentSnapshot
 import io.untaek.animal.R
 import io.untaek.animal.TimelineDetailActivity
@@ -45,6 +49,10 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
         holder.pet_name.text = "dog"
         holder.likes.text = item.totalLikes.toString()
         holder.viewer.changeSource(item.content)
+
+        Glide.with(context)
+                .load(Uri.parse(item.user.pictureUrl))
+                .into(holder.imageView_user_picture)
     }
 
     fun updateList() {
@@ -83,10 +91,14 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
         val container: FrameLayout = itemView.frame_image_container
         val imageView: ImageView = itemView.imageView
         val viewer: Viewer = Viewer(textureView, imageView)
+        val imageView_user_picture: ImageView = itemView.imageView_user_image
 
         val context: Context = parent.context
 
         init {
+            imageView_user_picture.clipToOutline = true
+            imageView_user_picture.background = ShapeDrawable(OvalShape())
+
             description.setOnClickListener {
                 val intent = Intent(context, TimelineDetailActivity::class.java).apply {
                     putExtra("data", items[adapterPosition])
@@ -96,8 +108,9 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
 
             user_name.setOnClickListener {
                 val intent = Intent(context, UserDetailActivity::class.java).apply {
-
+                    putExtra("data", items[adapterPosition])
                 }
+                context.startActivity(intent)
             }
 
             pet_name.setOnClickListener {

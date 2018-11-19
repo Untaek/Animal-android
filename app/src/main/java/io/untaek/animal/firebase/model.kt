@@ -47,7 +47,7 @@ data class Content(
 data class User(
         val id: String = "0",
         val name: String = "0",
-        val picture_url: String = "0"
+        val pictureUrl: String = "0"
 ): Serializable
 
 data class Post(

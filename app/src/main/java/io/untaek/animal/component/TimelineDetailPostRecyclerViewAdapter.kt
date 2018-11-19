@@ -45,7 +45,7 @@ class TimelineDetailPostRecyclerViewAdapter (val post : Post, val context: Conte
             holder.textViewUPostUserName.text = post.user.name
         } else {
             holder as ViewHolderComment
-            Glide.with(context).load(Uri.parse(post.user.picture_url)).into(holder.commentImage)
+            Glide.with(context).load(Uri.parse(post.user.pictureUrl)).into(holder.commentImage)
 //            holder.commentImage.setImageResource(R.mipmap.ic_launcher)
             //holder.commentImage.userimage_timeline_detail_comment_recyclerview_item.setImageURI(Uri.parse(post.comments[position-1].user.picture_url))
             holder.commentUserName.text = post.comments[position - 1].user.name
