@@ -7,4 +7,5 @@
     <string name="title_timeline">Timeline</string>
     <string name="facebook_application_id" translatable="false">703427763358555</string>
     <string name="facebook_login_protocol_scheme" translatable="false">8baf8971f56f542fc65eb958f7d504b3</string>
+    <string name="google_client_id" translatable="false">877795668080-bsa0tebepnkd3smk1bh8ei30s3ssott4.apps.googleusercontent.com</string>
 </resources>

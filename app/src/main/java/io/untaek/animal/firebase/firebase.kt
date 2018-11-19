@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -18,20 +19,28 @@ import com.bumptech.glide.request.target.Target
 import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.FirebaseAuth
 import com.firebase.ui.auth.AuthUI
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.storage.FirebaseStorage
+import io.untaek.animal.R
+import io.untaek.animal.tab.RC_SIGN_IN
 import io.untaek.animal.util.UploadManager
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.lang.Exception
 import java.util.*
+import kotlin.collections.HashMap
 
-const val POSTS = "totalPosts"
+const val POSTS = "posts"
 const val USERS = "users"
 const val LIKES = "likes"
-const val TOTAL_LIKES = "total_likes"
+const val TOTAL_LIKES = "totalLikes"
+const val TOTAL_POSTS = "totalPosts"
+const val TOTAL_FOLLOWS = "totalFollows"
 
 class Fire: FirebaseAuth.AuthStateListener {
 
@@ -205,7 +214,7 @@ class Fire: FirebaseAuth.AuthStateListener {
         storage().reference.child(content.url).putStream(context.contentResolver.openInputStream(contentUri))
                 .addOnSuccessListener { _ ->
                     val post = NewPost(
-                            user(),
+                            User(),
                             content,
                             description,
                             tags,
@@ -270,6 +279,16 @@ class Fire: FirebaseAuth.AuthStateListener {
                 }
     }
 
+    fun loadThumbnail(content: Content, context: Context, imageView: ImageView, callback: Callback<Any>?) {
+        storage().reference.child("thumb@256_${content.url}").downloadUrl
+                .addOnSuccessListener { uri ->
+                    Glide.with(context)
+                            .asBitmap()
+                            .load(uri)
+                            .into(imageView)
+                }
+    }
+
     fun loadActualContent(content: Content, context: Context, callback: Callback<Any>) {
         Log.d("LoadContent", "Try to load $content")
 
@@ -323,62 +342,87 @@ class Fire: FirebaseAuth.AuthStateListener {
         }
     }
 
-    class Auth(private val context: Context) {
-        fun connectionChecker() {
+    class Auth {
+//        fun connectionChecker() {
+//
+//        }
+//
+//        fun sendEmailLink(email: String) {
+//            val actionCodeSettings = ActionCodeSettings.newBuilder()
+//                    .setUrl("https://animalauth.page.link")
+//                    .setHandleCodeInApp(true)
+//                    .setAndroidPackageName(
+//                            "com.untaekPost.animal",
+//                            true,
+//                            "21"
+//                    )
+//                    .build()
+//
+//            val auth = FirebaseAuth.getInstance()
+//            auth.sendSignInLinkToEmail(email, actionCodeSettings)
+//                    .addOnCompleteListener {
+//                        _ -> Log.d("sendSignInLinkToEmail", "Email sent.")
+//                        context.getSharedPreferences("temp", 0)
+//                                .edit().putString("email", email).apply()
+//                    }
+//        }
+//
+//        fun completeSignInWithEmailLink(emailLink: String) {
+//            val auth = FirebaseAuth.getInstance()
+//
+//            if (auth.isSignInWithEmailLink(emailLink)) {
+//                val email = context.getSharedPreferences("temp", 0).getString("email", null)
+//                auth.signInWithEmailLink(email, emailLink)
+//                        .addOnCompleteListener {
+//                            task ->
+//                            if(task.isSuccessful) {
+//                                Log.d(TAG, "Successfully signed in with email link!")
+//                                val result = task.result
+//
+//                            }
+//                        }
+//            }
+//        }
 
-        }
-
-        fun sendEmailLink(email: String) {
-            val actionCodeSettings = ActionCodeSettings.newBuilder()
-                    .setUrl("https://animalauth.page.link")
-                    .setHandleCodeInApp(true)
-                    .setAndroidPackageName(
-                            "com.untaekPost.animal",
-                            true,
-                            "21"
-                    )
-                    .build()
-
-            val auth = FirebaseAuth.getInstance()
-            auth.sendSignInLinkToEmail(email, actionCodeSettings)
-                    .addOnCompleteListener {
-                        _ -> Log.d("sendSignInLinkToEmail", "Email sent.")
-                        context.getSharedPreferences("temp", 0)
-                                .edit().putString("email", email).apply()
-                    }
-        }
-
-        fun completeSignInWithEmailLink(emailLink: String) {
-            val auth = FirebaseAuth.getInstance()
-
-            if (auth.isSignInWithEmailLink(emailLink)) {
-                val email = context.getSharedPreferences("temp", 0).getString("email", null)
-                auth.signInWithEmailLink(email, emailLink)
-                        .addOnCompleteListener {
-                            task ->
-                            if(task.isSuccessful) {
-                                Log.d(TAG, "Successfully signed in with email link!")
-                                val result = task.result
-
-                            }
-                        }
-            }
-        }
-
-        companion object {
-             fun getDefaultProviders(): List<AuthUI.IdpConfig> {
-                 return Arrays.asList(
-                         AuthUI.IdpConfig.GoogleBuilder().build(),
-                         AuthUI.IdpConfig.FacebookBuilder().build())
-             }
-        }
-
-        fun signOut() {
+        fun signOut(context: Context) {
             AuthUI.getInstance()
                     .signOut(context)
                     .addOnCompleteListener {
                         Log.d(TAG, "Successfully signed out.")
                     }
+        }
+
+        fun createUser(user: FirebaseUser, callback: Callback<Any>?) {
+            val map: HashMap<String, Any> = HashMap<String, Any>().apply {
+                put("name", user.displayName!!)
+                put("pictureUrl", user.photoUrl!!)
+                put("totalLikes", 0)
+                put("totalPosts", 0)
+                put("totalFollowers", 0)
+                put("likes", HashMap<String, Any>())
+                put("comments", HashMap<String, Any>())
+                put("followers", HashMap<String, Any>())
+            }
+
+            FirebaseFirestore.getInstance()
+                    .collection(USERS)
+                    .document(user.uid)
+                    .set(map)
+                    .addOnSuccessListener {
+                        callback?.onResult(it)
+                    }
+                    .addOnFailureListener {
+                        callback?.onFail(it)
+                    }
+        }
+
+        fun user(): FirebaseUser? {
+            return FirebaseAuth.getInstance().currentUser
+        }
+
+        companion object {
+            private var instance: Auth? = null
+            fun getInstance(): Auth = if(instance == null) Auth() else instance!!
         }
     }
 }

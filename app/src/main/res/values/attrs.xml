@@ -9,4 +9,12 @@
             <enum name="video" value="2"/>
         </attr>
     </declare-styleable>
+
+    <declare-styleable name="LoginButton">
+        <attr name="type" format="enum">
+            <enum name="google" value="0" />
+            <enum name="facebook" value="1" />
+            <enum name="twitter" value="2" />
+        </attr>
+    </declare-styleable>
 </resources>

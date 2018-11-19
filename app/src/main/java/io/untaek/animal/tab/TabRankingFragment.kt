@@ -1,5 +1,6 @@
 package io.untaek.animal.tab
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 
 import android.support.v4.app.Fragment
@@ -23,6 +24,7 @@ class TabRankingFragment: Fragment(), MyCallBack {
     private lateinit var adapter: TabRankingRecyclerViewAdapter
     private lateinit var posts : ArrayList<Post>
     private lateinit var users : ArrayList<UserDetail>
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.tab_rank, container, false)
         posts = dummy.postList
@@ -37,8 +39,13 @@ class TabRankingFragment: Fragment(), MyCallBack {
     }
 
     companion object {
+        @SuppressLint("StaticFieldLeak")
+        private var THIS: TabRankingFragment? = null
         fun instance(): TabRankingFragment {
-            return TabRankingFragment()
+            if(THIS == null) {
+                THIS = TabRankingFragment()
+            }
+            return THIS!!
         }
     }
     override fun callback() {
