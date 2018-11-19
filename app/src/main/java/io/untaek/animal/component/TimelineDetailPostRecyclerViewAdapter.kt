@@ -8,30 +8,52 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
+import com.bumptech.glide.Glide.init
 import com.bumptech.glide.request.RequestOptions
+import com.google.firebase.firestore.DocumentSnapshot
 import io.untaek.animal.R
 import io.untaek.animal.firebase.Comment2
+import io.untaek.animal.firebase.Fire
 import io.untaek.animal.firebase.Post
-import io.untaek.animal.firebase.User
-import io.untaek.animal.firebase.dummy
 import io.untaek.animal.firebase.dummy.post
 import kotlinx.android.synthetic.main.component_timeline_detail_comment_recyclerview_header.view.*
 import kotlinx.android.synthetic.main.component_timeline_detail_comment_recyclerview_item.view.*
+import java.lang.Exception
 import java.util.*
 
 
-class TimelineDetailPostRecyclerViewAdapter (val post : Post, val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    fun postupdate() {
-        post.comments.add(Comment2("sadf", User("sfd", "asdasfd", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQitUl14tC2Ld3WVEUU0fXNoRx_oGQjgCf8QLXi-gKlbr0EJFKRFDO9OfYj"), Date(), "asdsaf"))
-        post.comments.add(Comment2("sadf", User("sfd", "asdasfd", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQitUl14tC2Ld3WVEUU0fXNoRx_oGQjgCf8QLXi-gKlbr0EJFKRFDO9OfYj"), Date(), "asdsaf"))
-        post.comments.add(Comment2("sadf", User("sfd", "asdasfd", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQitUl14tC2Ld3WVEUU0fXNoRx_oGQjgCf8QLXi-gKlbr0EJFKRFDO9OfYj"), Date(), "asdsaf"))
-        post.comments.add(Comment2("sadf", User("sfd", "asdasfd", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQitUl14tC2Ld3WVEUU0fXNoRx_oGQjgCf8QLXi-gKlbr0EJFKRFDO9OfYj"), Date(), "asdsaf"))
-        post.comments.add(Comment2("sadf", User("sfd", "asdasfd", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQitUl14tC2Ld3WVEUU0fXNoRx_oGQjgCf8QLXi-gKlbr0EJFKRFDO9OfYj"), Date(), "asdsaf"))
+class TimelineDetailPostRecyclerViewAdapter (val post : Post, val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), Fire. Callback<Pair<DocumentSnapshot?, List<Comment2?>>>  {
+
+    init {
+        Fire.getInstance().firstreadComments(post.id, this)
+        Log.e("ㅋㅋㅋ", "생성자에서 firstreadComments")
+    }
+    val comments: ArrayList<Comment2?> = arrayListOf()
+
+    private var lastSeen: DocumentSnapshot? = null
+
+    fun getItems() = comments
+
+    override fun onFail(e: Exception) {
     }
 
+    override fun onResult(data: Pair<DocumentSnapshot?, List<Comment2?>>) {
+
+        Log.e("ㅋㅋㅋ", "on result")
+        if(data.first != null) {
+            Log.e("ㅋㅋㅋ", data.second.size.toString())
+            comments.addAll(data.second)
+            lastSeen = data.first!!
+            notifyDataSetChanged()
+        }else{
+            Log.e("ㅋㅋㅋ", "data == null")
+        }
+
+    }
     fun update() {
-        this.postupdate()
-        this.notifyDataSetChanged()
+        if(lastSeen != null) {
+            Fire.getInstance().readComments(post.id, lastSeen!!, this)
+        }
     }
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         Log.e("ㅋㅋㅋ", "position : "+position)
@@ -45,18 +67,15 @@ class TimelineDetailPostRecyclerViewAdapter (val post : Post, val context: Conte
             holder.textViewUPostUserName.text = post.user.name
         } else {
             holder as ViewHolderComment
-            Glide.with(context).load(Uri.parse(post.user.pictureUrl)).into(holder.commentImage)
-//            holder.commentImage.setImageResource(R.mipmap.ic_launcher)
-            //holder.commentImage.userimage_timeline_detail_comment_recyclerview_item.setImageURI(Uri.parse(post.comments[position-1].user.picture_url))
-            holder.commentUserName.text = post.comments[position - 1].user.name
-            holder.commentText.text = post.comments[position - 1].text
-
-            holder.commentTime.text = timeCalculateFunction(post.comments[position - 1].timeStamp)
+            Glide.with(context).load(Uri.parse(comments[position-1]!!.user.pictureUrl)).into(holder.commentImage)
+            holder.commentUserName.text = comments[position-1]!!.user.name
+            holder.commentText.text = comments[position-1]!!.commentText
+            holder.commentTime.text = timeCalculateFunction(comments[position-1]!!.timeStamp)
         }
     }
 
     override fun getItemCount(): Int {
-       return post.comments.size+1
+       return comments.size+1
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -119,11 +138,11 @@ class TimelineDetailPostRecyclerViewAdapter (val post : Post, val context: Conte
         // Holds the TextView that will add each animal to
     }
     class ViewHolderPost(view : View) : RecyclerView.ViewHolder(view){
-        val textViewPostDecription = view.textView_description_timeline_detail
-        val textViewPostTags = view.textView_tags_timeline_detail
-        val textViewPostTimeStamp = view.textView_timestamp_timeline_detail
-        val imageViewPostUserIamge = view.imageView_user_image_timeline_detail
-        val textViewUPostUserName = view.textView_user_name_timeline_detail
+        val textViewPostDecription = view.textView_description_timeline_detail_header
+        val textViewPostTags = view.textView_tags_timeline_detail_header
+        val textViewPostTimeStamp = view.textView_timestamp_timeline_detail_header
+        val imageViewPostUserIamge = view.imageView_user_image_timeline_detail_header
+        val textViewUPostUserName = view.textView_user_name_timeline_detail_header
     }
 
 }

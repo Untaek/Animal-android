@@ -15,9 +15,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.*
-import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
+import io.untaek.animal.R
+import io.untaek.animal.tab.RC_SIGN_IN
 import io.untaek.animal.util.UploadManager
 import java.io.File
 import java.lang.Exception
@@ -27,10 +31,12 @@ import kotlin.collections.HashMap
 const val POSTS = "posts"
 const val USERS = "users"
 const val LIKES = "likes"
+const val COMMENTS = "comments"
 const val TOTAL_LIKES = "totalLikes"
 const val TOTAL_POSTS = "totalPosts"
 const val TOTAL_FOLLOWS = "totalFollows"
 const val TAG = "FireFireFire"
+const val TOTAL_COMMENTS = "totalComments"
 
 class Fire {
 
@@ -166,6 +172,62 @@ class Fire {
      * Require for entire parameters.
      *
      */
+
+
+    fun firstreadComments(postId : String, callback : Callback<Pair<DocumentSnapshot?, List<Comment2?>>>){
+        fs().collection(POSTS).document(postId).collection(COMMENTS)
+                .orderBy("timeStamp", Query.Direction.ASCENDING)
+                .limit(10)
+                .get()
+                .addOnSuccessListener {
+                    callback.onResult(Pair(it.documents.lastOrNull(), it.documents.map { it.toObject(Comment2::class.java).apply {
+                                Log.e("ㅋㅋㅋ", "원래 comment id : "+this!!.commentId)
+                                this.commentId = it.id
+                                Log.e("ㅋㅋㅋ", "바뀐후 comment id : "+this!!.commentId)
+                            } }))
+                }
+    }
+
+    fun readComments(postId : String, lastSeen : DocumentSnapshot, callback : Callback<Pair<DocumentSnapshot?, List<Comment2?>>>){
+        fs().collection(POSTS).document(postId).collection(COMMENTS)
+                .orderBy("timeStamp", Query.Direction.ASCENDING)
+                .limit(10)
+                .startAfter(lastSeen)
+                .get()
+                .addOnSuccessListener {
+                    callback.onResult(Pair(it.documents.lastOrNull(),
+                            it.map { it.toObject(Comment2::class.java).apply {
+                                Log.e("ㅋㅋㅋ", "원래 comment id : "+this.commentId)
+                                this.commentId = it.id
+                                Log.e("ㅋㅋㅋ", "바뀐후 comment id : "+this.commentId)
+                            } }))
+                }
+    }
+
+    fun newComment(context: Context, postId : String, commentText : String, callback : Callback<Any>){
+        val uploader = User("dbsdlswp", "inje", "https://s-i.huffpost.com/gen/4479784/images/n-THRO-628x314.jpg")
+        val comment : Comment_DB= Comment_DB(uploader, Date(), "ㅋㅋㅋㅋ 웃김")
+
+        val fs = fs()
+
+        val postRef = fs.collection(POSTS).document(postId)
+        val commentRef = fs.collection(POSTS).document(postId).collection(COMMENTS).document()
+
+        FirebaseAuth.getInstance().let {
+            fs.runTransaction { t ->
+                val targetPost = t.get(postRef)
+                val newPostTotalCommentsValue = targetPost.getLong(TOTAL_COMMENTS)?.plus(1L)
+
+                //fs.collection(POSTS).document(postId).collection("comments").add(comment)
+                t.update(postRef, TOTAL_COMMENTS, newPostTotalCommentsValue)
+                t.set(commentRef, comment)
+            }.addOnSuccessListener {
+                Log.d("ㅋㅋㅋ", "FireStore Transaction Success")
+            }.addOnFailureListener { e ->
+                Log.w("ㅋㅋㅋ", "FireStore Transaction Failure", e)
+            }
+        }
+    }
 
     fun newPost(context: Context, tags: Map<String, String>, description: String, contentUri: Uri, callback: Callback<Any>, progressCallback: ProgressCallback?) {
         if(Fire.Auth.getInstance().firebaseUser() == null) {

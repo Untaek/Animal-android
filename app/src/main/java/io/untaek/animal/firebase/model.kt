@@ -64,11 +64,18 @@ data class Post(
 ): Serializable
 
 data class Comment2(
-        val commentId: String = "0",
-        val user: User = User(),
-        val timeStamp: Date = Date(),
-        val text: String = "0"
+        var commentId: String = "0",
+        var user: User = User(),
+        var timeStamp: Date = Date(),
+        var commentText: String = "0"
 ): Serializable
+
+data class Comment_DB(
+        val user : User = User("dbsdlswp", "inje", "https://s-i.huffpost.com/gen/4479784/images/n-THRO-628x314.jpg"),
+        val timeStamp: Date = Date(),
+        val commentText : String
+)
+
 
 data class NewPost(
         val user: User,

@@ -45,7 +45,7 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/button_go_back"
+        android:id="@+id/button_go_back_timeline_detail"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_marginStart="20dp"

@@ -18,7 +18,6 @@ import io.untaek.animal.TimelineDetailActivity
 import io.untaek.animal.UserDetailActivity
 import io.untaek.animal.firebase.Fire
 import io.untaek.animal.firebase.Post
-import io.untaek.animal.firebase.dummy
 import io.untaek.animal.util.Viewer
 import kotlinx.android.synthetic.main.item_timeline.view.*
 import java.lang.Exception
@@ -127,7 +126,7 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
             }
 
             likes.setOnClickListener {
-                
+
             }
 
             imageView_like.setOnClickListener {

@@ -10,6 +10,7 @@ import io.untaek.animal.R.id.*
 import io.untaek.animal.component.UserDetailRecyclerViewAdapter
 import io.untaek.animal.firebase.UserDetail
 import io.untaek.animal.util.Viewer
+import kotlinx.android.synthetic.main.activity_timeline_detail.*
 import kotlinx.android.synthetic.main.activity_user_detail.*
 
 class UserDetailActivity : AppCompatActivity() {
@@ -46,6 +47,8 @@ class UserDetailActivity : AppCompatActivity() {
 
             recyclerView_user_detail.layoutManager = GridLayoutManager(this, 4)
             recyclerView_user_detail.adapter = UserDetailRecyclerViewAdapter(this, user)
+
+            button_go_back_user_detail_detail.setOnClickListener { finish() }
         }
     }
 
