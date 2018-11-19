@@ -49,6 +49,12 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
         holder.pet_name.text = "dog"
         holder.likes.text = item.totalLikes.toString()
         holder.viewer.changeSource(item.content)
+        holder.imageView_like.setImageResource(
+                if (item.like)
+                    R.drawable.ic_favorite_black_24dp
+                else
+                    R.drawable.ic_favorite_border_black_24dp
+        )
 
         Glide.with(context)
                 .load(Uri.parse(item.user.pictureUrl))
@@ -83,6 +89,8 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
     }
 
     class ViewHolder(parent: ViewGroup, items: ArrayList<Post>): RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_timeline,  parent, false)) {
+        private val TAG = "TimelineAdapter"
+
         val description: TextView = itemView.textView_description
         val textureView: TextureView = itemView.textureView
         val user_name: TextView = itemView.textView_name
@@ -92,6 +100,7 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
         val imageView: ImageView = itemView.imageView
         val viewer: Viewer = Viewer(textureView, imageView)
         val imageView_user_picture: ImageView = itemView.imageView_user_image
+        val imageView_like: ImageView = itemView.imageView_like
 
         val context: Context = parent.context
 
@@ -119,6 +128,26 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
 
             likes.setOnClickListener {
                 
+            }
+
+            imageView_like.setOnClickListener {
+                Log.d(TAG, "${items[adapterPosition]}")
+                Fire.getInstance().toggleLike(items[adapterPosition].like, items[adapterPosition].id, items[adapterPosition].user.id, likeButtonClickCallback)
+            }
+        }
+
+        private val likeButtonClickCallback = object : Fire.Callback<Pair<Boolean, Long>> {
+            override fun onResult(data: Pair<Boolean, Long>) {
+                when(data.first) {
+                    true -> imageView_like.setImageResource(R.drawable.ic_favorite_black_24dp)
+                    false -> imageView_like.setImageResource(R.drawable.ic_favorite_border_black_24dp)
+                }
+                items[adapterPosition].like = data.first
+                items[adapterPosition].totalLikes = data.second
+            }
+
+            override fun onFail(e: Exception) {
+                Log.d("TimelineAdapter", "like error", e)
             }
         }
     }

@@ -1,6 +1,7 @@
 package io.untaek.animal.firebase
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
@@ -55,6 +56,11 @@ class Fire {
         fun onFail(e: Exception)
     }
 
+    interface Callback2<T, V> {
+        fun onResult(data1: T, data2: V)
+        fun onFail(e: Exception)
+    }
+
     interface ProgressCallback {
         fun onProgress(percentage: Long)
     }
@@ -72,12 +78,21 @@ class Fire {
      * fun follow(postId: String)
      * fun unFollow(postId: String)
      */
+    fun toggleLike(state: Boolean, postId: String, ownerId: String, callback: Callback<Pair<Boolean, Long>>?) {
+        when(state) {
+            false -> like(postId, ownerId, callback)
+            true -> dislike(postId, ownerId, callback)
+        }
+    }
 
-    fun like(postId: String) {
+
+    private fun like(postId: String, ownerId: String, callback: Callback<Pair<Boolean, Long>>?) {
         val fs = fs()
 
         val postRef = fs.collection(POSTS)
                 .document(postId)
+
+        val ownerRef = fs.collection(USERS).document(ownerId)
 
         val userLikesRef = fs.collection(USERS)
                 .document(Fire.Auth.getInstance().user().id)
@@ -86,30 +101,31 @@ class Fire {
 
         FirebaseAuth.getInstance().currentUser?.let {
             fs.runTransaction { t ->
-                val targetPost = t.get(postRef)
-                val ownerUser = t.get(fs.collection(USERS).document(((targetPost.get("user") as Map<*, *>)["id"] as String?)!!))
-                val postOwnerRef = fs.collection(USERS).document(ownerUser.id)
-                val newPostTotalLikesValue = targetPost.getLong(TOTAL_LIKES)?.plus(1L)
-                val newUserTotalLikesValue = t.get(postOwnerRef).getLong(TOTAL_LIKES)?.plus(1L)
+                val newPostTotalLikesValue = t.get(postRef).getLong(TOTAL_LIKES)?.plus(1L)
+                val newUserTotalLikesValue = t.get(ownerRef).getLong(TOTAL_LIKES)?.plus(1L)
 
                 t.update(postRef, TOTAL_LIKES, newPostTotalLikesValue)
-                t.update(postOwnerRef, TOTAL_LIKES, newUserTotalLikesValue)
-                t.set(userLikesRef, true)
+                t.update(ownerRef, TOTAL_LIKES, newUserTotalLikesValue)
+                t.set(userLikesRef, HashMap())
 
-                null
-            }.addOnSuccessListener { _ ->
+                newPostTotalLikesValue
+            }.addOnSuccessListener { after ->
                 Log.d("Firestore Transaction", "Success")
+                callback?.onResult(Pair(true, after))
             }.addOnFailureListener { e ->
                 Log.w("Firestore Transaction", "Failure", e)
+                callback?.onFail(e)
             }
         }
     }
 
-    fun dislike(postId: String) {
+    private fun dislike(postId: String, ownerId: String, callback: Callback<Pair<Boolean, Long>>?) {
         val fs = fs()
 
         val postRef = fs.collection(POSTS)
                 .document(postId)
+
+        val ownerRef = fs.collection(USERS).document(ownerId)
 
         val userLikesRef = fs.collection(USERS)
                 .document(Fire.Auth.getInstance().user().id)
@@ -118,21 +134,20 @@ class Fire {
 
         FirebaseAuth.getInstance().currentUser?.let {
             fs.runTransaction { t ->
-                val targetPost = t.get(postRef)
-                val ownerUser = t.get(fs.collection(USERS).document(((targetPost.get("user") as Map<*, *>)["id"] as String?)!!))
-                val postOwnerRef = fs.collection(USERS).document(ownerUser.id)
-                val newPostTotalLikesValue = targetPost.getLong(TOTAL_LIKES)?.minus(1L)
-                val newUserTotalLikesValue = t.get(postOwnerRef).getLong(TOTAL_LIKES)?.minus(1L)
+                val newPostTotalLikesValue = t.get(postRef).getLong(TOTAL_LIKES)?.minus(1L)
+                val newUserTotalLikesValue = t.get(ownerRef).getLong(TOTAL_LIKES)?.minus(1L)
 
                 t.update(postRef, TOTAL_LIKES, newPostTotalLikesValue)
-                t.update(postOwnerRef, TOTAL_LIKES, newUserTotalLikesValue)
+                t.update(ownerRef, TOTAL_LIKES, newUserTotalLikesValue)
                 t.delete(userLikesRef)
 
-                null
-            }.addOnSuccessListener { _ ->
+                newPostTotalLikesValue
+            }.addOnSuccessListener { after ->
                 Log.d("Firestore Transaction", "Success")
+                callback?.onResult(Pair(false, after))
             }.addOnFailureListener { e ->
                 Log.w("Firestore Transaction", "Failure", e)
+                callback?.onFail(e)
             }
         }
     }
@@ -165,9 +180,11 @@ class Fire {
 
         val content = Content(mime, resolution.first, resolution.second, url)
 
+        //context.grantUriPermission(context.packageName, contentUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
         fs().collection(USERS).document(uid).get().addOnSuccessListener {
             val user = User(it.id, it.getString("name")?: "Unknown", it.getString("pictureUrl")?: "")
-            //context.grantUriPermission()
+
             storage().reference.child(content.url).putStream(context.contentResolver.openInputStream(contentUri))
                     .addOnSuccessListener { _ ->
                         val post = NewPost(
@@ -202,21 +219,29 @@ class Fire {
     fun getFirstPostPage(callback: Callback<Pair<DocumentSnapshot?, List<Post>>>){
         fs().collection(POSTS)
                 .orderBy("timeStamp")
-                .limit(5)
+                .limit(3)
                 .get()
                 .addOnSuccessListener { qs ->
-                    callback.onResult(Pair(qs.documents.lastOrNull(), qs.documents.map { it.toObject(Post::class.java)!! }))
+                    callback.onResult(Pair(qs.documents.lastOrNull(), qs.documents.map {
+                        it.toObject(Post::class.java)!!.apply {
+                            this.id = it.id
+                        }
+                    }))
                 }
     }
 
     fun getPostPage(lastSeen: DocumentSnapshot, callback: Callback<Pair<DocumentSnapshot?, List<Post>>>) {
         fs().collection(POSTS)
                 .orderBy("timeStamp")
-                .limit(5)
-                .startAt(lastSeen)
+                .limit(3)
+                .startAfter(lastSeen)
                 .get()
                 .addOnSuccessListener { qs ->
-                    callback.onResult(Pair(qs.documents.lastOrNull(), qs.documents.map { it.toObject(Post::class.java)!!}))
+                    callback.onResult(Pair(qs.documents.lastOrNull(), qs.documents.map {
+                        it.toObject(Post::class.java)!!.apply {
+                            this.id = it.id
+                        }
+                    }))
                 }
     }
 
@@ -236,12 +261,19 @@ class Fire {
     }
 
     fun loadThumbnail(content: Content, context: Context, imageView: ImageView, callback: Callback<Any>?) {
-        storage().reference.child("thumb@256_${content.url}").downloadUrl
+        val thumbUrl =
+                if (content.mime.startsWith("image/"))
+                    "thumb@256_${content.url}"
+        else "thumb@256_${content.url.split(".")[0]}.jpg"
+        storage().reference.child(thumbUrl).downloadUrl
                 .addOnSuccessListener { uri ->
                     Glide.with(context)
                             .asBitmap()
                             .load(uri)
                             .into(imageView)
+                }
+                .addOnFailureListener {
+                    Log.w(TAG, "thumbnail error", it)
                 }
     }
 

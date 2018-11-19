@@ -16,34 +16,38 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import io.untaek.animal.R
 import io.untaek.animal.firebase.Fire
+import io.untaek.animal.firebase.User
 import kotlinx.android.synthetic.main.tab_my_page.view.*
 
 class TabMyPageFragment: Fragment() {
 
     private val TAG = "TabMyPageFragment"
 
+    private lateinit var user: User
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.tab_my_page, container, false)
     }
 
     override fun onViewCreated(root: View, savedInstanceState: Bundle?) {
-        val user = FirebaseAuth.getInstance().currentUser
         val imageView = root.imageView
 
         imageView.background = ShapeDrawable(OvalShape())
-        if(Build.VERSION.SDK_INT >= 21)
-            imageView.clipToOutline = true
-        Glide.with(activity!!).load(user?.photoUrl).into(root.imageView)
+        imageView.clipToOutline = true
 
-        root.textView6.text = (FirebaseAuth.getInstance().currentUser?.displayName)
+        user = Fire.Auth.getInstance().user()
+
+        Glide.with(activity!!).load(user.pictureUrl).into(root.imageView)
+
+        root.textView6.text = user.name
 
         root.logout.setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
+            Fire.Auth.getInstance().signOut(requireContext())
         }
 
         FirebaseFirestore.getInstance()
                 .collection("user")
-                .document(user?.uid!!)
+                .document(user.id)
                 .addSnapshotListener { snapshot, e ->
                     if (e != null) {
                         Log.w(TAG, "Listen failed.", e)
@@ -51,6 +55,8 @@ class TabMyPageFragment: Fragment() {
 
                     if (snapshot != null && snapshot.exists()) {
                         Log.d(TAG, "Current data: " + snapshot.getData())
+
+
                     } else {
                         Log.d(TAG, "Current data: null")
                     }

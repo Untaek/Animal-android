@@ -51,15 +51,16 @@ data class User(
 ): Serializable
 
 data class Post(
-        val id: String = "0",
+        var id: String = "0",
         val user: User = User(),
         val description: String = "",
         val content: Content = Content(),
         val tags: Map<String, String> = mapOf(),
-        val totalLikes: Long = 0,
+        var totalLikes: Long = 0,
         val totalComments: Int = 0,
         val comments: ArrayList<Comment2> = arrayListOf(),
-        val timeStamp: Date = Date()
+        val timeStamp: Date = Date(),
+        var like: Boolean = false
 ): Serializable
 
 data class Comment2(

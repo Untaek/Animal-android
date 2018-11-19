@@ -56,13 +56,22 @@ class UploadActivity : AppCompatActivity() {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if(requestCode == REQUEST_TAKE_PHOTO){
-            PermissionHelper.handleRequestResult(permissions, grantResults, {
-                Intent(MediaStore.ACTION_IMAGE_CAPTURE).also {
-                    it.putExtra(MediaStore.EXTRA_OUTPUT, contentUri)
-                    startActivityForResult(it, requestCode)
-                }
-            }, null)
+        when(requestCode){
+            REQUEST_TAKE_PHOTO ->
+                PermissionHelper.handleRequestResult(permissions, grantResults, {
+                    Intent(MediaStore.ACTION_IMAGE_CAPTURE).also {
+                        it.putExtra(MediaStore.EXTRA_OUTPUT, contentUri)
+                        startActivityForResult(it, requestCode)
+                    }
+                }, null)
+            REQUEST_GET_IMAGE, REQUEST_GET_VIDEO -> {
+                    PermissionHelper.handleRequestResult(permissions, grantResults, {
+                        Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).also {
+                            it.type = if (requestCode == REQUEST_GET_IMAGE) "image/*" else "video/*"
+                            startActivityForResult(it, requestCode)
+                        }
+                    }, null)
+            }
         }
     }
 
@@ -84,16 +93,20 @@ class UploadActivity : AppCompatActivity() {
     }
 
     private fun openImageGallery() {
-        Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
-            type = "image/*"
-            startActivityForResult(this, REQUEST_GET_IMAGE)
+        Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).also {
+            it.type = "image/*"
+            if(PermissionHelper.checkAndRequestPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, REQUEST_GET_IMAGE)){
+                startActivityForResult(it, REQUEST_GET_IMAGE)
+            }
         }
     }
 
     private fun openVideoGallery() {
-        Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
-            type = "video/*"
-            startActivityForResult(this, REQUEST_GET_VIDEO)
+        Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).also {
+            it.type = "video/*"
+            if(PermissionHelper.checkAndRequestPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, REQUEST_GET_VIDEO)){
+                startActivityForResult(it, REQUEST_GET_VIDEO)
+            }
         }
     }
 
