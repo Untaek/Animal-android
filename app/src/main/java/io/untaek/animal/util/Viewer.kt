@@ -88,10 +88,10 @@ class Viewer(val textureView: TextureView, val imageView: ImageView) :
         content?.let {
             resize(it)
 
-            Fire.getInstance().loadActualContent(it, context, object: Fire.Callback {
+            Fire.getInstance().loadActualContent(it, context, object: Fire.Callback<Any> {
                 override fun onResult(data: Any) {
                     Log.d("Post", data.toString())
-                    if(it.type == Type.Image){
+                    if(it.mime.split("/")[0] == "image"){
                         imageView.visibility = View.VISIBLE
                         textureView.visibility = View.GONE
                         bitmap = data as Bitmap

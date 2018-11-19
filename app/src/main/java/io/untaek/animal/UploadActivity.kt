@@ -17,56 +17,65 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.MimeTypeMap
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import io.untaek.animal.component.SelectPictureComponent
+import io.untaek.animal.firebase.Content
 import io.untaek.animal.firebase.Fire
+import io.untaek.animal.firebase.Type
+import io.untaek.animal.util.Constants
 import io.untaek.animal.util.PermissionHelper
 import io.untaek.animal.util.UploadManager
-import kotlinx.android.synthetic.main.fragment_upload_write_detail.view.*
-
 import kotlinx.android.synthetic.main.activity_upload.*
+import kotlinx.android.synthetic.main.activity_upload.view.*
 import kotlinx.android.synthetic.main.fragment_upload_write_detail.*
+import kotlinx.android.synthetic.main.fragment_upload_write_detail.view.*
+import kotlinx.android.synthetic.main.tab_upload.view.*
 import java.io.File
+import java.io.OutputStream
 import java.lang.Exception
+import java.util.*
+
 class UploadActivity : AppCompatActivity() {
 
-    private var target = SelectPictureComponent.GALLERY
-    private var requestCode = REQUEST_GET_CONTENT_FROM_GALLERY
+    private var target = SelectPictureComponent.IMAGE
     private val stepWriteDetailFragment: Fragment = StepWriteDetail.instance()
 
     private lateinit var mIntent: Intent
     private lateinit var contentUri: Uri
-    private lateinit var contentFile: File
 
     companion object {
-        const val REQUEST_GET_CONTENT_FROM_GALLERY = 23
+        const val REQUEST_GET_IMAGE = 23
+        const val REQUEST_GET_VIDEO = 55
         const val REQUEST_TAKE_PHOTO = 44
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if(requestCode == REQUEST_TAKE_PHOTO)
+        if(requestCode == REQUEST_TAKE_PHOTO){
             PermissionHelper.handleRequestResult(permissions, grantResults, {
-                startActivityForResult(mIntent, requestCode)
+                Intent(MediaStore.ACTION_IMAGE_CAPTURE).also {
+                    it.putExtra(MediaStore.EXTRA_OUTPUT, contentUri)
+                    startActivityForResult(it, requestCode)
+                }
             }, null)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if(resultCode == Activity.RESULT_OK) {
-            stepWriteDetailFragment.arguments = Bundle()
-
-            when(requestCode) {
-                REQUEST_GET_CONTENT_FROM_GALLERY -> {
-                    contentUri = data!!.data
-                }
-                REQUEST_TAKE_PHOTO -> {
-
-                }
+            if(requestCode == REQUEST_GET_IMAGE || requestCode == REQUEST_GET_VIDEO) {
+                contentUri = data!!.data
             }
-            stepWriteDetailFragment.arguments?.putString("uri", contentUri.toString())
+
+            stepWriteDetailFragment.arguments = Bundle().apply {
+                putString("uri", contentUri.toString())
+            }
+
             replaceFragment(stepWriteDetailFragment)
         }
         else{
@@ -74,33 +83,26 @@ class UploadActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_upload)
-
-        target = intent.getIntExtra(SelectPictureComponent.TARGET, 0)
-
-        button_goback.setOnClickListener { finish() }
-        button_submit.setOnClickListener { finish() }
-
-        mIntent = when(target) {
-            SelectPictureComponent.GALLERY -> Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
-                type = "image/* video/*"
-                requestCode = REQUEST_GET_CONTENT_FROM_GALLERY
-            }
-            SelectPictureComponent.CAMERA -> Intent(MediaStore.ACTION_IMAGE_CAPTURE).also {
-                contentUri = UploadManager.createTempUri(this, ".jpg")
-                it.putExtra(MediaStore.EXTRA_OUTPUT, contentUri)
-                requestCode = REQUEST_TAKE_PHOTO
-            }
-            else -> throw Exception()
+    private fun openImageGallery() {
+        Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
+            type = "image/*"
+            startActivityForResult(this, REQUEST_GET_IMAGE)
         }
+    }
 
-        if(requestCode == REQUEST_GET_CONTENT_FROM_GALLERY) {
-            startActivityForResult(mIntent, requestCode)
-        }else {
+    private fun openVideoGallery() {
+        Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
+            type = "video/*"
+            startActivityForResult(this, REQUEST_GET_VIDEO)
+        }
+    }
+
+    private fun openCamera() {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also {
+            contentUri = UploadManager.createTempUri(this, ".jpg")
+            it.putExtra(MediaStore.EXTRA_OUTPUT, contentUri)
             if(PermissionHelper.checkAndRequestPermission(this, Manifest.permission.CAMERA, REQUEST_TAKE_PHOTO)) {
-                startActivityForResult(mIntent, requestCode)
+                startActivityForResult(it, REQUEST_TAKE_PHOTO)
             }
         }
     }
@@ -111,13 +113,33 @@ class UploadActivity : AppCompatActivity() {
                 .replace(R.id.container, fragment)
                 .commitAllowingStateLoss()
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_upload)
+
+        button_goback.setOnClickListener { finish() }
+
+        target = intent.getIntExtra(SelectPictureComponent.TARGET, 0)
+
+        /**
+         * 카메라와 비디오 갤러리가 반대로 열림 왜그런지는 모름
+         */
+        when(target) {
+            SelectPictureComponent.IMAGE -> openImageGallery()
+            SelectPictureComponent.CAMERA -> openVideoGallery()
+            SelectPictureComponent.VIDEO -> openCamera()
+            else -> throw Exception()
+        }
+    }
+
     class StepSelectImage: Fragment() {
         companion object {
             fun instance() = StepSelectImage()
         }
     }
 
-    class StepWriteDetail: Fragment(), RequestListener<Drawable> {
+    class StepWriteDetail: Fragment(), RequestListener<Drawable>, Fire.Callback<Any> {
         private lateinit var contentUri: Uri
         private var isImageLoading = true
 
@@ -139,19 +161,12 @@ class UploadActivity : AppCompatActivity() {
                     .addListener(this)
                     .into(root.imageView)
 
-            requireContext().grantUriPermission("io.untaek.animal", contentUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-
-            Fire.getInstance().newPost(requireContext(), mapOf(), root.editText_description.text.toString(), contentUri,
-                    object : Fire.Callback{
-                        override fun onResult(data: Any) {
-                            Log.d("StepWriteDetailFragment", "done!")
-                        }
-
-                        override fun onFail(e: Exception) {
-                            Log.d("StepWriteDetailFragment", "Fail...!")
-                        }
-
-                    }, null)
+            root.button_submit.setOnClickListener {
+                Fire.getInstance().newPost(requireContext(), mapOf(), root.editText_description.text.toString(), contentUri,
+                        this, null)
+                Toast.makeText(requireContext(), "업로드 중입니다..", Toast.LENGTH_SHORT).show()
+                activity?.finish()
+            }
         }
 
         override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
@@ -161,9 +176,15 @@ class UploadActivity : AppCompatActivity() {
         override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
             isImageLoading = false
             progressBar.visibility = View.GONE
-
-
             return false
+        }
+
+        override fun onResult(data: Any) {
+            Log.d("StepWriteDetailFragment", "done!")
+        }
+
+        override fun onFail(e: Exception) {
+            Log.d("StepWriteDetailFragment", "Fail...!")
         }
     }
 }

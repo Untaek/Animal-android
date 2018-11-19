@@ -12,7 +12,7 @@ import io.untaek.animal.firebase.UserDetail
 import io.untaek.animal.util.Viewer
 import kotlinx.android.synthetic.main.activity_user_detail.*
 
-class UserDetailActivity_kotlin : AppCompatActivity() {
+class UserDetailActivity : AppCompatActivity() {
 
     private lateinit var user : UserDetail
 

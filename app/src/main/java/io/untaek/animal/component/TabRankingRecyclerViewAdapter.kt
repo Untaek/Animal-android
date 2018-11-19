@@ -2,19 +2,14 @@ package io.untaek.animal.component
 
 import android.content.Context
 import android.content.Intent
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.bumptech.glide.Glide.init
 import io.untaek.animal.R
-import io.untaek.animal.R.id.*
-import io.untaek.animal.UserDetailActivity_kotlin
+import io.untaek.animal.UserDetailActivity
 import io.untaek.animal.firebase.Post
 import io.untaek.animal.firebase.UserDetail
 import io.untaek.animal.firebase.dummy
@@ -95,7 +90,7 @@ class  TabRankingRecyclerViewAdapter (private val context: Context, val posts : 
 
         init {
             userName.setOnClickListener {
-                val intent = Intent(context, UserDetailActivity_kotlin::class.java).apply {
+                val intent = Intent(context, UserDetailActivity::class.java).apply {
                     putExtra("data", users[adapterPosition-1])
                 }
                 context.startActivity(intent)

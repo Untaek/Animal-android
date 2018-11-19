@@ -14,7 +14,6 @@ public class MyOnScrollListener extends RecyclerView.OnScrollListener {
     ArrayList<?> list;
     MyCallBack callBack;
 
-
     public MyOnScrollListener(RecyclerView.Adapter adapter, ArrayList<?> list, MyCallBack callBack) {
         this.adapter = adapter;
         this.list = list;

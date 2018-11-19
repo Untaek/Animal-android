@@ -4,8 +4,9 @@
         <attr name="text" format="string"/>
         <attr name="icon" format="reference"/>
         <attr name="target" format="enum">
-            <enum name="gallery" value="0"/>
+            <enum name="image" value="0"/>
             <enum name="camera" value="1"/>
+            <enum name="video" value="2"/>
         </attr>
     </declare-styleable>
 </resources>

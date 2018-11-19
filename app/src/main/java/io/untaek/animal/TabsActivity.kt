@@ -34,11 +34,12 @@ class TabsActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_my_page -> {
-                if(FirebaseAuth.getInstance().currentUser == null) {
-                    changeTab(Tab.Login)
-                }else{
-                    changeTab(Tab.MyPage)
-                }
+                changeTab(Tab.MyPage)
+//                if(FirebaseAuth.getInstance().currentUser == null) {
+//                    changeTab(Tab.Login)
+//                }else{
+//                    changeTab(Tab.MyPage)
+//                }
 
                 return@OnNavigationItemSelectedListener true
             }
@@ -53,15 +54,15 @@ class TabsActivity : AppCompatActivity() {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         navigation.selectedItemId = R.id.navigation_timeline
 
-        FirebaseAuth.getInstance().addAuthStateListener {
-            auth -> if (auth.currentUser == null) {
-                changeTab(Tab.Timeline)
-                Log.d("Auth", "Signed out")
-            }else {
-                changeTab(Tab.MyPage)
-                Log.d("Auth", "Signed in")
-            }
-        }
+//        FirebaseAuth.getInstance().addAuthStateListener {
+//            auth -> if (auth.currentUser == null) {
+//                changeTab(Tab.Timeline)
+//                Log.d("Auth", "Signed out")
+//            }else {
+//                changeTab(Tab.MyPage)
+//                Log.d("Auth", "Signed in")
+//            }
+//        }
     }
 
     private fun changeTab(tab: Tab): Fragment {
