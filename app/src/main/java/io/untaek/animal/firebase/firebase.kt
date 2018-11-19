@@ -21,12 +21,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.firestore.*
 import com.google.firebase.storage.FirebaseStorage
 import io.untaek.animal.R
+import io.untaek.animal.firebase.dummy.post
 import io.untaek.animal.tab.RC_SIGN_IN
 import io.untaek.animal.util.UploadManager
 import java.io.ByteArrayOutputStream
@@ -38,9 +38,11 @@ import kotlin.collections.HashMap
 const val POSTS = "posts"
 const val USERS = "users"
 const val LIKES = "likes"
+const val COMMENTS = "comments"
 const val TOTAL_LIKES = "totalLikes"
 const val TOTAL_POSTS = "totalPosts"
 const val TOTAL_FOLLOWS = "totalFollows"
+const val TOTAL_COMMENTS = "totalComments"
 
 class Fire: FirebaseAuth.AuthStateListener {
 
@@ -157,6 +159,8 @@ class Fire: FirebaseAuth.AuthStateListener {
         }
     }
 
+
+
     fun dislike(postId: String) {
         val fs = fs()
 
@@ -204,6 +208,62 @@ class Fire: FirebaseAuth.AuthStateListener {
      *
      */
 
+
+    fun firstreadComments(postId : String, callback : Callback<Pair<DocumentSnapshot?, List<Comment2?>>>){
+        fs().collection(POSTS).document(postId).collection(COMMENTS)
+                .orderBy("timeStamp", Query.Direction.ASCENDING)
+                .limit(10)
+                .get()
+                .addOnSuccessListener {
+                    callback.onResult(Pair(it.documents.lastOrNull(), it.documents.map { it.toObject(Comment2::class.java).apply {
+                                Log.e("ㅋㅋㅋ", "원래 comment id : "+this!!.commentId)
+                                this.commentId = it.id
+                                Log.e("ㅋㅋㅋ", "바뀐후 comment id : "+this!!.commentId)
+                            } }))
+                }
+    }
+
+    fun readComments(postId : String, lastSeen : DocumentSnapshot, callback : Callback<Pair<DocumentSnapshot?, List<Comment2?>>>){
+        fs().collection(POSTS).document(postId).collection(COMMENTS)
+                .orderBy("timeStamp", Query.Direction.ASCENDING)
+                .limit(10)
+                .startAfter(lastSeen)
+                .get()
+                .addOnSuccessListener {
+                    callback.onResult(Pair(it.documents.lastOrNull(),
+                            it.map { it.toObject(Comment2::class.java).apply {
+                                Log.e("ㅋㅋㅋ", "원래 comment id : "+this.commentId)
+                                this.commentId = it.id
+                                Log.e("ㅋㅋㅋ", "바뀐후 comment id : "+this.commentId)
+                            } }))
+                }
+    }
+
+    fun newComment(context: Context, postId : String, commentText : String, callback : Callback<Any>){
+        val uploader = User("dbsdlswp", "inje", "https://s-i.huffpost.com/gen/4479784/images/n-THRO-628x314.jpg")
+        val comment : Comment_DB= Comment_DB(uploader, Date(), "ㅋㅋㅋㅋ 웃김")
+
+        val fs = fs()
+
+        val postRef = fs.collection(POSTS).document(postId)
+        val commentRef = fs.collection(POSTS).document(postId).collection(COMMENTS).document()
+
+        FirebaseAuth.getInstance().let {
+            fs.runTransaction { t ->
+                val targetPost = t.get(postRef)
+                val newPostTotalCommentsValue = targetPost.getLong(TOTAL_COMMENTS)?.plus(1L)
+
+                //fs.collection(POSTS).document(postId).collection("comments").add(comment)
+                t.update(postRef, TOTAL_COMMENTS, newPostTotalCommentsValue)
+                t.set(commentRef, comment)
+            }.addOnSuccessListener {
+                Log.d("ㅋㅋㅋ", "FireStore Transaction Success")
+            }.addOnFailureListener { e ->
+                Log.w("ㅋㅋㅋ", "FireStore Transaction Failure", e)
+            }
+        }
+    }
+
     fun newPost(context: Context, tags: Map<String, String>, description: String, contentUri: Uri, callback: Callback<Any>, progressCallback: ProgressCallback?) {
         val resolution = UploadManager.getSize(context, contentUri)
         val mime = UploadManager.getMime(context, contentUri)
@@ -243,13 +303,19 @@ class Fire: FirebaseAuth.AuthStateListener {
                 }
     }
 
+
+
     fun getFirstPostPage(callback: Callback<Pair<DocumentSnapshot?, List<Post>>>){
         fs().collection(POSTS)
                 .orderBy("timeStamp")
                 .limit(5)
                 .get()
                 .addOnSuccessListener { qs ->
-                    callback.onResult(Pair(qs.documents.lastOrNull(), qs.documents.map { it.toObject(Post::class.java)!! }))
+                    callback.onResult(Pair(qs.documents.lastOrNull(), qs.documents.map {
+                        it.toObject(Post::class.java)!!.apply {
+                            this.id = it.id
+                        }
+                    }))
                 }
     }
 
@@ -260,7 +326,11 @@ class Fire: FirebaseAuth.AuthStateListener {
                 .startAt(lastSeen)
                 .get()
                 .addOnSuccessListener { qs ->
-                    callback.onResult(Pair(qs.documents.lastOrNull(), qs.documents.map { it.toObject(Post::class.java)!!}))
+                    callback.onResult(Pair(qs.documents.lastOrNull(), qs.documents.map {
+                        it.toObject(Post::class.java)!!.apply {
+                            this.id = it.id
+                        }
+                    }))
                 }
     }
 
@@ -306,7 +376,6 @@ class Fire: FirebaseAuth.AuthStateListener {
                                         callback.onFail(e!!)
                                         return true
                                     }
-
                                     override fun onResourceReady(resource: Bitmap?, model: Any?, target: Target<Bitmap>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                                         callback.onResult(resource!!)
                                         return true

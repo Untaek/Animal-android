@@ -20,7 +20,7 @@ import java.lang.Exception
 
 class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<TimelineAdapter.ViewHolder>(), Fire.Callback<Pair<DocumentSnapshot?, List<Post>>> {
 
-    private val items: MutableList<Post> = mutableListOf()
+    private val items: ArrayList<Post> = arrayListOf()
     private lateinit var lastSeen: DocumentSnapshot
     private var loading = false
 
@@ -32,6 +32,9 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
     override fun getItemCount(): Int {
         return items.size
     }
+
+    fun getItems() = items
+
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
