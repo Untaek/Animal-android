@@ -81,7 +81,15 @@ class Viewer(val textureView: TextureView, val imageView: ImageView) :
     fun changeSource(content: Content){
         Log.d("Viewer", "changeSource")
         this.content = content
-        fetch()
+        //fetch()
+        preview()
+    }
+
+    private fun preview() {
+        content?.let {
+            resize(it)
+            Fire.getInstance().loadThumbnail(it, context, imageView, null)
+        }
     }
 
     private fun fetch() {

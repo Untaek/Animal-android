@@ -18,12 +18,12 @@ data class PostInTimeline(
 ): Serializable
 
 data class UserDetail(
-        val id: String,
-        val userName: String,
-        val imgResource: Int,
-        val totalLikes: Long,
-        val posts: Long,
-        val Follows: Long
+        val id: String = "0",
+        val userName: String = "0",
+        val pictureUrl: String = "0",
+        val totalLikes: Long = 0L,
+        val totalPosts: Long = 0L,
+        val totalFollows: Long = 0L
 ): Serializable
 
 data class Comment(
@@ -45,27 +45,35 @@ data class Content(
 data class User(
         val id: String = "0",
         val name: String = "0",
-        val picture_url: String = "0"
+        val pictureUrl: String = "0"
 ): Serializable
 
 data class Post(
-        val id: String = "0",
+        var id: String = "0",
         val user: User = User(),
         val description: String = "",
         val content: Content = Content(),
         val tags: Map<String, String> = mapOf(),
-        val totalLikes: Long = 0,
+        var totalLikes: Long = 0,
         val totalComments: Int = 0,
         val comments: ArrayList<Comment2> = arrayListOf(),
-        val timeStamp: Date = Date()
+        val timeStamp: Date = Date(),
+        var like: Boolean = false
 ): Serializable
 
 data class Comment2(
-        val commentId: String = "0",
-        val user: User = User(),
-        val timeStamp: Date = Date(),
-        val text: String = "0"
+        var commentId: String = "0",
+        var user: User = User(),
+        var timeStamp: Date = Date(),
+        var commentText: String = "0"
 ): Serializable
+
+data class Comment_DB(
+        val user : User = User("dbsdlswp", "inje", "https://s-i.huffpost.com/gen/4479784/images/n-THRO-628x314.jpg"),
+        val timeStamp: Date = Date(),
+        val commentText : String
+)
+
 
 data class NewPost(
         val user: User,

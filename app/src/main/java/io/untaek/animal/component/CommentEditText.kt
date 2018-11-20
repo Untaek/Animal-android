@@ -15,5 +15,6 @@ class CommentEditText: ConstraintLayout {
     init {
         val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         addView(inflater.inflate(R.layout.component_edittext_comment, this, false))
+
     }
 }

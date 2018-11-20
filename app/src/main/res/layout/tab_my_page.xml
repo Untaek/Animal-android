@@ -7,14 +7,13 @@
     tools:context="io.untaek.animal.tab.TabMyPageFragment"
     tools:layout_editor_absoluteY="81dp">
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/ic_settings_black_24dp"
-        android:text="SETTINGS"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -84,7 +83,7 @@
                 android:text="POST" />
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/textView_posts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -106,7 +105,7 @@
                 android:text="FOLLOW" />
 
             <TextView
-                android:id="@+id/textView25"
+                android:id="@+id/textView_follows"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -128,7 +127,7 @@
                 android:text="LIKE" />
 
             <TextView
-                android:id="@+id/textView48"
+                android:id="@+id/textView_likes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

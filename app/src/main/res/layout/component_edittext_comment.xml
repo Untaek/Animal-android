@@ -15,12 +15,12 @@
         android:hint="Comment"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/frameLayout"
+        app:layout_constraintEnd_toStartOf="@+id/frameLayout_edittext_comment"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
-        android:id="@+id/frameLayout"
+        android:id="@+id/frameLayout_edittext_comment"
         android:layout_width="54dp"
         android:layout_height="54dp"
         android:background="@drawable/ic_send_black_24dp"

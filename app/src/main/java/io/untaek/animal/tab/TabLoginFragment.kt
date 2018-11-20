@@ -1,34 +1,46 @@
 package io.untaek.animal.tab
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.support.v4.app.Fragment
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.firebase.ui.auth.AuthUI
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
+import io.untaek.animal.LoginActivity
 import io.untaek.animal.R
-import io.untaek.animal.firebase.Fire
-import kotlinx.android.synthetic.main.tab_my_page.*
+import kotlinx.android.synthetic.main.tab_login.view.*
 
 class TabLoginFragment: Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val root = inflater.inflate(R.layout.tab_login, container, false)
+    val TAG = "TabLoginFragment"
 
-        startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setAvailableProviders(Fire.Auth.getDefaultProviders())
-                        .setIsSmartLockEnabled(false)
-                        .setLogo(R.drawable.ic_launcher_background)
-                        .build(), RC_SIGN_IN)
-        return root
+
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.tab_login, container, false)
+    }
+
+    override fun onViewCreated(root: View, savedInstanceState: Bundle?) {
+        root.button_login.setOnClickListener {
+            startActivity(Intent(requireContext(), LoginActivity::class.java))
+            requireActivity().finish()
+        }
     }
 
     companion object {
+        @SuppressLint("StaticFieldLeak")
+        private var THIS: TabLoginFragment? = null
         fun instance(): TabLoginFragment {
-            return TabLoginFragment()
+            if(THIS == null) {
+                THIS = TabLoginFragment()
+            }
+            return THIS!!
         }
     }
 }
