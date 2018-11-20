@@ -19,6 +19,7 @@ import com.bumptech.glide.request.target.Target
 import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.FirebaseAuth
 import com.firebase.ui.auth.AuthUI
+import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.OnSuccessListener
@@ -39,6 +40,9 @@ const val POSTS = "posts"
 const val USERS = "users"
 const val LIKES = "likes"
 const val COMMENTS = "comments"
+const val FOLLOWS = "follows"
+
+
 const val TOTAL_LIKES = "totalLikes"
 const val TOTAL_POSTS = "totalPosts"
 const val TOTAL_FOLLOWS = "totalFollows"
@@ -69,6 +73,7 @@ class Fire: FirebaseAuth.AuthStateListener {
      * Instance of Firebase features
      */
     private fun fs() = FirebaseFirestore.getInstance()
+
     private fun storage() = FirebaseStorage.getInstance()
     private fun auth() = FirebaseAuth.getInstance()
 
@@ -160,7 +165,6 @@ class Fire: FirebaseAuth.AuthStateListener {
     }
 
 
-
     fun dislike(postId: String) {
         val fs = fs()
 
@@ -193,12 +197,29 @@ class Fire: FirebaseAuth.AuthStateListener {
         }
     }
 
-    fun follow() {
+    fun follow(myId: String, userId: String) {
+        val fs = fs()
+        val myReference = fs.collection(USERS).document(myId)
+        val userReference = fs.collection(USERS).document(userId)
+        var follow: MutableMap<String, Boolean> = mutableMapOf()
+        fs.collection(USERS).document(myId).get().addOnSuccessListener {
+            follow = it[FOLLOWS] as MutableMap<String, Boolean>
+            follow.put(userId, true)
+        }
 
-    }
+        FirebaseAuth.getInstance().let {
+            fs.runTransaction { t ->
+                val targetPost = t.get(myReference)
+                val newTotalFollowCount = targetPost.getLong(TOTAL_FOLLOWS)?.plus(1L)
+                t.update(myReference, TOTAL_FOLLOWS, newTotalFollowCount)
+                t.update(myReference, FOLLOWS, follow)
 
-    fun unFollow() {
+            }
 
+            fun unFollow() {
+
+            }
+        }
     }
 
     /**
@@ -209,19 +230,21 @@ class Fire: FirebaseAuth.AuthStateListener {
      */
 
 
-    fun firstreadComments(postId : String, callback : Callback<Pair<DocumentSnapshot?, List<Comment2?>>>){
+    fun firstreadComments(postId: String, callback: Callback<Pair<DocumentSnapshot?, List<Comment2?>>>) {
         fs().collection(POSTS).document(postId).collection(COMMENTS)
                 .orderBy("timeStamp", Query.Direction.DESCENDING)
                 .limit(10)
                 .get()
                 .addOnSuccessListener {
-                    callback.onResult(Pair(it.documents.lastOrNull(), it.documents.map { it.toObject(Comment2::class.java).apply {
-                                this!!.commentId = it.id
-                            } }))
+                    callback.onResult(Pair(it.documents.lastOrNull(), it.documents.map {
+                        it.toObject(Comment2::class.java).apply {
+                            this!!.commentId = it.id
+                        }
+                    }))
                 }
     }
 
-    fun readComments(postId : String, lastSeen : DocumentSnapshot, callback : Callback<Pair<DocumentSnapshot?, List<Comment2?>>>){
+    fun readComments(postId: String, lastSeen: DocumentSnapshot, callback: Callback<Pair<DocumentSnapshot?, List<Comment2?>>>) {
         fs().collection(POSTS).document(postId).collection(COMMENTS)
                 .orderBy("timeStamp", Query.Direction.DESCENDING)
                 .limit(10)
@@ -229,15 +252,17 @@ class Fire: FirebaseAuth.AuthStateListener {
                 .get()
                 .addOnSuccessListener {
                     callback.onResult(Pair(it.documents.lastOrNull(),
-                            it.map { it.toObject(Comment2::class.java).apply {
-                                this.commentId = it.id
-                            } }))
+                            it.map {
+                                it.toObject(Comment2::class.java).apply {
+                                    this.commentId = it.id
+                                }
+                            }))
                 }
     }
 
-    fun newComment(context: Context, postId : String, commentText : String, callback : Callback<Any>){
+    fun newComment(context: Context, postId: String, commentText: String, callback: Callback<Any>) {
         val uploader = User("dbsdlswp", "inje", "https://s-i.huffpost.com/gen/4479784/images/n-THRO-628x314.jpg")
-        val comment : Comment_DB= Comment_DB(uploader, Date(), commentText)
+        val comment: Comment_DB = Comment_DB(uploader, Date(), commentText)
 
         val fs = fs()
 
@@ -300,8 +325,7 @@ class Fire: FirebaseAuth.AuthStateListener {
     }
 
 
-
-    fun getFirstPostPage(callback: Callback<Pair<DocumentSnapshot?, List<Post>>>){
+    fun getFirstPostPage(callback: Callback<Pair<DocumentSnapshot?, List<Post>>>) {
         fs().collection(POSTS)
                 .orderBy("timeStamp")
                 .limit(5)
@@ -360,7 +384,7 @@ class Fire: FirebaseAuth.AuthStateListener {
 
         val type = content.mime.split("/")[0]
 
-        if(type == "image") {
+        if (type == "image") {
             storage().reference.child(content.url).downloadUrl
                     .addOnSuccessListener { uri ->
                         Log.d(TAG, "uri $uri")
@@ -372,6 +396,7 @@ class Fire: FirebaseAuth.AuthStateListener {
                                         callback.onFail(e!!)
                                         return true
                                     }
+
                                     override fun onResourceReady(resource: Bitmap?, model: Any?, target: Target<Bitmap>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                                         callback.onResult(resource!!)
                                         return true
@@ -382,25 +407,23 @@ class Fire: FirebaseAuth.AuthStateListener {
                     .addOnFailureListener {
                         callback.onFail(it)
                     }
-        }
-        else if (type == "video") {
+        } else if (type == "video") {
             val file = File(context.cacheDir, content.url)
 
             Log.d("Video file", file.absolutePath)
 
-            if(file.exists()) {
+            if (file.exists()) {
                 Log.d("Video file", "exist")
                 callback.onResult(file)
-            }
-            else {
+            } else {
                 file.createNewFile()
                 storage().reference.child(content.url)
                         .getFile(file)
-                        .addOnProgressListener {  }
+                        .addOnProgressListener { }
                         .addOnSuccessListener {
                             callback.onResult(file)
                         }
-                        .addOnFailureListener{
+                        .addOnFailureListener {
                             callback.onFail(it)
                         }
             }
@@ -485,9 +508,11 @@ class Fire: FirebaseAuth.AuthStateListener {
             return FirebaseAuth.getInstance().currentUser
         }
 
+
         companion object {
             private var instance: Auth? = null
-            fun getInstance(): Auth = if(instance == null) Auth() else instance!!
+            fun getInstance(): Auth = if (instance == null) Auth() else instance!!
         }
     }
+
 }
