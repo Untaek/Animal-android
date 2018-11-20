@@ -211,37 +211,33 @@ class Fire: FirebaseAuth.AuthStateListener {
 
     fun firstreadComments(postId : String, callback : Callback<Pair<DocumentSnapshot?, List<Comment2?>>>){
         fs().collection(POSTS).document(postId).collection(COMMENTS)
-                .orderBy("timeStamp", Query.Direction.ASCENDING)
+                .orderBy("timeStamp", Query.Direction.DESCENDING)
                 .limit(10)
                 .get()
                 .addOnSuccessListener {
                     callback.onResult(Pair(it.documents.lastOrNull(), it.documents.map { it.toObject(Comment2::class.java).apply {
-                                Log.e("ㅋㅋㅋ", "원래 comment id : "+this!!.commentId)
-                                this.commentId = it.id
-                                Log.e("ㅋㅋㅋ", "바뀐후 comment id : "+this!!.commentId)
+                                this!!.commentId = it.id
                             } }))
                 }
     }
 
     fun readComments(postId : String, lastSeen : DocumentSnapshot, callback : Callback<Pair<DocumentSnapshot?, List<Comment2?>>>){
         fs().collection(POSTS).document(postId).collection(COMMENTS)
-                .orderBy("timeStamp", Query.Direction.ASCENDING)
+                .orderBy("timeStamp", Query.Direction.DESCENDING)
                 .limit(10)
                 .startAfter(lastSeen)
                 .get()
                 .addOnSuccessListener {
                     callback.onResult(Pair(it.documents.lastOrNull(),
                             it.map { it.toObject(Comment2::class.java).apply {
-                                Log.e("ㅋㅋㅋ", "원래 comment id : "+this.commentId)
                                 this.commentId = it.id
-                                Log.e("ㅋㅋㅋ", "바뀐후 comment id : "+this.commentId)
                             } }))
                 }
     }
 
     fun newComment(context: Context, postId : String, commentText : String, callback : Callback<Any>){
         val uploader = User("dbsdlswp", "inje", "https://s-i.huffpost.com/gen/4479784/images/n-THRO-628x314.jpg")
-        val comment : Comment_DB= Comment_DB(uploader, Date(), "ㅋㅋㅋㅋ 웃김")
+        val comment : Comment_DB= Comment_DB(uploader, Date(), commentText)
 
         val fs = fs()
 

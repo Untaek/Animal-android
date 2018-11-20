@@ -12,10 +12,13 @@ import com.bumptech.glide.Glide.init
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.firestore.DocumentSnapshot
 import io.untaek.animal.R
+import io.untaek.animal.R.id.editText
 import io.untaek.animal.firebase.Comment2
 import io.untaek.animal.firebase.Fire
 import io.untaek.animal.firebase.Post
+import io.untaek.animal.firebase.User
 import io.untaek.animal.firebase.dummy.post
+import kotlinx.android.synthetic.main.component_edittext_comment.*
 import kotlinx.android.synthetic.main.component_timeline_detail_comment_recyclerview_header.view.*
 import kotlinx.android.synthetic.main.component_timeline_detail_comment_recyclerview_item.view.*
 import java.lang.Exception
@@ -29,8 +32,10 @@ class TimelineDetailPostRecyclerViewAdapter (val post : Post, val context: Conte
         Log.e("ㅋㅋㅋ", "생성자에서 firstreadComments")
     }
     val comments: ArrayList<Comment2?> = arrayListOf()
-
+    val uploader = User("dbsdlswp", "inje", "https://s-i.huffpost.com/gen/4479784/images/n-THRO-628x314.jpg")
     private var lastSeen: DocumentSnapshot? = null
+    private var lastSeen_before : DocumentSnapshot? = null
+    var addDataFlag : Boolean = false
 
     fun getItems() = comments
 
@@ -41,7 +46,10 @@ class TimelineDetailPostRecyclerViewAdapter (val post : Post, val context: Conte
 
         Log.e("ㅋㅋㅋ", "on result")
         if(data.first != null) {
-            Log.e("ㅋㅋㅋ", data.second.size.toString())
+            if(addDataFlag) {
+                comments.removeAt(comments.size - 1)
+                addDataFlag = false
+            }
             comments.addAll(data.second)
             lastSeen = data.first!!
             notifyDataSetChanged()
@@ -51,9 +59,20 @@ class TimelineDetailPostRecyclerViewAdapter (val post : Post, val context: Conte
 
     }
     fun update() {
-        if(lastSeen != null) {
+        Log.e("ㅋㅋㅋ", "update")
+        if(lastSeen != lastSeen_before && lastSeen != null) {
             Fire.getInstance().readComments(post.id, lastSeen!!, this)
+            lastSeen_before = lastSeen
+            lastSeen = null
         }
+    }
+
+    fun addData(postId : String, commentText : String){
+        Log.e("ㅋㅋㅋ", "addData")
+        comments.add( 0,Comment2(postId, uploader, Date(), commentText ))
+        //comments.add(Comment2(postId, uploader, Date(), commentText ))
+        addDataFlag = true
+        notifyDataSetChanged()
     }
 
 
