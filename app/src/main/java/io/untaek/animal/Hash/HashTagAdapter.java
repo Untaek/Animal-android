@@ -11,33 +11,6 @@ import java.util.regex.Pattern;
 
 public class HashTagAdapter  {
 
-//    public SpannableString hashChange(final Context context, String text) {
-//        ArrayList<int[]> hashes = getSpans(text, '#');
-//
-//        SpannableString commentsContent =
-//                new SpannableString(text);
-//
-//        for(int i = 0; i < hashes.size(); i++) {
-//            int[] span = hashes.get(i);
-//            int hashTagStart = span[0];
-//            int hashTagEnd = span[1];
-//
-//            Hashtag hashTag = new Hashtag(context);
-//            hashTag.setOnClickEventListener(new Hashtag.ClickEventListener() {
-//                @Override
-//                public void onClickEvent(String data) {
-//                    Log.d("clickable", "ㅇㅇ");
-//                }
-//            });
-//
-//            commentsContent.setSpan(new Hashtag(context ),
-//                    hashTagStart,
-//                    hashTagEnd, 0);
-//        }
-//        return commentsContent;
-//
-//    }
-
     private ArrayList<int[]> getSpans(String text, char prefix) {
         ArrayList<int[]> array = new ArrayList<int[]>();
 

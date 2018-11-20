@@ -14,14 +14,14 @@ public class CalloutLink extends ClickableSpan {
     }
 
     Context context;
-    CalloutLink.ClickEventListener mClickEventListener = null;
+    ClickEventListener mClickEventListener = null;
 
     public CalloutLink(Context ctx) {
         super();
         context = ctx;
     }
 
-    public void setOnClickEventListener(CalloutLink.ClickEventListener listener) {
+    public void setOnClickEventListener(ClickEventListener listener) {
         mClickEventListener = listener;
     }
 

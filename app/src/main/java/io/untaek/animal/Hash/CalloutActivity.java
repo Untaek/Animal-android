@@ -1,9 +1,8 @@
-package io.untaek.animal;
+package io.untaek.animal.Hash;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -11,39 +10,36 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.untaek.animal.R;
 import io.untaek.animal.component.UserDetailListViewAdapter;
 import io.untaek.animal.component.UserDetailListViewItem;
 import io.untaek.animal.firebase.PostInTimeline;
 import io.untaek.animal.firebase.UserDetail;
 import io.untaek.animal.firebase.dummy;
 
-public class UserDetailActivity extends AppCompatActivity {
-
+public class CalloutActivity extends AppCompatActivity {
     List<List<PostInTimeline>> userPost = null;
     UserDetail user;
     boolean findFlag = false;
-    String userId = null;
+    String userId ;
     int userPosition = 0;
 
     List<UserDetailListViewItem> itemList;
 
-    public UserDetailActivity() {
-
+    public CalloutActivity(String data) {
+        userId = data;
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_detail);
+        setContentView(R.layout.activity_callout_profile);
 
         userId = getIntent().getExtras().getString("userId");
-        userPosition = 0;
-        Log.d("users2", userId);
-        for(UserDetail user : dummy.INSTANCE.getUsersDetail()){
+        userPosition = 0;//이건 무었을 의미?
+        for(UserDetail user : dummy.INSTANCE.getUsersDetail()){//더미에서 뭘가져온겨?
             if(user.getId().equals(userId)){
-                Log.d("users3", user.getId().toString() );
                 break;
-
             }
             userPosition++;
         }
@@ -59,6 +55,7 @@ public class UserDetailActivity extends AppCompatActivity {
         listView.setAdapter(userDetailListViewAdapter);
     }
 
+    //
     List<UserDetailListViewItem> defineItemList(List<List<PostInTimeline>> user){
         itemList = new ArrayList<UserDetailListViewItem>();
         UserDetailListViewItem item;
@@ -85,5 +82,4 @@ public class UserDetailActivity extends AppCompatActivity {
         followCount.setText(""+ user.getFollows());
         likeCount.setText(""+ user.getTotalLikes());
     }
-
 }
