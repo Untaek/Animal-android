@@ -18,14 +18,12 @@ data class PostInTimeline(
 ): Serializable
 
 data class UserDetail(
-        val id: String,
-        val userName: String,
-        val imgUrl: String,
-        val totalLikes: Long,
-        val totalPosts: Long,
-        val totalFollows: Long,
-        val postList : List<String> = arrayListOf("aa1","aa2","aa3","aa4","aa5","aa6"),
-        val petNames : List<String> = arrayListOf("초코", "화이트", "솜사탕")
+        val id: String = "0",
+        val userName: String = "0",
+        val pictureUrl: String = "0",
+        val totalLikes: Long = 0L,
+        val totalPosts: Long = 0L,
+        val totalFollows: Long = 0L
 ): Serializable
 
 data class Comment(

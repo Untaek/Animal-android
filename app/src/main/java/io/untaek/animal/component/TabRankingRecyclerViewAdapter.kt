@@ -21,11 +21,11 @@ class  TabRankingRecyclerViewAdapter (private val context: Context, val posts : 
 
 
     fun userUpadate(){
-        users.add(UserDetail("AAA","inje", dummy.img,7421,24,300, arrayListOf("aa1","aa2")))
-        users.add(UserDetail("BBB","untaek",img,3333,14,255,arrayListOf("aa1","aa2","aa3","aa4")))
-        users.add(UserDetail("CCC","jonghyun", dummy.img,2224,11,226,arrayListOf("aa1","aa2","aa3","aa4","aa5","aa6")))
-        users.add(UserDetail("DDD","taeyang", dummy.img,366,2,44,arrayListOf("aa1","aa2","aa3")))
-        users.add(UserDetail("EEE","sungbum", dummy.img,442,5,31,arrayListOf("aa1")))
+        users.add(UserDetail("AAA","inje", dummy.img,7421,24,300))
+        users.add(UserDetail("BBB","untaek",img,3333,14,255))
+        users.add(UserDetail("CCC","jonghyun", dummy.img,2224,11,226))
+        users.add(UserDetail("DDD","taeyang", dummy.img,366,2,44))
+        users.add(UserDetail("EEE","sungbum", dummy.img,442,5,31))
     }
 
     fun update(){

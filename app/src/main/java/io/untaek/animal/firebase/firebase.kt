@@ -218,7 +218,6 @@ class Fire {
                 val targetPost = t.get(postRef)
                 val newPostTotalCommentsValue = targetPost.getLong(TOTAL_COMMENTS)?.plus(1L)
 
-                //fs.collection(POSTS).document(postId).collection("comments").add(comment)
                 t.update(postRef, TOTAL_COMMENTS, newPostTotalCommentsValue)
                 t.set(commentRef, comment)
             }.addOnSuccessListener {
@@ -242,40 +241,41 @@ class Fire {
 
         val content = Content(mime, resolution.first, resolution.second, url)
 
-        //context.grantUriPermission(context.packageName, contentUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        val user = Auth.getInstance().user()
 
-        fs().collection(USERS).document(uid).get().addOnSuccessListener {
-            val user = User(it.id, it.getString("name")?: "Unknown", it.getString("pictureUrl")?: "")
+        storage().reference.child(content.url).putStream(context.contentResolver.openInputStream(contentUri))
+                .addOnSuccessListener { _ ->
+                    val post = NewPost(
+                            user,
+                            content,
+                            description,
+                            tags,
+                            0L,
+                            0,
+                            Date()
+                    )
 
-            storage().reference.child(content.url).putStream(context.contentResolver.openInputStream(contentUri))
-                    .addOnSuccessListener { _ ->
-                        val post = NewPost(
-                                user,
-                                content,
-                                description,
-                                tags,
-                                0L,
-                                0,
-                                Date()
-                        )
+                    val userRef = fs().collection(USERS).document(Auth.getInstance().user().id)
+                    val postRef = fs().collection(POSTS).document()
 
-                        fs().collection(POSTS).add(post)
-                                .addOnSuccessListener {
-                                    Log.d("firestore", "added ${it.id}")
-                                    callback.onResult(it.id)
-                                }
-                                .addOnFailureListener {
-                                    Log.w("firestore", "error occurred", it)
-                                    callback.onFail(it)
-                                }
-                    }
-                    .addOnProgressListener {
-                        progressCallback?.onProgress(it.bytesTransferred / it.totalByteCount)
-                    }
-                    .addOnFailureListener {
+                    fs().runTransaction { t ->
+                        val newTotalPosts = t.get(userRef).getLong(TOTAL_POSTS)?.plus(1)
+                        t.update(userRef, TOTAL_POSTS, newTotalPosts)
+                        t.set(postRef, post)
+                    }.addOnSuccessListener {
+                        Log.d("firestore", "added new Post")
+                        callback.onResult(true)
+                    }.addOnFailureListener {
+                        Log.w("firestore", "error occurred", it)
                         callback.onFail(it)
                     }
-        }
+                }
+                .addOnProgressListener {
+                    progressCallback?.onProgress(it.bytesTransferred / it.totalByteCount)
+                }
+                .addOnFailureListener {
+                    callback.onFail(it)
+                }
     }
 
     fun getFirstPostPage(callback: Callback<Pair<DocumentSnapshot?, List<Post>>>){
@@ -462,47 +462,5 @@ class Fire {
             private var user: User = User()
             fun getInstance(): Auth = if(instance == null) Auth() else instance!!
         }
-
-
-        //        fun connectionChecker() {
-//
-//        }
-//
-//        fun sendEmailLink(email: String) {
-//            val actionCodeSettings = ActionCodeSettings.newBuilder()
-//                    .setUrl("https://animalauth.page.link")
-//                    .setHandleCodeInApp(true)
-//                    .setAndroidPackageName(
-//                            "com.untaekPost.animal",
-//                            true,
-//                            "21"
-//                    )
-//                    .build()
-//
-//            val auth = FirebaseAuth.getInstance()
-//            auth.sendSignInLinkToEmail(email, actionCodeSettings)
-//                    .addOnCompleteListener {
-//                        _ -> Log.d("sendSignInLinkToEmail", "Email sent.")
-//                        context.getSharedPreferences("temp", 0)
-//                                .edit().putString("email", email).apply()
-//                    }
-//        }
-//
-//        fun completeSignInWithEmailLink(emailLink: String) {
-//            val auth = FirebaseAuth.getInstance()
-//
-//            if (auth.isSignInWithEmailLink(emailLink)) {
-//                val email = context.getSharedPreferences("temp", 0).getString("email", null)
-//                auth.signInWithEmailLink(email, emailLink)
-//                        .addOnCompleteListener {
-//                            task ->
-//                            if(task.isSuccessful) {
-//                                Log.d(TAG, "Successfully signed in with email link!")
-//                                val result = task.result
-//
-//                            }
-//                        }
-//            }
-//        }
     }
 }

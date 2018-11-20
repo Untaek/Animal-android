@@ -35,7 +35,7 @@ class TabRankingUserRankRecyclerViewAdapter (val context: Context, val user : Us
     }
 
     override fun getItemCount(): Int {
-        return user.postList.size
+        return dummy.postList.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

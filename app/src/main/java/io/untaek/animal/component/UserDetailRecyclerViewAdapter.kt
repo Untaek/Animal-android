@@ -22,7 +22,7 @@ class  UserDetailRecyclerViewAdapter (val context: Context, val user : UserDetai
         Glide.with(context).load(Uri.parse(posts.get(position).content.url)).into(holder.postImage)
     }
     override fun getItemCount(): Int {
-        return user.postList.size;
+        return dummy.postList.size;
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

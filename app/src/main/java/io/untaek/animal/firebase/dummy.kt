@@ -126,11 +126,11 @@ object dummy {
 
     val usersDetail: ArrayList<UserDetail> =
             arrayListOf(
-                    UserDetail("AAA","inje",img,7421,24,300, arrayListOf("aa1","aa2")),
-                    UserDetail("BBB","untaek",img,3333,14,255,arrayListOf("aa1","aa2","aa3","aa4")),
-                    UserDetail("CCC","jonghyun",img,2224,11,226,arrayListOf("aa1","aa2","aa3","aa4","aa5","aa6")),
-                    UserDetail("DDD","taeyang",img,366,2,44,arrayListOf("aa1","aa2","aa3")),
-                    UserDetail("EEE","sungbum",img,442,5,31,arrayListOf("aa1"))
+                    UserDetail("AAA","inje",img,7421,24,300),
+                    UserDetail("BBB","untaek",img,3333,14,255),
+                    UserDetail("CCC","jonghyun",img,2224,11,226),
+                    UserDetail("DDD","taeyang",img,366,2,44),
+                    UserDetail("EEE","sungbum",img,442,5,31)
             )
     val timelines: ArrayList<PostInTimeline> =
             arrayListOf(
