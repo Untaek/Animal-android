@@ -3,6 +3,7 @@ package io.untaek.animal
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.widget.Toast
 import com.google.firebase.firestore.DocumentSnapshot
@@ -38,7 +39,9 @@ class TimelineDetailActivity : AppCompatActivity(), MyCallBack , Fire.Callback<A
                 changeSource(post.content)
             }
 
-            recyclerview_comments_timeline_detail.layoutManager = GridLayoutManager(this, 1)
+            val mLayoutManager = LinearLayoutManager (this)
+            recyclerview_comments_timeline_detail.layoutManager = mLayoutManager
+
             timelineDetailPostRecyclerViewAdapter = TimelineDetailPostRecyclerViewAdapter(post, this)
 
             recyclerview_comments_timeline_detail.adapter = timelineDetailPostRecyclerViewAdapter
@@ -48,9 +51,13 @@ class TimelineDetailActivity : AppCompatActivity(), MyCallBack , Fire.Callback<A
             button_go_back_timeline_detail.setOnClickListener { finish() }
 
             editText2.setOnClickListener {
+                Log.e("ㅋㅋㅋ", "댓글 입력")
                 Toast.makeText(this, editText.text.toString(), Toast.LENGTH_SHORT).show()
+                timelineDetailPostRecyclerViewAdapter.addData(post.id, editText.text.toString())
+                mLayoutManager.scrollToPosition(1)
                 Fire.getInstance().newComment(this, post.id, editText.text.toString(),this)
-                timelineDetailPostRecyclerViewAdapter.notifyDataSetChanged()
+                editText.setText("")
+
             }
         }
     }
@@ -63,7 +70,6 @@ class TimelineDetailActivity : AppCompatActivity(), MyCallBack , Fire.Callback<A
         Log.d("ㅋㅋㅋ", "Comment add Fail...!")
     }
     override fun callback() {
-
         Log.e("ㅋㅋㅋ", "콜백")
         timelineDetailPostRecyclerViewAdapter.update()
     }
