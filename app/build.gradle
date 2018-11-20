@@ -36,6 +36,10 @@ android {
 
 }
 
+ext {
+    latest_release = '3.6.1.2802'
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -57,6 +61,11 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+
+    implementation "im.ene.toro3:toro:${latest_release}"
+    implementation "im.ene.toro3:toro-ext-exoplayer:${latest_release}"
+
 
     def nav_version = "1.0.0-alpha07"
 

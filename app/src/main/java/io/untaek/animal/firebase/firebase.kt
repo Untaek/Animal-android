@@ -236,12 +236,13 @@ class Fire {
         val mime = UploadManager.getMime(context, contentUri)
         val url = "${uid}_${Date().time}.${if (mime.startsWith("image")) "jpg" else "mp4"}"
 
-        val content = Content(mime, resolution.first, resolution.second, url)
-
         val user = Auth.getInstance().user()
 
-        storage().reference.child(content.url).putStream(context.contentResolver.openInputStream(contentUri))
-                .addOnSuccessListener { _ ->
+        storage().reference.child(url).putStream(context.contentResolver.openInputStream(contentUri))
+                .addOnSuccessListener { kl ->
+
+                    val content = Content(mime, resolution.first, resolution.second, url, kl.uploadSessionUri.toString())
+
                     val post = NewPost(
                             user,
                             content,
@@ -281,6 +282,11 @@ class Fire {
                 .limit(amount)
                 .get()
                 .addOnSuccessListener { qs ->
+
+                    qs.documents.map {
+                        it.getString("url")
+                    }
+
                     callback.onResult(Pair(qs.documents.lastOrNull(), qs.documents.map {
                         it.toObject(Post::class.java)!!.apply {
                             this.id = it.id
@@ -356,22 +362,51 @@ class Fire {
                 if (content.mime.startsWith("image/"))
                     "thumb@${resolution(size)}_${content.url}"
         else "thumb@${resolution(size)}_${content.url.split(".")[0]}.jpg"
-        storage().reference.child(thumbUrl).downloadUrl
-                .addOnSuccessListener { uri ->
-                    val builder = Glide.with(context)
-                            .asBitmap()
-                            .load(uri)
 
-                    if(options != null) {
-                        builder.apply(options).into(imageView)
-                    }else {
-                        builder.into(imageView)
+        if(content.thumbUrl.isNotBlank()) {
+            val builder = Glide.with(context)
+                    .asBitmap()
+                    .load(Uri.parse(content.thumbUrl))
+            if(options != null) {
+                builder.apply(options).into(imageView)
+            }else {
+                builder.into(imageView)
+            }
+        }
+        else {
+            storage().reference.child(thumbUrl).downloadUrl
+                    .addOnSuccessListener { uri ->
+                        content.thumbUrl = uri.toString()
+                        val builder = Glide.with(context)
+                                .asBitmap()
+                                .load(uri)
+
+                        if(options != null) {
+                            builder.apply(options).into(imageView)
+                        }else {
+                            builder.into(imageView)
+                        }
+
                     }
+                    .addOnFailureListener {
+                        Log.w(TAG, "thumbnail error", it)
+                    }
+        }
+    }
 
-                }
-                .addOnFailureListener {
-                    Log.w(TAG, "thumbnail error", it)
-                }
+    fun loadVideoDownloadUri(content: Content, callback: Callback<Uri>) {
+        if (content.downloadUrl.isNotBlank())
+            callback.onResult(Uri.parse(content.downloadUrl))
+        else {
+            storage().reference.child(content.url).downloadUrl
+                    .addOnSuccessListener {
+                        content.downloadUrl = it.toString()
+                        callback.onResult(it)
+                    }
+                    .addOnFailureListener {
+                        callback.onFail(it)
+                    }
+        }
     }
 
     fun loadActualContent(content: Content, context: Context, callback: Callback<Any>) {
@@ -404,26 +439,38 @@ class Fire {
                     }
         }
         else if (type == "video") {
-            val file = File(context.cacheDir, content.url)
-
-            Log.d("Video file", file.absolutePath)
-
-            if(file.exists()) {
-                Log.d("Video file", "exist")
-                callback.onResult(file)
-            }
-            else {
-                file.createNewFile()
-                storage().reference.child(content.url)
-                        .getFile(file)
-                        .addOnProgressListener {  }
-                        .addOnSuccessListener {
-                            callback.onResult(file)
-                        }
-                        .addOnFailureListener{
-                            callback.onFail(it)
-                        }
-            }
+            storage().reference.child(content.url).downloadUrl
+                    .addOnSuccessListener {
+                        callback.onResult(it)
+                    }
+                    .addOnFailureListener {
+                        callback.onFail(it)
+                    }
+//
+//            val file = File(context.cacheDir, content.url)
+//
+//            Log.d("Video file", file.absolutePath)
+//
+//            if(file.exists()) {
+//                Log.d("Video file", "exist")
+//                callback.onResult(file)
+//            }
+//            else {
+//                file.createNewFile()
+//                storage().reference.child(content.url)
+//                        .getFile(file)
+//                        .addOnProgressListener {
+//
+//                        }
+//                        .addOnSuccessListener {
+//                            callback.onResult(file)
+//                        }
+//                        .addOnFailureListener{
+//                            callback.onFail(it)
+//                        }
+//
+//
+//            }
         }
     }
 

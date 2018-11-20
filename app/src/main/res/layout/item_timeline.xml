@@ -15,16 +15,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextureView
-            android:id="@+id/textureView"
+
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/playerView"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:minHeight="100dp" />
+            android:layout_height="match_parent"
+            android:minHeight="100dp"
+            app:surface_type="texture_view"
+            app:use_artwork="true"
+            app:use_controller="true"
+            app:auto_show="false"
+            app:resize_mode="fit"
+            />
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="100dp"
+            />
+
+        <ImageView
+            android:id="@+id/imageView_play"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_play_circle_outline_black_24dp"
+            android:layout_gravity="center"
             />
     </FrameLayout>
 

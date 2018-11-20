@@ -39,7 +39,9 @@ data class Content(
         val mime: String = "",
         val h: Int = 0,
         val w: Int = 0,
-        val url: String = ""
+        val url: String = "",
+        var downloadUrl: String = "",
+        var thumbUrl: String = ""
 ): Serializable
 
 data class User(

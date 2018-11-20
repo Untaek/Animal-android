@@ -1,25 +1,34 @@
 package io.untaek.animal.list
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Point
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.OvalShape
 import android.net.Uri
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.TextureView
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import com.bumptech.glide.Glide
+import com.google.android.exoplayer2.ui.PlayerView
 import com.google.firebase.firestore.DocumentSnapshot
+import im.ene.toro.ToroPlayer
+import im.ene.toro.ToroUtil
+import im.ene.toro.exoplayer.ExoPlayerViewHelper
+import im.ene.toro.exoplayer.Playable
+import im.ene.toro.media.PlaybackInfo
+import im.ene.toro.widget.Container
 import io.untaek.animal.R
 import io.untaek.animal.TimelineDetailActivity
 import io.untaek.animal.UserDetailActivity
+import io.untaek.animal.firebase.Content
 import io.untaek.animal.firebase.Fire
 import io.untaek.animal.firebase.Post
 import io.untaek.animal.util.Viewer
 import kotlinx.android.synthetic.main.item_timeline.view.*
+import java.io.File
 import java.lang.Exception
 
 class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<TimelineAdapter.ViewHolder>(), Fire.Callback<Pair<DocumentSnapshot?, List<Post>>> {
@@ -29,12 +38,29 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
     private var loading = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        Log.d("TimelineAdapter", "viewType: $viewType")
-        return ViewHolder(parent, items)
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_timeline,  parent, false), items)
     }
 
     override fun getItemCount(): Int {
         return items.size
+    }
+
+    private fun resize(content: Content, view: View) {
+        val ratio = 0.6
+
+        val p = Point()
+        (context as Activity).windowManager.defaultDisplay.getSize(p)
+        Log.d("Viewer", "Window size ${p.x} ${p.y}")
+
+        val width = p.x
+        val height = content.h * p.x / content.w
+
+        if(height > p.y * 0.7) {
+            view.layoutParams = FrameLayout.LayoutParams((width * ratio).toInt(), (height * ratio).toInt(), Gravity.CENTER)
+        }
+        else {
+            view.layoutParams = FrameLayout.LayoutParams(width, height, Gravity.CENTER)
+        }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -45,9 +71,8 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
 
         holder.description.text = item.description
         holder.user_name.text = item.user.name
-        holder.pet_name.text = "dog"
+        holder.pet_name.text = "동물 이름?"
         holder.likes.text = item.totalLikes.toString()
-        //holder.viewer.changeSource(item.content)
         holder.imageView_like.setImageResource(
                 if (item.like)
                     R.drawable.ic_favorite_black_24dp
@@ -55,11 +80,36 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
                     R.drawable.ic_favorite_border_black_24dp
         )
 
+        resize(item.content, holder.imageView)
+        resize(item.content, holder.playerView)
+
         Glide.with(context)
                 .load(Uri.parse(item.user.pictureUrl))
                 .into(holder.imageView_user_picture)
 
         Fire.getInstance().loadMiddleThumbnail(item.content, context, holder.imageView, null, null)
+
+        Fire.getInstance().loadVideoDownloadUri(item.content, object : Fire.Callback<Uri> {
+            override fun onResult(data: Uri) {
+                Log.d("holder", "${data.toString()}")
+                holder.uri = data
+            }
+
+            override fun onFail(e: Exception) {
+                Log.d("holder", "exception", e)
+            }
+
+        })
+//
+//        if(item.content.mime.startsWith("video")){
+////            holder.playerView.visibility = View.VISIBLE
+////            holder.image_play.visibility = View.VISIBLE
+//        }
+//        else {
+//            holder.imageView.visibility = View.VISIBLE
+//            holder.playerView.visibility = View.GONE
+//            holder.image_play.visibility = View.GONE
+//        }
     }
 
     fun updateList() {
@@ -77,6 +127,7 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
     fun getItems() = items
 
     override fun onResult(data: Pair<DocumentSnapshot?, List<Post>>) {
+        Log.d("TimelineAdapter", "onResult ${data.second.size}")
         loading = !loading
         if (data.first != null) {
             lastSeen = data.first!!
@@ -89,25 +140,86 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
 
     }
 
-    class ViewHolder(parent: ViewGroup, items: ArrayList<Post>): RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_timeline,  parent, false)) {
+    class ViewHolder(itemView: View, val items: ArrayList<Post>): RecyclerView.ViewHolder(itemView), ToroPlayer {
+
+        var helper: ExoPlayerViewHelper? = null
+        var uri: Uri? = null
+
+
+        override fun isPlaying(): Boolean {
+            return helper != null && helper!!.isPlaying
+        }
+
+        override fun getPlayerView(): View {
+            return playerView
+        }
+
+        override fun pause() {
+            if(helper != null) helper!!.pause()
+        }
+
+        override fun wantsToPlay(): Boolean {
+//            return image_play.visibility == View.GONE && playerView.visibility == View.VISIBLE &&
+//             ToroUtil.visibleAreaOffset(this, itemView.parent) >= 0.75
+
+            return ToroUtil.visibleAreaOffset(this, itemView.parent) >= 0.85
+        }
+
+        override fun play() {
+            if(helper != null) helper!!.play()
+        }
+
+        override fun getCurrentPlaybackInfo(): PlaybackInfo {
+            return if (helper != null) helper!!.latestPlaybackInfo else PlaybackInfo()
+        }
+
+        override fun release() {
+            if (helper != null) {
+                helper!!.release()
+                helper = null
+            }
+        }
+
+        override fun initialize(container: Container, playbackInfo: PlaybackInfo) {
+            if(uri != null){
+                if(helper == null) {
+                    helper = ExoPlayerViewHelper(this, uri!!)
+                }
+                helper!!.initialize(container, playbackInfo)
+            }
+
+        }
+
+        override fun getPlayerOrder(): Int {
+            return adapterPosition
+        }
+
         private val TAG = "TimelineAdapter"
 
         val description: TextView = itemView.textView_description
-        val textureView: TextureView = itemView.textureView
         val user_name: TextView = itemView.textView_name
         val pet_name: TextView = itemView.textView_pet_name
         val likes: TextView = itemView.textView_like
         val container: FrameLayout = itemView.frame_image_container
         val imageView: ImageView = itemView.imageView
-        val viewer: Viewer = Viewer(textureView, imageView)
         val imageView_user_picture: ImageView = itemView.imageView_user_image
         val imageView_like: ImageView = itemView.imageView_like
+        val playerView: PlayerView = itemView.playerView
+        val image_play: ImageView = itemView.imageView_play
 
-        val context: Context = parent.context
+        val context: Context = itemView.context
 
         init {
             imageView_user_picture.clipToOutline = true
             imageView_user_picture.background = ShapeDrawable(OvalShape())
+
+            imageView.setOnClickListener {
+                if(items[adapterPosition].content.mime.startsWith("video")){
+                    imageView.visibility = View.GONE
+                    playerView.visibility = View.VISIBLE
+                    image_play.visibility = View.GONE
+                }
+            }
 
             description.setOnClickListener {
                 val intent = Intent(context, TimelineDetailActivity::class.java).apply {
