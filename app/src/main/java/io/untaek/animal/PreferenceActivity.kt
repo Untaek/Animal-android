@@ -10,10 +10,12 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
+import io.untaek.animal.TabsActivity.Companion.LOG_OUT
 import io.untaek.animal.firebase.Content
 import io.untaek.animal.firebase.Fire
 import kotlinx.android.synthetic.main.activity_preference.*
@@ -40,13 +42,13 @@ class PreferenceAdapter(val context: Context): RecyclerView.Adapter<PreferenceAd
 
     init {
         items.add(Menu("공지사항", 0))
-        items.add(Menu("로그아웃", 0))
+        items.add(Menu("로그아웃", 1))
 
         FirebaseAuth.getInstance().addAuthStateListener(this)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-       return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_preference, parent, false))
+       return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_preference, parent, false), items)
     }
 
     override fun getItemCount(): Int {
@@ -62,27 +64,37 @@ class PreferenceAdapter(val context: Context): RecyclerView.Adapter<PreferenceAd
     override fun onAuthStateChanged(p0: FirebaseAuth) {
         Log.d(TAG, "onAuthStateChanged, ${p0.currentUser}")
         if(p0.currentUser == null){
-            (context as Activity).setResult(66)
+            (context as Activity).setResult(LOG_OUT)
             (context as Activity).finish()
         }
     }
 
-    class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View, items: ArrayList<Menu>): RecyclerView.ViewHolder(itemView) {
         private val context: Context = itemView.context
 
-        val textView_label: TextView = itemView.textView_label.also {
-            it.setOnClickListener {
-                AlertDialog.Builder(context)
-                        .setMessage("정말로 로그아웃 하시겠습니까?")
-                        .setPositiveButton("네") { dialog, _ ->
-                            Fire.Auth.getInstance().signOut(context)
-                            dialog.dismiss()
-                        }
-                        .setNegativeButton("아니오") { dialog, _ ->
-                            dialog.dismiss()
-                        }
-                        .create()
-                        .show()
+        val textView_label: TextView = itemView.textView_label
+
+        init {
+            itemView.setOnClickListener {
+                when(items[adapterPosition].type){
+                    0 -> {
+
+                    }
+
+                    1 -> {
+                        AlertDialog.Builder(context)
+                            .setMessage("정말로 로그아웃 하시겠습니까?")
+                            .setPositiveButton("네") { dialog, _ ->
+                                Fire.Auth.getInstance().signOut(context)
+                                dialog.dismiss()
+                            }
+                            .setNegativeButton("아니오") { dialog, _ ->
+                                dialog.dismiss()
+                            }
+                            .create()
+                            .show()
+                    }
+                }
             }
         }
     }

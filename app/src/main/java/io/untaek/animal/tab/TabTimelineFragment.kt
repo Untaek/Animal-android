@@ -12,10 +12,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import io.untaek.animal.R
-import io.untaek.animal.component.MyOnScrollListener
-import io.untaek.animal.component.TimelineAdapter
-import io.untaek.animal.component.TimelineDecorator
-import io.untaek.animal.component.TimelineLayoutManager
+import io.untaek.animal.list.ScrollUpdateListener
+import io.untaek.animal.list.TimelineAdapter
+import io.untaek.animal.list.TimelineDecorator
+import io.untaek.animal.list.TimelineLayoutManager
 import kotlinx.android.synthetic.main.tab_timeline.view.*
 
 const val RC_SIGN_IN = 123
@@ -25,7 +25,7 @@ class TabTimelineFragment: Fragment() {
     private lateinit var adapter: TimelineAdapter
     private lateinit var layoutManager: TimelineLayoutManager
     private lateinit var decorator: TimelineDecorator
-    private lateinit var scrollListener: MyOnScrollListener
+    private lateinit var scrollUpdateListener: ScrollUpdateListener
 
     private var state: Parcelable? = null
     private var count = 1
@@ -40,10 +40,10 @@ class TabTimelineFragment: Fragment() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = layoutManager
         recyclerView.addItemDecoration(decorator)
-        recyclerView.addOnScrollListener(scrollListener)
+        recyclerView.addOnScrollListener(scrollUpdateListener)
         recyclerView.setHasFixedSize(true)
         recyclerView.recycledViewPool.setMaxRecycledViews(0, 30)
-        //recyclerView.setItemViewCacheSize(30)
+//        recyclerView.setItemViewCacheSize(30)
         recyclerView.isDrawingCacheEnabled = true
         recyclerView.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
     }
@@ -60,7 +60,7 @@ class TabTimelineFragment: Fragment() {
         layoutManager = TimelineLayoutManager(activity, LinearLayoutManager::VERTICAL.get(), false)
         layoutManager.setExtraLayoutSpace(activity?.windowManager?.defaultDisplay?.height!!)
         decorator = TimelineDecorator()
-        scrollListener = MyOnScrollListener(adapter, adapter.getItems()) {
+        scrollUpdateListener = ScrollUpdateListener(adapter, adapter.getItems()) {
             adapter.updateList()
         }
         adapter.updateList()
@@ -68,7 +68,7 @@ class TabTimelineFragment: Fragment() {
 
     override fun onPause() {
         super.onPause()
-        state = recyclerView?.layoutManager?.onSaveInstanceState()
+        state = recyclerView.layoutManager?.onSaveInstanceState()
     }
 
     companion object {

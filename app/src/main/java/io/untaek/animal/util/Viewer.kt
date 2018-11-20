@@ -88,7 +88,7 @@ class Viewer(val textureView: TextureView, val imageView: ImageView) :
     private fun preview() {
         content?.let {
             resize(it)
-            Fire.getInstance().loadThumbnail(it, context, imageView, null)
+            Fire.getInstance().loadThumbnail(it, context, imageView, Fire.ThumbSize.M256, null, null)
         }
     }
 

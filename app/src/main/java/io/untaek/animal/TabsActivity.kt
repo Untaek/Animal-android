@@ -22,6 +22,10 @@ import java.lang.Exception
 class TabsActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
     private var logined = false
 
+    companion object {
+        const val LOG_OUT = 66
+    }
+
     override fun onAuthStateChanged(auth: FirebaseAuth) {
         Log.d("TabsActivity", "auth state changed ${auth.currentUser}")
         logined = auth.currentUser != null
@@ -30,7 +34,7 @@ class TabsActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(resultCode == 66) {
+        if(resultCode == LOG_OUT) {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }

@@ -8,6 +8,8 @@ import android.graphics.drawable.shapes.OvalShape
 import android.graphics.drawable.shapes.Shape
 import android.os.Build
 import android.os.Bundle
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.GridLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +23,7 @@ import io.untaek.animal.firebase.Fire
 import io.untaek.animal.firebase.USERS
 import io.untaek.animal.firebase.User
 import io.untaek.animal.firebase.UserDetail
+import io.untaek.animal.list.MyPostRecyclerAdapter
 import kotlinx.android.synthetic.main.tab_my_page.*
 import kotlinx.android.synthetic.main.tab_my_page.view.*
 
@@ -75,6 +78,14 @@ class TabMyPageFragment: Fragment() {
                         Log.d(TAG, "Current data: null")
                     }
                 }
+
+        root.recyclerView_my_post_list.adapter = MyPostRecyclerAdapter(requireContext()).also {
+            it.update()
+        }
+        root.recyclerView_my_post_list.layoutManager =
+                GridLayoutManager(requireContext(), 3, GridLayoutManager.VERTICAL, false).apply {
+                }
+        //root.recyclerView_my_post_list.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.HORIZONTAL))
     }
 
     override fun onResume() {

@@ -1,4 +1,4 @@
-package io.untaek.animal.component
+package io.untaek.animal.list
 
 import android.graphics.Canvas
 import android.graphics.Color
@@ -6,7 +6,6 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.View
 
 class TimelineDecorator : RecyclerView.ItemDecoration() {
@@ -34,7 +33,7 @@ class TimelineDecorator : RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         if(parent.getChildAdapterPosition(view) != parent.adapter.itemCount - 1) {
-           outRect.bottom = itemPadding
+            outRect.bottom = itemPadding
         }
     }
 }

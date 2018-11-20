@@ -6,11 +6,8 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.util.Log
 import com.bumptech.glide.Glide
-import io.untaek.animal.R.id.*
-import io.untaek.animal.component.UserDetailRecyclerViewAdapter
+import io.untaek.animal.list.UserDetailRecyclerViewAdapter
 import io.untaek.animal.firebase.UserDetail
-import io.untaek.animal.util.Viewer
-import kotlinx.android.synthetic.main.activity_timeline_detail.*
 import kotlinx.android.synthetic.main.activity_user_detail.*
 
 class UserDetailActivity : AppCompatActivity() {

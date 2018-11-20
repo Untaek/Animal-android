@@ -1,4 +1,4 @@
-package io.untaek.animal.component
+package io.untaek.animal.list
 
 import android.content.Context
 import android.content.Intent
@@ -47,7 +47,7 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
         holder.user_name.text = item.user.name
         holder.pet_name.text = "dog"
         holder.likes.text = item.totalLikes.toString()
-        holder.viewer.changeSource(item.content)
+        //holder.viewer.changeSource(item.content)
         holder.imageView_like.setImageResource(
                 if (item.like)
                     R.drawable.ic_favorite_black_24dp
@@ -58,6 +58,8 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
         Glide.with(context)
                 .load(Uri.parse(item.user.pictureUrl))
                 .into(holder.imageView_user_picture)
+
+        Fire.getInstance().loadMiddleThumbnail(item.content, context, holder.imageView, null, null)
     }
 
     fun updateList() {

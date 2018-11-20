@@ -1,4 +1,4 @@
-package io.untaek.animal.component
+package io.untaek.animal.list
 
 import android.content.Context
 import android.net.Uri

@@ -1,4 +1,4 @@
-package io.untaek.animal.component
+package io.untaek.animal.list
 
 import android.content.Context
 import android.content.Intent
@@ -6,7 +6,6 @@ import android.net.Uri
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -14,9 +13,7 @@ import io.untaek.animal.R
 import io.untaek.animal.TimelineDetailActivity
 import io.untaek.animal.firebase.Post
 import io.untaek.animal.firebase.dummy
-import io.untaek.animal.firebase.dummy.post
 import kotlinx.android.synthetic.main.component_tab_rank_hotpost_recyclerview_item.view.*
-import kotlinx.android.synthetic.main.component_tab_rank_recyclerview_item_userrank.view.*
 
 
 class TabRankingHotPostRecyclerViewAdapter (val context: Context, val posts: List<Post> ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

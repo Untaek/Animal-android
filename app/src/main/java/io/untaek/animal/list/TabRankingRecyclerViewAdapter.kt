@@ -1,4 +1,4 @@
-package io.untaek.animal.component
+package io.untaek.animal.list
 
 import android.content.Context
 import android.content.Intent
@@ -62,7 +62,7 @@ class  TabRankingRecyclerViewAdapter (private val context: Context, val posts : 
             holder.userLikeCount.text =user.totalLikes.toString()
 
             holder.userPostRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            holder.userPostRecyclerView.adapter =  TabRankingUserRankRecyclerViewAdapter(context, users.get(position-1))
+            holder.userPostRecyclerView.adapter = TabRankingUserRankRecyclerViewAdapter(context, users.get(position - 1))
         }
     }
 

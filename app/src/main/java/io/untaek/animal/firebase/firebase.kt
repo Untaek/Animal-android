@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.google.firebase.auth.FirebaseAuth
 import com.firebase.ui.auth.AuthUI
@@ -274,10 +275,29 @@ class Fire {
                 }
     }
 
-    fun getFirstPostPage(callback: Callback<Pair<DocumentSnapshot?, List<Post>>>){
+    fun getFirstPostPage(callback: Callback<Pair<DocumentSnapshot?, List<Post>>>, amount: Long) {
         fs().collection(POSTS)
                 .orderBy("timeStamp")
-                .limit(3)
+                .limit(amount)
+                .get()
+                .addOnSuccessListener { qs ->
+                    callback.onResult(Pair(qs.documents.lastOrNull(), qs.documents.map {
+                        it.toObject(Post::class.java)!!.apply {
+                            this.id = it.id
+                        }
+                    }))
+                }
+    }
+
+    fun getFirstPostPage(callback: Callback<Pair<DocumentSnapshot?, List<Post>>>){
+        getFirstPostPage(callback, 5)
+    }
+
+    fun getPostPage(lastSeen: DocumentSnapshot, callback: Callback<Pair<DocumentSnapshot?, List<Post>>>, amount: Long) {
+        fs().collection(POSTS)
+                .orderBy("timeStamp")
+                .limit(amount)
+                .startAfter(lastSeen)
                 .get()
                 .addOnSuccessListener { qs ->
                     callback.onResult(Pair(qs.documents.lastOrNull(), qs.documents.map {
@@ -289,18 +309,7 @@ class Fire {
     }
 
     fun getPostPage(lastSeen: DocumentSnapshot, callback: Callback<Pair<DocumentSnapshot?, List<Post>>>) {
-        fs().collection(POSTS)
-                .orderBy("timeStamp")
-                .limit(3)
-                .startAfter(lastSeen)
-                .get()
-                .addOnSuccessListener { qs ->
-                    callback.onResult(Pair(qs.documents.lastOrNull(), qs.documents.map {
-                        it.toObject(Post::class.java)!!.apply {
-                            this.id = it.id
-                        }
-                    }))
-                }
+        getPostPage(lastSeen, callback, 5)
     }
 
     fun postDetail(postId: String, callback: Callback<Post>) {
@@ -318,17 +327,47 @@ class Fire {
                 }
     }
 
-    fun loadThumbnail(content: Content, context: Context, imageView: ImageView, callback: Callback<Any>?) {
+    enum class ThumbSize {
+        S64,
+        S128,
+        M256,
+        M512
+    }
+
+    private fun resolution(size: ThumbSize): String {
+        return when(size) {
+            ThumbSize.S64 -> "64"
+            ThumbSize.S128 -> "128"
+            ThumbSize.M256 -> "256"
+            ThumbSize.M512 -> "512"
+        }
+    }
+
+    fun loadsmallThumbnail(content: Content, context: Context, imageView: ImageView, options: RequestOptions?, callback: Callback<Any>?) {
+        loadThumbnail(content, context, imageView, ThumbSize.S64, options, callback)
+    }
+
+    fun loadMiddleThumbnail(content: Content, context: Context, imageView: ImageView, options: RequestOptions?, callback: Callback<Any>?) {
+        loadThumbnail(content, context, imageView, ThumbSize.M256, options, callback)
+    }
+
+    fun loadThumbnail(content: Content, context: Context, imageView: ImageView, size: ThumbSize, options: RequestOptions?, callback: Callback<Any>?) {
         val thumbUrl =
                 if (content.mime.startsWith("image/"))
-                    "thumb@256_${content.url}"
-        else "thumb@256_${content.url.split(".")[0]}.jpg"
+                    "thumb@${resolution(size)}_${content.url}"
+        else "thumb@${resolution(size)}_${content.url.split(".")[0]}.jpg"
         storage().reference.child(thumbUrl).downloadUrl
                 .addOnSuccessListener { uri ->
-                    Glide.with(context)
+                    val builder = Glide.with(context)
                             .asBitmap()
                             .load(uri)
-                            .into(imageView)
+
+                    if(options != null) {
+                        builder.apply(options).into(imageView)
+                    }else {
+                        builder.into(imageView)
+                    }
+
                 }
                 .addOnFailureListener {
                     Log.w(TAG, "thumbnail error", it)
