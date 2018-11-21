@@ -5,6 +5,7 @@ import android.content.Intent
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -80,7 +81,9 @@ class  TabRankingRecyclerViewAdapter (private val context: Context, val posts : 
         init {
         }
     }
-    class ViewHolderUserRank(parent: ViewGroup, users : ArrayList<UserDetail>) : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.component_tab_rank_recyclerview_item_userrank, parent, false)){
+    class ViewHolderUserRank(parent: ViewGroup, users : ArrayList<UserDetail>) :
+            RecyclerView.ViewHolder(LayoutInflater.from(parent.context).
+                    inflate(R.layout.component_tab_rank_recyclerview_item_userrank, parent, false)){
         val userName : TextView = itemView.textView_user_name_tab_rank_userRank
         val userFollowCount:TextView = itemView.textView_follow_count_tab_rank_userRank
         val userLikeCount :TextView =itemView. textView_like_count_tab_rank_userRank
@@ -92,9 +95,9 @@ class  TabRankingRecyclerViewAdapter (private val context: Context, val posts : 
             userName.setOnClickListener {
                 val intent = Intent(context, UserDetailActivity::class.java).apply {
                     putExtra("data", users[adapterPosition-1])
-                }
-                context.startActivity(intent)
-            }
+        }
+        context.startActivity(intent)
+    }
         }
     }
 }

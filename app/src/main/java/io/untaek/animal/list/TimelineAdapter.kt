@@ -20,6 +20,7 @@ import im.ene.toro.exoplayer.ExoPlayerViewHelper
 import im.ene.toro.exoplayer.Playable
 import im.ene.toro.media.PlaybackInfo
 import im.ene.toro.widget.Container
+import io.untaek.animal.Hash.HashTagAdapter
 import io.untaek.animal.R
 import io.untaek.animal.TimelineDetailActivity
 import io.untaek.animal.UserDetailActivity
@@ -161,9 +162,11 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
         }
 
         open fun bind(item: Post) {
-            description.text = item.description
+            val hash = HashTagAdapter()
+            hash.setContent(context, description , items[adapterPosition].description)
+            //description.text = item.description
             user_name.text = item.user.name
-            pet_name.text = this.javaClass.name
+            pet_name.text = "pet name"
             likes.text = item.totalLikes.toString()
             imageView_like.setImageResource(
                     if (item.like)

@@ -26,6 +26,11 @@ data class UserDetail(
         val totalFollows: Long = 0L
 ): Serializable
 
+data class HashTagDetail(
+        val tags: String = "0",
+        val counts: Long = 0L
+): Serializable
+
 data class Comment(
         val commentId: String = "0",
         val userImage: Int = 0,

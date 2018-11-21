@@ -132,6 +132,13 @@ object dummy {
                     UserDetail("DDD","taeyang",img,366,2,44),
                     UserDetail("EEE","sungbum",img,442,5,31)
             )
+
+    val hashTagsDetail: ArrayList<HashTagDetail> =
+            arrayListOf(
+                    HashTagDetail("Untaek", 3),
+                    HashTagDetail("dog", 3)
+            )
+
     val timelines: ArrayList<PostInTimeline> =
             arrayListOf(
                     PostInTimeline("SDF235SD", R.mipmap.ic_launcher, "SDFH23D2", "NUMUYFH535", "Anthony", "강즤쥐", "정말루 귀엽당 ㅎ", 123),
