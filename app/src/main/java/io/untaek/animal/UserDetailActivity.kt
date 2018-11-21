@@ -82,15 +82,15 @@ class UserDetailActivity : AppCompatActivity(), Fire.Callback<UserDetail> {
         button_go_back_user_detail_detail.setOnClickListener { finish() }
         textView_followersLabel_user_detail.setOnClickListener {
             Log.e("ㅋㅋㅋ","userDetail Activity user.id : "+user.id)
-            Fire.getInstance().checkFollow("dbsdlswp",user.id, object : Fire.Callback<Boolean> {
+            Fire.getInstance().checkFollow(Fire.Auth.getInstance().user().id, user.id, object : Fire.Callback<Boolean> {
                 override fun onResult(data: Boolean) {
-                    if (data == true) {
+                    if (data) {
                         Log.e("ㅋㅋㅋ", "unfollow")
-                        Fire.getInstance().unfollow("dbsdlswp", user.id)
+                        Fire.getInstance().unfollow(Fire.Auth.getInstance().user().id, user.id)
                         followerCount.text = (followerCount.text.toString().toInt() - 1).toString()
                     } else {
                         Log.e("ㅋㅋㅋ", "follow")
-                        Fire.getInstance().follow("dbsdlswp", user.id)
+                        Fire.getInstance().follow(Fire.Auth.getInstance().user().id, user.id)
                         followerCount.text = (followerCount.text.toString().toInt() + 1).toString()
                     }
                 }

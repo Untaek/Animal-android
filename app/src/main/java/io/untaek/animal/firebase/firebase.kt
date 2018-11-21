@@ -466,16 +466,19 @@ class Fire {
             storage().reference.child(thumbUrl).downloadUrl
                     .addOnSuccessListener { uri ->
                         content.thumbUrl = uri.toString()
-                        val builder = Glide.with(context)
-                                .asBitmap()
-                                .load(uri)
+                        try{
+                            val builder = Glide.with(context)
+                                    .asBitmap()
+                                    .load(uri)
 
-                        if(options != null) {
-                            builder.apply(options).into(imageView)
-                        }else {
-                            builder.into(imageView)
+                            if(options != null) {
+                                builder.apply(options).into(imageView)
+                            }else {
+                                builder.into(imageView)
+                            }
+                        }catch (e: Exception) {
+                            Log.e("thumbnail error", "ha", e)
                         }
-
                     }
                     .addOnFailureListener {
                         Log.w(TAG, "thumbnail error", it)
