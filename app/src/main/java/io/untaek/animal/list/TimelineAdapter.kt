@@ -31,85 +31,41 @@ import kotlinx.android.synthetic.main.item_timeline.view.*
 import java.io.File
 import java.lang.Exception
 
-class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<TimelineAdapter.ViewHolder>(), Fire.Callback<Pair<DocumentSnapshot?, List<Post>>> {
+class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<TimelineAdapter.BaseViewHolder>(), Fire.Callback<Pair<DocumentSnapshot?, List<Post>>> {
+
+    companion object {
+        const val IMAGE = 0
+        const val VIDEO = 1
+    }
 
     private val items: ArrayList<Post> = arrayListOf()
     private lateinit var lastSeen: DocumentSnapshot
     private var loading = false
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_timeline,  parent, false), items)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+
+        if(viewType == IMAGE) {
+            return BaseViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_timeline_image,  parent, false), items)
+        }else if (viewType == VIDEO) {
+            return VideoViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_timeline,  parent, false), items)
+        }
+        throw Exception()
+    }
+
+    override fun onViewRecycled(holder: BaseViewHolder) {
+        holder.onRecycled()
     }
 
     override fun getItemCount(): Int {
         return items.size
     }
 
-    private fun resize(content: Content, view: View) {
-        val ratio = 0.6
-
-        val p = Point()
-        (context as Activity).windowManager.defaultDisplay.getSize(p)
-        Log.d("Viewer", "Window size ${p.x} ${p.y}")
-
-        val width = p.x
-        val height = content.h * p.x / content.w
-
-        if(height > p.y * 0.7) {
-            view.layoutParams = FrameLayout.LayoutParams((width * ratio).toInt(), (height * ratio).toInt(), Gravity.CENTER)
-        }
-        else {
-            view.layoutParams = FrameLayout.LayoutParams(width, height, Gravity.CENTER)
-        }
+    override fun getItemViewType(position: Int): Int {
+        return if(items[position].content.mime.startsWith("image")) IMAGE else VIDEO
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
-        Log.d("holder", "")
-
-        val item = items[position]
-
-        holder.description.text = item.description
-        holder.user_name.text = item.user.name
-        holder.pet_name.text = "동물 이름?"
-        holder.likes.text = item.totalLikes.toString()
-        holder.imageView_like.setImageResource(
-                if (item.like)
-                    R.drawable.ic_favorite_black_24dp
-                else
-                    R.drawable.ic_favorite_border_black_24dp
-        )
-
-        resize(item.content, holder.imageView)
-        resize(item.content, holder.playerView)
-
-        Glide.with(context)
-                .load(Uri.parse(item.user.pictureUrl))
-                .into(holder.imageView_user_picture)
-
-        Fire.getInstance().loadMiddleThumbnail(item.content, context, holder.imageView, null, null)
-
-        Fire.getInstance().loadVideoDownloadUri(item.content, object : Fire.Callback<Uri> {
-            override fun onResult(data: Uri) {
-                Log.d("holder", "${data.toString()}")
-                holder.uri = data
-            }
-
-            override fun onFail(e: Exception) {
-                Log.d("holder", "exception", e)
-            }
-
-        })
-//
-//        if(item.content.mime.startsWith("video")){
-////            holder.playerView.visibility = View.VISIBLE
-////            holder.image_play.visibility = View.VISIBLE
-//        }
-//        else {
-//            holder.imageView.visibility = View.VISIBLE
-//            holder.playerView.visibility = View.GONE
-//            holder.image_play.visibility = View.GONE
-//        }
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+        holder.bind(items[position])
     }
 
     fun updateList() {
@@ -140,61 +96,8 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
 
     }
 
-    class ViewHolder(itemView: View, val items: ArrayList<Post>): RecyclerView.ViewHolder(itemView), ToroPlayer {
-
-        var helper: ExoPlayerViewHelper? = null
-        var uri: Uri? = null
-
-
-        override fun isPlaying(): Boolean {
-            return helper != null && helper!!.isPlaying
-        }
-
-        override fun getPlayerView(): View {
-            return playerView
-        }
-
-        override fun pause() {
-            if(helper != null) helper!!.pause()
-        }
-
-        override fun wantsToPlay(): Boolean {
-//            return image_play.visibility == View.GONE && playerView.visibility == View.VISIBLE &&
-//             ToroUtil.visibleAreaOffset(this, itemView.parent) >= 0.75
-
-            return ToroUtil.visibleAreaOffset(this, itemView.parent) >= 0.85
-        }
-
-        override fun play() {
-            if(helper != null) helper!!.play()
-        }
-
-        override fun getCurrentPlaybackInfo(): PlaybackInfo {
-            return if (helper != null) helper!!.latestPlaybackInfo else PlaybackInfo()
-        }
-
-        override fun release() {
-            if (helper != null) {
-                helper!!.release()
-                helper = null
-            }
-        }
-
-        override fun initialize(container: Container, playbackInfo: PlaybackInfo) {
-            if(uri != null){
-                if(helper == null) {
-                    helper = ExoPlayerViewHelper(this, uri!!)
-                }
-                helper!!.initialize(container, playbackInfo)
-            }
-
-        }
-
-        override fun getPlayerOrder(): Int {
-            return adapterPosition
-        }
-
-        private val TAG = "TimelineAdapter"
+    open class BaseViewHolder(itemView: View, val items: ArrayList<Post>): RecyclerView.ViewHolder(itemView) {
+        val context = itemView.context
 
         val description: TextView = itemView.textView_description
         val user_name: TextView = itemView.textView_name
@@ -204,22 +107,10 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
         val imageView: ImageView = itemView.imageView
         val imageView_user_picture: ImageView = itemView.imageView_user_image
         val imageView_like: ImageView = itemView.imageView_like
-        val playerView: PlayerView = itemView.playerView
-        val image_play: ImageView = itemView.imageView_play
-
-        val context: Context = itemView.context
 
         init {
             imageView_user_picture.clipToOutline = true
             imageView_user_picture.background = ShapeDrawable(OvalShape())
-
-            imageView.setOnClickListener {
-                if(items[adapterPosition].content.mime.startsWith("video")){
-                    imageView.visibility = View.GONE
-                    playerView.visibility = View.VISIBLE
-                    image_play.visibility = View.GONE
-                }
-            }
 
             description.setOnClickListener {
                 val intent = Intent(context, TimelineDetailActivity::class.java).apply {
@@ -236,17 +127,58 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
             }
 
             pet_name.setOnClickListener {
-
+                val intent = Intent(context, TimelineDetailActivity::class.java).apply {
+                    putExtra("data", items[adapterPosition])
+                }
+                context.startActivity(intent)
             }
 
             likes.setOnClickListener {
-
+                Fire.getInstance().toggleLike(items[adapterPosition].like, items[adapterPosition].id, items[adapterPosition].user.id, likeButtonClickCallback)
             }
 
             imageView_like.setOnClickListener {
-                Log.d(TAG, "${items[adapterPosition]}")
                 Fire.getInstance().toggleLike(items[adapterPosition].like, items[adapterPosition].id, items[adapterPosition].user.id, likeButtonClickCallback)
             }
+        }
+
+        fun resize(content: Content, view: View) {
+            val ratio = 0.6
+
+            val p = Point()
+            (context as Activity).windowManager.defaultDisplay.getSize(p)
+            Log.d("Viewer", "Window size ${p.x} ${p.y}")
+
+            val width = p.x
+            val height = content.h * p.x / content.w
+
+            if(height > p.y * 0.7) {
+                view.layoutParams = FrameLayout.LayoutParams((width * ratio).toInt(), (height * ratio).toInt(), Gravity.CENTER)
+            }
+            else {
+                view.layoutParams = FrameLayout.LayoutParams(width, height, Gravity.CENTER)
+            }
+        }
+
+        open fun bind(item: Post) {
+            description.text = item.description
+            user_name.text = item.user.name
+            pet_name.text = this.javaClass.name
+            likes.text = item.totalLikes.toString()
+            imageView_like.setImageResource(
+                    if (item.like)
+                        R.drawable.ic_favorite_black_24dp
+                    else
+                        R.drawable.ic_favorite_border_black_24dp
+            )
+            Glide.with(context)
+                    .load(item.user.pictureUrl)
+                    .into(imageView_user_picture)
+
+            resize(item.content, imageView)
+
+            //if(item.content.mime.startsWith("image"))
+                    Fire.getInstance().loadThumbnail(item.content, context, imageView, Fire.ThumbSize.M256, null, null)
         }
 
         private val likeButtonClickCallback = object : Fire.Callback<Pair<Boolean, Long>> {
@@ -262,6 +194,116 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
             override fun onFail(e: Exception) {
                 Log.d("TimelineAdapter", "like error", e)
             }
+        }
+
+        open fun onRecycled(){
+
+        }
+    }
+
+    class VideoViewHolder(itemView: View, items: ArrayList<Post>): BaseViewHolder(itemView, items), ToroPlayer {
+
+        var helper: ExoPlayerViewHelper? = null
+        var uri: Uri? = null
+
+        private val TAG = "TimelineAdapter"
+
+        val playerView: PlayerView = itemView.playerView
+        val image_play: ImageView = itemView.imageView_play
+        val progressBar: ProgressBar = itemView.progress_bar
+
+        override fun bind(item: Post) {
+            super.bind(item)
+            resize(item.content, playerView)
+            uri = null
+            Fire.getInstance().loadVideoDownloadUri(item.content, object : Fire.Callback<Uri>{
+                override fun onResult(data: Uri) {
+                    uri = data
+
+                }
+
+                override fun onFail(e: Exception) {
+
+                }
+
+            })
+        }
+
+        private val listener = object : Playable.DefaultEventListener(){
+            override fun onLoadingChanged(isLoading: Boolean) {
+                if(!isLoading) {
+                    progressBar.visibility = View.GONE
+                    imageView.visibility = View.GONE
+                    image_play.visibility = View.GONE
+                }
+                else {
+                    image_play.visibility = View.GONE
+                    progressBar.visibility = View.VISIBLE
+                    imageView.visibility = View.VISIBLE
+                }
+            }
+
+            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+                if(!playWhenReady) {
+                    image_play.visibility = View.VISIBLE
+                    imageView.visibility = View.VISIBLE
+                }
+                else{
+                    imageView.visibility = View.GONE
+                }
+            }
+        }
+
+        override fun isPlaying(): Boolean {
+            return helper != null && helper!!.isPlaying
+        }
+
+        override fun getPlayerView(): View {
+            return playerView
+        }
+
+        override fun pause() {
+            if(helper != null) helper!!.pause()
+        }
+
+        override fun wantsToPlay(): Boolean {
+            return ToroUtil.visibleAreaOffset(this, itemView.parent) >= 0.85
+        }
+
+        override fun play() {
+            if(helper != null) helper!!.play()
+        }
+
+        override fun getCurrentPlaybackInfo(): PlaybackInfo {
+            return if (helper != null) helper!!.latestPlaybackInfo else PlaybackInfo()
+        }
+
+        override fun release() {
+            if (helper != null) {
+                helper!!.removeEventListener(listener)
+                helper!!.release()
+                helper = null
+            }
+        }
+
+        override fun initialize(container: Container, playbackInfo: PlaybackInfo) {
+            if(uri != null){
+                if(helper == null) {
+                    helper = ExoPlayerViewHelper(this, uri!!).apply {
+                        addEventListener(listener)
+                    }
+                }
+                helper!!.initialize(container, playbackInfo)
+            }
+
+        }
+
+        override fun getPlayerOrder(): Int {
+            return adapterPosition
+        }
+
+        override fun onRecycled() {
+
         }
     }
 }

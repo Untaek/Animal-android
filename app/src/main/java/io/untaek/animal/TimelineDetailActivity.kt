@@ -31,7 +31,7 @@ class TimelineDetailActivity : AppCompatActivity(), ScrollUpdateCallback, Fire.C
         intent.getSerializableExtra("data")?.let { d ->
             post = d as Post
 
-            viewer = Viewer(textureView, imageView).apply {
+            viewer = Viewer(playerView, imageView).apply {
                 changeSource(post.content)
             }
 
@@ -42,7 +42,6 @@ class TimelineDetailActivity : AppCompatActivity(), ScrollUpdateCallback, Fire.C
 
             recyclerview_comments_timeline_detail.adapter = timelineDetailPostRecyclerViewAdapter
             recyclerview_comments_timeline_detail.addOnScrollListener(ScrollUpdateListener(timelineDetailPostRecyclerViewAdapter, timelineDetailPostRecyclerViewAdapter.getItems(), this))
-
 
             button_go_back_timeline_detail.setOnClickListener { finish() }
 

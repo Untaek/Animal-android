@@ -395,9 +395,9 @@ class Fire {
     }
 
     fun loadVideoDownloadUri(content: Content, callback: Callback<Uri>) {
-        if (content.downloadUrl.isNotBlank())
-            callback.onResult(Uri.parse(content.downloadUrl))
-        else {
+//        if (content.downloadUrl.isNotBlank())
+//            callback.onResult(Uri.parse(content.downloadUrl))
+//        else {
             storage().reference.child(content.url).downloadUrl
                     .addOnSuccessListener {
                         content.downloadUrl = it.toString()
@@ -406,7 +406,7 @@ class Fire {
                     .addOnFailureListener {
                         callback.onFail(it)
                     }
-        }
+//        }
     }
 
     fun loadActualContent(content: Content, context: Context, callback: Callback<Any>) {

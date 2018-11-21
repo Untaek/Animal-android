@@ -25,54 +25,11 @@ import kotlinx.android.synthetic.main.tab_timeline.view.*
 const val RC_SIGN_IN = 123
 
 class TabTimelineFragment: Fragment() {
-    private lateinit var recyclerView: RecyclerView
     private lateinit var timelineadapter: TimelineAdapter
     private lateinit var timelinelayoutManager: TimelineLayoutManager
     private lateinit var decorator: TimelineDecorator
     private lateinit var scrollUpdateListener: ScrollUpdateListener
-    private lateinit var recyclerView_container: RecyclerView
 
-    private var state: Parcelable? = null
-    private var count = 1
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.tab_timeline, container, false)
-    }
-
-    override fun onViewCreated(root: View, savedInstanceState: Bundle?) {
-        Log.d("TABTIMELINE", "${count++}")
-        //recyclerView = root.recyclerView_timeline
-//        recyclerView.adapter = adapter
-//        recyclerView.layoutManager = layoutManager
-//        recyclerView.addItemDecoration(decorator)
-//        recyclerView.addOnScrollListener(scrollUpdateListener)
-//        recyclerView.setHasFixedSize(true)
-//        recyclerView.recycledViewPool.setMaxRecycledViews(0, 30)
-////        recyclerView.setItemViewCacheSize(30)
-//        recyclerView.isDrawingCacheEnabled = true
-//        recyclerView.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
-//
-
-//        recyclerView_container = root.recyclerView_container
-//        recyclerView_container.adapter = adapter
-//        recyclerView_container.layoutManager = layoutManager
-
-        root.recyclerView_container.apply {
-            adapter = timelineadapter
-            layoutManager = timelinelayoutManager
-            cacheManager = CacheManager.DEFAULT
-            addOnScrollListener(scrollUpdateListener)
-            playerSelector = PlayerSelector.DEFAULT
-            isDrawingCacheEnabled = true
-            drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d("TABTIMELINE", "onCreate")
-
-    }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -84,6 +41,22 @@ class TabTimelineFragment: Fragment() {
             timelineadapter.updateList()
         }
         timelineadapter.updateList()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.tab_timeline, container, false)
+    }
+
+    override fun onViewCreated(root: View, savedInstanceState: Bundle?) {
+        root.recyclerView_container.apply {
+            adapter = timelineadapter
+            layoutManager = timelinelayoutManager
+            cacheManager = CacheManager.DEFAULT
+            addOnScrollListener(scrollUpdateListener)
+            playerSelector = PlayerSelector.DEFAULT
+            isDrawingCacheEnabled = true
+            drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
+        }
     }
 
     companion object {
