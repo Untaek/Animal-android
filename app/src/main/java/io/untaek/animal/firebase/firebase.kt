@@ -33,6 +33,7 @@ const val POSTS = "posts"
 const val USERS = "users"
 const val LIKES = "likes"
 const val COMMENTS = "comments"
+const val FOLLOWS = "follows"
 const val TOTAL_LIKES = "totalLikes"
 const val TOTAL_POSTS = "totalPosts"
 const val TOTAL_FOLLOWS = "totalFollows"
@@ -159,8 +160,25 @@ class Fire {
         }
     }
 
-    fun follow() {
+    fun follow(myId: String, userId: String) {
+        val fs = fs()
+        val myReference = fs.collection(USERS).document(myId)
+        val userReference = fs.collection(USERS).document(userId)
+        var follow: MutableMap<String, Boolean> = mutableMapOf()
+        fs.collection(USERS).document(myId).get().addOnSuccessListener {
+            follow = it[FOLLOWS] as MutableMap<String, Boolean>
+            follow.put(userId, true)
+        }
 
+        FirebaseAuth.getInstance().let {
+            fs.runTransaction { t ->
+                val targetPost = t.get(myReference)
+                val newTotalFollowCount = targetPost.getLong(TOTAL_FOLLOWS)?.plus(1L)
+                t.update(myReference, TOTAL_FOLLOWS, newTotalFollowCount)
+                t.update(myReference, FOLLOWS, follow)
+
+            }
+        }
     }
 
     fun unFollow() {
@@ -175,19 +193,21 @@ class Fire {
      */
 
 
-    fun firstreadComments(postId : String, callback : Callback<Pair<DocumentSnapshot?, List<Comment2?>>>){
+    fun firstreadComments(postId: String, callback: Callback<Pair<DocumentSnapshot?, List<Comment2?>>>) {
         fs().collection(POSTS).document(postId).collection(COMMENTS)
                 .orderBy("timeStamp", Query.Direction.DESCENDING)
                 .limit(10)
                 .get()
                 .addOnSuccessListener {
-                    callback.onResult(Pair(it.documents.lastOrNull(), it.documents.map { it.toObject(Comment2::class.java).apply {
-                                this!!.commentId = it.id
-                            } }))
+                    callback.onResult(Pair(it.documents.lastOrNull(), it.documents.map {
+                        it.toObject(Comment2::class.java).apply {
+                            this!!.commentId = it.id
+                        }
+                    }))
                 }
     }
 
-    fun readComments(postId : String, lastSeen : DocumentSnapshot, callback : Callback<Pair<DocumentSnapshot?, List<Comment2?>>>){
+    fun readComments(postId: String, lastSeen: DocumentSnapshot, callback: Callback<Pair<DocumentSnapshot?, List<Comment2?>>>) {
         fs().collection(POSTS).document(postId).collection(COMMENTS)
                 .orderBy("timeStamp", Query.Direction.DESCENDING)
                 .limit(10)
@@ -195,15 +215,17 @@ class Fire {
                 .get()
                 .addOnSuccessListener {
                     callback.onResult(Pair(it.documents.lastOrNull(),
-                            it.map { it.toObject(Comment2::class.java).apply {
-                                this.commentId = it.id
-                            } }))
+                            it.map {
+                                it.toObject(Comment2::class.java).apply {
+                                    this.commentId = it.id
+                                }
+                            }))
                 }
     }
 
-    fun newComment(context: Context, postId : String, commentText : String, callback : Callback<Any>){
+    fun newComment(context: Context, postId: String, commentText: String, callback: Callback<Any>) {
         val uploader = User("dbsdlswp", "inje", "https://s-i.huffpost.com/gen/4479784/images/n-THRO-628x314.jpg")
-        val comment : Comment_DB= Comment_DB(uploader, Date(), commentText)
+        val comment: Comment_DB = Comment_DB(uploader, Date(), commentText)
 
         val fs = fs()
 
@@ -215,6 +237,7 @@ class Fire {
                 val targetPost = t.get(postRef)
                 val newPostTotalCommentsValue = targetPost.getLong(TOTAL_COMMENTS)?.plus(1L)
 
+                //fs.collection(POSTS).document(postId).collection("comments").add(comment)
                 t.update(postRef, TOTAL_COMMENTS, newPostTotalCommentsValue)
                 t.set(commentRef, comment)
             }.addOnSuccessListener {
@@ -224,6 +247,7 @@ class Fire {
             }
         }
     }
+
 
     fun newPost(context: Context, tags: Map<String, String>, description: String, contentUri: Uri, callback: Callback<Any>, progressCallback: ProgressCallback?) {
         if(Fire.Auth.getInstance().firebaseUser() == null) {

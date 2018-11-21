@@ -5,9 +5,15 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.util.Log
+import android.widget.Toast
 import com.bumptech.glide.Glide
-import io.untaek.animal.list.UserDetailRecyclerViewAdapter
+import io.untaek.animal.R.id.*
+import io.untaek.animal.component.UserDetailRecyclerViewAdapter
+import io.untaek.animal.firebase.Fire
 import io.untaek.animal.firebase.UserDetail
+import io.untaek.animal.list.UserDetailRecyclerViewAdapter
+import io.untaek.animal.util.Viewer
+import kotlinx.android.synthetic.main.activity_timeline_detail.*
 import kotlinx.android.synthetic.main.activity_user_detail.*
 
 class UserDetailActivity : AppCompatActivity() {
@@ -19,8 +25,6 @@ class UserDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_user_detail)
 
         Log.e("ㅋㅋㅋ", "이동완료 !")
-
-
         intent.getSerializableExtra("data")?.let { d ->
             user = d as UserDetail
 
@@ -46,6 +50,10 @@ class UserDetailActivity : AppCompatActivity() {
             recyclerView_user_detail.adapter = UserDetailRecyclerViewAdapter(this, user)
 
             button_go_back_user_detail_detail.setOnClickListener { finish() }
+            textView_followersLabel_user_detail.setOnClickListener {
+                Toast.makeText(this, "클릭", Toast.LENGTH_SHORT).show()
+                Fire.getInstance().follow("dbsdlswp", "untaek")
+            }
         }
     }
 
