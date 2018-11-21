@@ -164,7 +164,6 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
         open fun bind(item: Post) {
             val hash = HashTagAdapter()
             hash.setContent(context, description , items[adapterPosition].description)
-            //description.text = item.description
             user_name.text = item.user.name
             pet_name.text = "pet name"
             likes.text = item.totalLikes.toString()
@@ -180,8 +179,7 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
 
             resize(item.content, imageView)
 
-            //if(item.content.mime.startsWith("image"))
-                    Fire.getInstance().loadThumbnail(item.content, context, imageView, Fire.ThumbSize.M256, null, null)
+            Fire.getInstance().loadThumbnail(item.content, context, imageView, Fire.ThumbSize.M256, null, null)
         }
 
         private val likeButtonClickCallback = object : Fire.Callback<Pair<Boolean, Long>> {
@@ -199,9 +197,7 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
             }
         }
 
-        open fun onRecycled(){
-
-        }
+        open fun onRecycled(){}
     }
 
     class VideoViewHolder(itemView: View, items: ArrayList<Post>): BaseViewHolder(itemView, items), ToroPlayer {
@@ -305,8 +301,6 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
             return adapterPosition
         }
 
-        override fun onRecycled() {
-
-        }
+        override fun onRecycled() {}
     }
 }
