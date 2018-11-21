@@ -2,24 +2,20 @@ package io.untaek.animal
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.widget.Toast
-import com.google.firebase.firestore.DocumentSnapshot
-import io.untaek.animal.component.MyCallBack
-import io.untaek.animal.component.MyOnScrollListener
-import io.untaek.animal.component.TimelineDetailPostRecyclerViewAdapter
+import io.untaek.animal.list.ScrollUpdateCallback
+import io.untaek.animal.list.ScrollUpdateListener
+import io.untaek.animal.list.TimelineDetailPostRecyclerViewAdapter
 import io.untaek.animal.firebase.Fire
 import io.untaek.animal.firebase.Post
-import io.untaek.animal.firebase.dummy.post
-import io.untaek.animal.legacy.Camera
 import io.untaek.animal.util.Viewer
 import kotlinx.android.synthetic.main.activity_timeline_detail.*
 import kotlinx.android.synthetic.main.component_edittext_comment.*
 import java.lang.Exception
 
-class TimelineDetailActivity : AppCompatActivity(), MyCallBack , Fire.Callback<Any>{
+class TimelineDetailActivity : AppCompatActivity(), ScrollUpdateCallback, Fire.Callback<Any>{
 
 
     private var first_flag = true
@@ -45,7 +41,7 @@ class TimelineDetailActivity : AppCompatActivity(), MyCallBack , Fire.Callback<A
             timelineDetailPostRecyclerViewAdapter = TimelineDetailPostRecyclerViewAdapter(post, this)
 
             recyclerview_comments_timeline_detail.adapter = timelineDetailPostRecyclerViewAdapter
-            recyclerview_comments_timeline_detail.addOnScrollListener(MyOnScrollListener(timelineDetailPostRecyclerViewAdapter,timelineDetailPostRecyclerViewAdapter.getItems(), this))
+            recyclerview_comments_timeline_detail.addOnScrollListener(ScrollUpdateListener(timelineDetailPostRecyclerViewAdapter, timelineDetailPostRecyclerViewAdapter.getItems(), this))
 
 
             button_go_back_timeline_detail.setOnClickListener { finish() }

@@ -1,20 +1,16 @@
-package io.untaek.animal.component;
+package io.untaek.animal.list;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import io.untaek.animal.firebase.Comment;
-import io.untaek.animal.firebase.Comment2;
-import io.untaek.animal.firebase.Post;
-
-public class MyOnScrollListener extends RecyclerView.OnScrollListener {
+public class ScrollUpdateListener extends RecyclerView.OnScrollListener {
     RecyclerView.Adapter adapter;
     ArrayList<?> list;
-    MyCallBack callBack;
+    ScrollUpdateCallback callBack;
 
-    public MyOnScrollListener(RecyclerView.Adapter adapter, ArrayList<?> list, MyCallBack callBack) {
+    public ScrollUpdateListener(RecyclerView.Adapter adapter, ArrayList<?> list, ScrollUpdateCallback callBack) {
         this.adapter = adapter;
         this.list = list;
         this.callBack = callBack;

@@ -1,4 +1,4 @@
-package io.untaek.animal.component
+package io.untaek.animal.list
 
 import android.content.Context
 import android.net.Uri
@@ -8,17 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import com.bumptech.glide.Glide.init
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.firestore.DocumentSnapshot
 import io.untaek.animal.R
-import io.untaek.animal.R.id.editText
 import io.untaek.animal.firebase.Comment2
 import io.untaek.animal.firebase.Fire
 import io.untaek.animal.firebase.Post
 import io.untaek.animal.firebase.User
-import io.untaek.animal.firebase.dummy.post
-import kotlinx.android.synthetic.main.component_edittext_comment.*
 import kotlinx.android.synthetic.main.component_timeline_detail_comment_recyclerview_header.view.*
 import kotlinx.android.synthetic.main.component_timeline_detail_comment_recyclerview_item.view.*
 import java.lang.Exception
@@ -43,7 +39,6 @@ class TimelineDetailPostRecyclerViewAdapter (val post : Post, val context: Conte
     }
 
     override fun onResult(data: Pair<DocumentSnapshot?, List<Comment2?>>) {
-
         Log.e("ㅋㅋㅋ", "on result")
         if(data.first != null) {
             if(addDataFlag) {
@@ -56,7 +51,6 @@ class TimelineDetailPostRecyclerViewAdapter (val post : Post, val context: Conte
         }else{
             Log.e("ㅋㅋㅋ", "data == null")
         }
-
     }
     fun update() {
         Log.e("ㅋㅋㅋ", "update")
@@ -88,7 +82,7 @@ class TimelineDetailPostRecyclerViewAdapter (val post : Post, val context: Conte
             holder.textViewUPostUserName.text = post.user.name
         } else {
             holder as ViewHolderComment
-            Glide.with(context).load(Uri.parse(comments[position-1]!!.user.picture_url)).into(holder.commentImage)
+            Glide.with(context).load(Uri.parse(comments[position-1]!!.user.pictureUrl)).into(holder.commentImage)
             holder.commentUserName.text = comments[position-1]!!.user.name
             holder.commentText.text = comments[position-1]!!.commentText
             holder.commentTime.text = timeCalculateFunction(comments[position-1]!!.timeStamp)
@@ -100,10 +94,10 @@ class TimelineDetailPostRecyclerViewAdapter (val post : Post, val context: Conte
     }
 
     override fun getItemViewType(position: Int): Int {
-        if(position == 0)
-            return 0
+        return if (position == 0)
+            0
         else
-            return 1
+            1
     }
 
     fun timeCalculateFunction(time: Date): String {

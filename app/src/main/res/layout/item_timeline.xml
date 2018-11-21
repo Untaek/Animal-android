@@ -18,7 +18,7 @@
         <TextureView
             android:id="@+id/textureView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:minHeight="100dp" />
         <ImageView
             android:id="@+id/imageView"
@@ -48,7 +48,7 @@
                 android:textSize="12sp"/>
 
             <TextView
-                android:id="@+id/textView_description_timeline_detail_header"
+                android:id="@+id/textView_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="description"
@@ -57,7 +57,7 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="18dp"
             android:orientation="horizontal"
             android:layout_marginTop="36dp">
 
@@ -68,13 +68,15 @@
                 app:layout_constraintLeft_toLeftOf="parent">
 
                 <ImageView
+                    android:layout_marginEnd="6dp"
+                    android:id="@+id/imageView_user_image"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:src="@mipmap/ic_launcher"/>
                 <TextView
                     android:id="@+id/textView_name"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:textSize="12sp"
                     android:text="user name" />
             </LinearLayout>
@@ -86,9 +88,10 @@
                 app:layout_constraintRight_toRightOf="parent">
 
                 <ImageView
+                    android:id="@+id/imageView_like"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@mipmap/ic_launcher"
+                    android:src="@drawable/ic_favorite_black_24dp"
                     />
                 <TextView
                     android:id="@+id/textView_like"

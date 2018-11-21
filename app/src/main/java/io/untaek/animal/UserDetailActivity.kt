@@ -11,6 +11,7 @@ import io.untaek.animal.R.id.*
 import io.untaek.animal.component.UserDetailRecyclerViewAdapter
 import io.untaek.animal.firebase.Fire
 import io.untaek.animal.firebase.UserDetail
+import io.untaek.animal.list.UserDetailRecyclerViewAdapter
 import io.untaek.animal.util.Viewer
 import kotlinx.android.synthetic.main.activity_timeline_detail.*
 import kotlinx.android.synthetic.main.activity_user_detail.*
@@ -34,13 +35,13 @@ class UserDetailActivity : AppCompatActivity() {
             val likeCount = textView_likesCount_user_detail
 
             Log.e("ㅋㅋㅋ", "user name : "+user.userName)
-            Log.e("ㅋㅋㅋ", "user imgUrl : "+user.imgUrl)
+            Log.e("ㅋㅋㅋ", "user imgUrl : "+user.pictureUrl)
             Log.e("ㅋㅋㅋ", "user totalPosts : "+user.totalPosts)
             Log.e("ㅋㅋㅋ", "user totalLikes : "+user.totalLikes)
             Log.e("ㅋㅋㅋ", "user totalFollows : "+user.totalFollows)
 
             userName.text = user.userName
-            Glide.with(this).load(Uri.parse(user.imgUrl).toString()).into(userImage)
+            Glide.with(this).load(Uri.parse(user.pictureUrl).toString()).into(userImage)
             postCount.text = user.totalPosts.toString()
             followCount.text= user.totalFollows.toString()
             likeCount.text = user.totalLikes.toString()

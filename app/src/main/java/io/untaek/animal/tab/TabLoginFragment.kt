@@ -12,36 +12,25 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import io.untaek.animal.LoginActivity
 import io.untaek.animal.R
+import kotlinx.android.synthetic.main.tab_login.view.*
 
 class TabLoginFragment: Fragment() {
 
     val TAG = "TabLoginFragment"
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        if (requestCode == RC_SIGN_IN) {
-//            Log.d(TAG, "google login onActivityResult")
-//
-//            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-//            val account = task.getResult(ApiException::class.java)
-//            val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
-//            val auth = FirebaseAuth.getInstance()
-//            auth.signInWithCredential(credential)
-//                    .addOnSuccessListener {
-//                        Log.d(TAG, auth.currentUser.toString())
-//                    }
-//                    .addOnFailureListener {
-//                        Log.d(TAG, it.message)
-//                    }
-//        }
-    }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.tab_login, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+    override fun onViewCreated(root: View, savedInstanceState: Bundle?) {
+        root.button_login.setOnClickListener {
+            startActivity(Intent(requireContext(), LoginActivity::class.java))
+            requireActivity().finish()
+        }
     }
 
     companion object {

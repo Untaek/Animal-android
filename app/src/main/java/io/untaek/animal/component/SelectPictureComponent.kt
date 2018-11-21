@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
 import io.untaek.animal.R
 import io.untaek.animal.UploadActivity
 import io.untaek.animal.firebase.Fire
@@ -45,7 +46,7 @@ class SelectPictureComponent: ConstraintLayout, View.OnClickListener {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     override fun onClick(v: View) {
-        if(Fire.Auth.getInstance().user() == null) {
+        if(FirebaseAuth.getInstance().currentUser == null) {
             Toast.makeText(context, "로그인이 필요합니다", Toast.LENGTH_SHORT).show()
             return
         }

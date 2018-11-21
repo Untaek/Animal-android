@@ -1,4 +1,4 @@
-package io.untaek.animal.component
+package io.untaek.animal.list
 
 import android.content.Context
 import android.content.Intent
@@ -35,7 +35,7 @@ class TabRankingUserRankRecyclerViewAdapter (val context: Context, val user : Us
     }
 
     override fun getItemCount(): Int {
-        return user.postList.size
+        return dummy.postList.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
