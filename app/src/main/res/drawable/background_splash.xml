@@ -3,7 +3,7 @@
     <item android:drawable="@android:color/holo_blue_bright"/>
     <item>
         <bitmap
-            android:src="@drawable/com_facebook_profile_picture_blank_portrait"
+            android:src="@drawable/dogbone"
             android:gravity="center"
             />
     </item>
