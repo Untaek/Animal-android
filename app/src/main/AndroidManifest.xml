@@ -52,6 +52,9 @@
             android:label="Preference"
             android:theme="@style/ActionBarTheme" />
         <activity android:name=".LoginActivity"></activity>
+
+        <activity android:name=".Hash.CalloutActivity"/>
+        <activity android:name=".Hash.HashtagActivity"/>
     </application>
 
 </manifest>

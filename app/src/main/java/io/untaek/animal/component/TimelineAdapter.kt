@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.*
 import com.bumptech.glide.Glide
 import com.google.firebase.firestore.DocumentSnapshot
+import io.untaek.animal.Hash.HashTagAdapter
 import io.untaek.animal.R
 import io.untaek.animal.TimelineDetailActivity
 import io.untaek.animal.UserDetailActivity
@@ -22,7 +23,8 @@ import io.untaek.animal.util.Viewer
 import kotlinx.android.synthetic.main.item_timeline.view.*
 import java.lang.Exception
 
-class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<TimelineAdapter.ViewHolder>(), Fire.Callback<Pair<DocumentSnapshot?, List<Post>>> {
+class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<TimelineAdapter.ViewHolder>(),
+        Fire.Callback<Pair<DocumentSnapshot?, List<Post>>> {
 
     private val items: ArrayList<Post> = arrayListOf()
     private lateinit var lastSeen: DocumentSnapshot
@@ -43,7 +45,9 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
 
         val item = items[position]
 
-        holder.description.text = item.description
+        val hash = HashTagAdapter()
+        hash.setContent(context,holder.description ,item.description)
+//        holder.description.text = item.description
         holder.user_name.text = item.user.name
         holder.pet_name.text = "dog"
         holder.likes.text = item.totalLikes.toString()

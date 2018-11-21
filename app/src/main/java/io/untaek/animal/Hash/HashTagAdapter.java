@@ -1,13 +1,20 @@
 package io.untaek.animal.Hash;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import io.untaek.animal.firebase.HashTagDetail;
+import io.untaek.animal.firebase.UserDetail;
+import io.untaek.animal.firebase.dummy;
 
 public class HashTagAdapter  {
 
@@ -27,7 +34,7 @@ public class HashTagAdapter  {
         return array;
     }
 
-    public void setContent(final Context context, final TextView textView, String tag){
+    public void setContent(final Context context, final TextView textView, String tag) {
 
         int i = 0;
         ArrayList<int[]> hashtagSpans = getSpans(tag, '#');
@@ -44,6 +51,10 @@ public class HashTagAdapter  {
             hashTag.setOnClickEventListener(new Hashtag.ClickEventListener() {
                 @Override
                 public void onClickEvent(String data) {
+                    Intent intent = new Intent(context, HashtagActivity.class);
+                    intent.putExtra("data", hashInfo(data));
+                    context.startActivity(intent);
+
                 }
             });
 
@@ -62,10 +73,14 @@ public class HashTagAdapter  {
             calloutLink.setOnClickEventListener(new CalloutLink.ClickEventListener() {
                 @Override
                 public void onClickEvent(String data) {
+                    Intent intent = new Intent(context, CalloutActivity.class);
+                    Log.d("users", data);
+                    intent.putExtra("data", userInfo(data));
+                    context.startActivity(intent);
                 }
             });
 
-            tagsContent.setSpan(new CalloutLink(context),
+            tagsContent.setSpan(calloutLink,
                     calloutStart,
                     calloutEnd, 0);
         }
@@ -74,5 +89,28 @@ public class HashTagAdapter  {
             textView.setMovementMethod(LinkMovementMethod.getInstance());
             textView.setText(tagsContent);
         }
+    }
+
+    public UserDetail userInfo(String name) {
+        ArrayList<UserDetail> users = dummy.INSTANCE.getUsersDetail();
+
+        for(int i = 0; i < users.size(); i++) {
+            if (users.get(i).getUserName().equals(name)) {
+               Log.d("users", users.get(i).getUserName());
+                return users.get(i);
+            }
+        }
+        return null;
+    }
+
+    public HashTagDetail hashInfo(String hash) {
+        ArrayList<HashTagDetail> hashes = dummy.INSTANCE.getHashTagsDetail();
+
+        for(int i = 0; i < hashes.size(); i++)
+        {
+            if (hashes.get(i).getTags().equals(hash))
+                return hashes.get(i);
+        }
+        return null;
     }
 }
