@@ -23,15 +23,15 @@ object dummy {
     }
     val img = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQitUl14tC2Ld3WVEUU0fXNoRx_oGQjgCf8QLXi-gKlbr0EJFKRFDO9OfYj"
     val postList = ArrayList<Post>().apply {
-        add(Post("aa1" ,User("sdf", "sdfsdf", img), "svdvdvdvdf", Content(jpeg, 600, 800, img), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 3, commentList, Date()))
-        add(Post("aa2" ,User("sdf", "sdfsdf", img), "svdvdvdvdf", Content(jpeg, 600, 800, img), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 3, commentList, Date()))
-        add(Post("aa3" ,User("sdf", "sdfsdf", img), "svdvdvdvdf", Content(jpeg, 600, 800, img), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 3, commentList, Date()))
-        add(Post("aa4" ,User("sdf", "sdfsdf", img), "svdvdvdvdf", Content(jpeg, 600, 800, img), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 3, commentList, Date()))
-        add(Post("aa5" ,User("sdf", "sdfsdf", img), "svdvdvdvdf", Content(jpeg, 600, 800, img), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 3, commentList, Date()))
-        add(Post("aa6" ,User("sdf", "sdfsdf", img), "svdvdvdvdf", Content(jpeg, 600, 800, img), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 3, commentList, Date()))
-        add(Post("aa7" ,User("sdf", "sdfsdf", img), "svdvdvdvdf", Content(jpeg, 600, 800, img), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 3, commentList, Date()))
-        add(Post("aa8" ,User("sdf", "sdfsdf", img), "svdvdvdvdf", Content(jpeg, 600, 800, img), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 3, commentList, Date()))
-        add(Post("aa9" ,User("sdf", "sdfsdf", img), "svdvdvdvdf", Content(jpeg, 600, 800, img), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 0L, 3, commentList, Date()))
+        add(Post("aa1" ,User("sdf", "sdfsdf", img), "svdvdvdvdf", Content(jpeg, 600, 800, img), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 30L, 3, commentList, Date()))
+        add(Post("aa2" ,User("sdf", "sdfsdf", img), "svdvdvdvdf", Content(jpeg, 600, 800, img), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 1111L, 3, commentList, Date()))
+        add(Post("aa3" ,User("sdf", "sdfsdf", img), "svdvdvdvdf", Content(jpeg, 600, 800, img), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 22230L, 3, commentList, Date()))
+        add(Post("aa4" ,User("sdf", "sdfsdf", img), "svdvdvdvdf", Content(jpeg, 600, 800, img), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 40L, 3, commentList, Date()))
+        add(Post("aa5" ,User("sdf", "sdfsdf", img), "svdvdvdvdf", Content(jpeg, 600, 800, img), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 1L, 3, commentList, Date()))
+        add(Post("aa6" ,User("sdf", "sdfsdf", img), "svdvdvdvdf", Content(jpeg, 600, 800, img), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 20L, 3, commentList, Date()))
+        add(Post("aa7" ,User("sdf", "sdfsdf", img), "svdvdvdvdf", Content(jpeg, 600, 800, img), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 40L, 3, commentList, Date()))
+        add(Post("aa8" ,User("sdf", "sdfsdf", img), "svdvdvdvdf", Content(jpeg, 600, 800, img), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 50L, 3, commentList, Date()))
+        add(Post("aa9" ,User("sdf", "sdfsdf", img), "svdvdvdvdf", Content(jpeg, 600, 800, img), mapOf(Pair("0", "강아지"), Pair("1", "귀여움")), 220L, 3, commentList, Date()))
     }
 
     val postComment: ArrayList<Comment> =

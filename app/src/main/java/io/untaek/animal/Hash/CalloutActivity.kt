@@ -37,12 +37,12 @@ class CalloutActivity : AppCompatActivity() {
             Log.e("ㅋㅋㅋ", "user imgUrl : "+user.pictureUrl)
             Log.e("ㅋㅋㅋ", "user totalPosts : "+user.totalPosts)
             Log.e("ㅋㅋㅋ", "user totalLikes : "+user.totalLikes)
-            Log.e("ㅋㅋㅋ", "user totalFollows : "+user.totalFollows)
+            Log.e("ㅋㅋㅋ", "user totalFollows : "+user.totalFollowers)
 
             userName.text = user.userName
             Glide.with(this).load(Uri.parse(user.pictureUrl).toString()).into(userImage)
             postCount.text = user.totalPosts.toString()
-            followCount.text= user.totalFollows.toString()
+            followCount.text= user.totalFollowers.toString()
             likeCount.text = user.totalLikes.toString()
 
             user_detail_listView.layoutManager = GridLayoutManager(this, 4)

@@ -23,7 +23,7 @@ data class UserDetail(
         val pictureUrl: String = "0",
         val totalLikes: Long = 0L,
         val totalPosts: Long = 0L,
-        val totalFollows: Long = 0L
+        val totalFollowers: Long = 0L
 ): Serializable
 
 data class HashTagDetail(

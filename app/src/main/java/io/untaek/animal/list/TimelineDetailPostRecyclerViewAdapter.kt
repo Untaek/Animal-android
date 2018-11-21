@@ -1,6 +1,9 @@
 package io.untaek.animal.list
 
 import android.content.Context
+import android.content.Intent
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.OvalShape
 import android.net.Uri
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -11,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.firestore.DocumentSnapshot
 import io.untaek.animal.R
+import io.untaek.animal.UserDetailActivity
 import io.untaek.animal.firebase.Comment2
 import io.untaek.animal.firebase.Fire
 import io.untaek.animal.firebase.Post
@@ -22,6 +26,7 @@ import java.util.*
 
 
 class TimelineDetailPostRecyclerViewAdapter (val post : Post, val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), Fire. Callback<Pair<DocumentSnapshot?, List<Comment2?>>>  {
+
 
     init {
         Fire.getInstance().firstreadComments(post.id, this)
@@ -78,11 +83,18 @@ class TimelineDetailPostRecyclerViewAdapter (val post : Post, val context: Conte
             holder.textViewPostDecription.text = post.description
             holder.textViewPostTags.text = if (post.tags.isNotEmpty()) post.tags.values.map { s -> "#$s " }.reduce { acc, s -> acc + s } else ""
             holder.textViewPostTimeStamp.text = timeCalculateFunction(post.timeStamp)
-            Glide.with(context).load(Uri.parse(post.content.url)).apply(RequestOptions()).into(holder.imageViewPostUserIamge)
+            Glide.with(context).load(Uri.parse(post.user.pictureUrl)).apply(RequestOptions()).into(holder.imageViewPostUserIamge)
             holder.textViewUPostUserName.text = post.user.name
         } else {
             holder as ViewHolderComment
+            Log.e("ㅋㅋㅋ", "user.pictureUrl : "+comments[position-1]!!.user.pictureUrl)
+
+
+            holder.commentImage.clipToOutline = true
+            holder.commentImage.background = ShapeDrawable(OvalShape())
+
             Glide.with(context).load(Uri.parse(comments[position-1]!!.user.pictureUrl)).into(holder.commentImage)
+
             holder.commentUserName.text = comments[position-1]!!.user.name
             holder.commentText.text = comments[position-1]!!.commentText
             holder.commentTime.text = timeCalculateFunction(comments[position-1]!!.timeStamp)
@@ -135,7 +147,7 @@ class TimelineDetailPostRecyclerViewAdapter (val post : Post, val context: Conte
         val view : View
         if( viewType== 0){
             view = LayoutInflater.from(context).inflate(R.layout.component_timeline_detail_comment_recyclerview_header,parent,false)
-            return ViewHolderPost(view)
+            return ViewHolderPost(context, view, post)
         }else {
             view = LayoutInflater.from(context).inflate(R.layout.component_timeline_detail_comment_recyclerview_item, parent, false)
             return ViewHolderComment(view)
@@ -152,12 +164,28 @@ class TimelineDetailPostRecyclerViewAdapter (val post : Post, val context: Conte
 
         // Holds the TextView that will add each animal to
     }
-    class ViewHolderPost(view : View) : RecyclerView.ViewHolder(view){
+    class ViewHolderPost(context : Context, view : View, post : Post) : RecyclerView.ViewHolder(view){
         val textViewPostDecription = view.textView_description_timeline_detail_header
         val textViewPostTags = view.textView_tags_timeline_detail_header
         val textViewPostTimeStamp = view.textView_timestamp_timeline_detail_header
         val imageViewPostUserIamge = view.imageView_user_image_timeline_detail_header
         val textViewUPostUserName = view.textView_user_name_timeline_detail_header
+        val imageViewHeart = view.button_like
+        init {
+            imageViewHeart.setOnClickListener {
+                //Fire.getInstance().toggleLike(false,post.id, post.user.id, callback = null)
+            }
+            imageViewPostUserIamge.setOnClickListener {
+
+                val intent = Intent(context, UserDetailActivity::class.java).apply {
+                    putExtra("postDetail_user", post.user )
+                }
+                context.startActivity(intent)
+
+            }
+
+        }
+
     }
 
 }

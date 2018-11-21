@@ -9,7 +9,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout5"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="36dp"
         android:layout_gravity="center"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
@@ -23,30 +23,45 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/imageView_user_image_tab_rank_userRank"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/background_splash" />
+
         <TextView
             android:id="@+id/textView_user_name_tab_rank_userRank"
             android:layout_width="0dp"
             android:layout_height="25dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="3dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginBottom="3dp"
             android:layout_weight="3"
-            android:gravity="center_horizontal|center"
             android:padding="0dp"
             android:paddingTop="5dp"
             android:paddingBottom="0dp"
             android:text="TextView"
             android:textSize="20sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/textView_follow_label_tab_rank_userRank"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/imageView_user_image_tab_rank_userRank"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textView_follow_label_tab_rank_userRank"
             android:layout_width="60dp"
-            android:layout_height="25dp"
-            android:layout_marginTop="5dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="3dp"
             android:layout_marginEnd="5dp"
+            android:layout_marginBottom="3dp"
             android:layout_weight="6"
             android:gravity="center_horizontal|center"
             android:padding="0dp"
@@ -55,15 +70,17 @@
             android:text="FOLLOW"
             android:textColor="@color/colorPrimaryDark"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/textView_follow_count_tab_rank_userRank"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textView_follow_count_tab_rank_userRank"
             android:layout_width="60dp"
-            android:layout_height="25dp"
-            android:layout_marginTop="5dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="3dp"
             android:layout_marginEnd="5dp"
+            android:layout_marginBottom="3dp"
             android:layout_weight="7"
             android:gravity="center_horizontal|center"
             android:padding="0dp"
@@ -71,21 +88,24 @@
             android:paddingBottom="0dp"
             android:text="6"
             android:textColor="@color/colorPrimaryDark"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/imageView_likeImage_tab_rank_userRank"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/imageView_likeImage_tab_rank_userRank"
             android:layout_width="30dp"
-            android:layout_height="25dp"
-            android:layout_marginTop="5dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="3dp"
             android:layout_marginEnd="5dp"
+            android:layout_marginBottom="3dp"
             android:layout_weight="7"
             android:maxWidth="100dp"
             android:maxHeight="100dp"
             android:padding="0dp"
             android:paddingTop="5dp"
             android:paddingBottom="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/textView_like_count_tab_rank_userRank"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/heart" />
@@ -93,14 +113,16 @@
         <TextView
             android:id="@+id/textView_like_count_tab_rank_userRank"
             android:layout_width="60dp"
-            android:layout_height="25dp"
-            android:layout_marginTop="5dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
             android:layout_weight="7"
             android:gravity="center_horizontal|center"
             android:padding="0dp"
             android:paddingTop="5dp"
             android:paddingBottom="0dp"
             android:text="20"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
