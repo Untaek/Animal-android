@@ -1,7 +1,6 @@
 package io.untaek.animal.firebase
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
@@ -13,7 +12,6 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.google.firebase.auth.FirebaseAuth
-import com.firebase.ui.auth.AuthUI
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
@@ -21,8 +19,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
-import io.untaek.animal.R
-import io.untaek.animal.tab.RC_SIGN_IN
 import io.untaek.animal.util.UploadManager
 import java.io.File
 import java.lang.Exception
@@ -33,10 +29,11 @@ const val POSTS = "posts"
 const val USERS = "users"
 const val LIKES = "likes"
 const val COMMENTS = "comments"
-const val FOLLOWS = "follows"
+const val FOLLOWERS = "followers"   // 나를 팔로우 하는사람
+const val FOLLOW = "follow"       // 내가 팔로우 하는사람
 const val TOTAL_LIKES = "totalLikes"
 const val TOTAL_POSTS = "totalPosts"
-const val TOTAL_FOLLOWS = "totalFollows"
+const val TOTAL_FOLLOWERS = "totalFollowers"
 const val TAG = "FireFireFire"
 const val TOTAL_COMMENTS = "totalComments"
 
@@ -92,6 +89,8 @@ class Fire {
             true -> dislike(postId, ownerId, callback)
         }
     }
+
+
 
 
     private fun like(postId: String, ownerId: String, callback: Callback<Pair<Boolean, Long>>?) {
@@ -160,29 +159,69 @@ class Fire {
         }
     }
 
-    fun follow(myId: String, userId: String) {
+    fun checkFollow(myId:String, userId:String, callback: Callback<Boolean>){
+        fs().collection(USERS).document(myId).get().addOnSuccessListener {
+            val follow : MutableMap<String,Boolean> = it[FOLLOW] as MutableMap<String,Boolean>
+            val followFlag = follow[userId]
+            if(followFlag== null){
+                callback.onResult(false)
+            }else{
+                callback.onResult(true)
+            }
+            Log.e("ㅋㅋㅋ","flag = "+ followFlag)
+        }
+    }
+
+    fun follow(myId: String, userId: String) {          // myId 가 userId 를 follow
         val fs = fs()
         val myReference = fs.collection(USERS).document(myId)
         val userReference = fs.collection(USERS).document(userId)
         var follow: MutableMap<String, Boolean> = mutableMapOf()
-        fs.collection(USERS).document(myId).get().addOnSuccessListener {
-            follow = it[FOLLOWS] as MutableMap<String, Boolean>
-            follow.put(userId, true)
-        }
+
 
         FirebaseAuth.getInstance().let {
             fs.runTransaction { t ->
-                val targetPost = t.get(myReference)
-                val newTotalFollowCount = targetPost.getLong(TOTAL_FOLLOWS)?.plus(1L)
-                t.update(myReference, TOTAL_FOLLOWS, newTotalFollowCount)
-                t.update(myReference, FOLLOWS, follow)
+                fs.collection(USERS).document(myId).get().addOnSuccessListener {
+                    follow = it[FOLLOW] as MutableMap<String, Boolean>
+                    Log.e("ㅋㅋㅋ", "firebase = follow "+follow["aaaa"])
+                    follow.put(userId, true)            // myId 의 follows (map) 에 {userId, true} 추가.
+                }
 
+                val targetPost = t.get(userReference)
+                val newTotalFollowersCount = targetPost.getLong(TOTAL_FOLLOWERS)?.plus(1L)     // userId의 totalFollwers +1
+                t.update(userReference, TOTAL_FOLLOWERS, newTotalFollowersCount)
+                t.update(myReference, FOLLOW, follow)
             }
         }
     }
 
-    fun unFollow() {
+    fun unfollow(myId: String, userId: String) {
+        val fs = fs()
+        val myReference = fs.collection(USERS).document(myId)
+        val userReference = fs.collection(USERS).document(userId)
+        var follow: MutableMap<String, Boolean> = mutableMapOf()
+        //var followers: MutableMap<String, Boolean> = mutableMapOf()
 
+
+        FirebaseAuth.getInstance().let {
+            fs.runTransaction { t ->
+                fs.collection(USERS).document(myId).get().addOnSuccessListener {
+                    follow = it[FOLLOW] as MutableMap<String, Boolean>
+                    follow.remove(userId)          // myId 의 follows (map) 에 {userId, true} 추가.
+                }
+
+                fs.collection(USERS).document(userId).get().addOnSuccessListener {
+                    //followers = it[FOLLOWERS] as MutableMap<String, Boolean>
+                    //followers.put(myId, true)
+                }
+
+                val targetPost = t.get(userReference)
+                val newTotalFollowersCount = targetPost.getLong(TOTAL_FOLLOWERS)?.minus(1L)     // userId의 totalFollwers +1
+                t.update(userReference, TOTAL_FOLLOWERS, newTotalFollowersCount)
+                t.update(myReference, FOLLOW, follow)
+                //t.update(userReference, FOLLOWERS, followers)
+            }
+        }
     }
 
     /**
@@ -192,6 +231,18 @@ class Fire {
      *
      */
 
+
+    fun getUserDetail(userId : String, callback: Callback<UserDetail>){
+        fs().collection(USERS).document(userId).get().addOnSuccessListener{
+            val user = it.toObject(UserDetail::class.java)
+            user?.let{
+                callback.onResult(user)
+            }
+        }
+                .addOnFailureListener {
+                    callback.onFail(it)
+                }
+    }
 
     fun firstreadComments(postId: String, callback: Callback<Pair<DocumentSnapshot?, List<Comment2?>>>) {
         fs().collection(POSTS).document(postId).collection(COMMENTS)
@@ -312,7 +363,6 @@ class Fire {
                     }))
                 }
     }
-
     fun getFirstPostPage(callback: Callback<Pair<DocumentSnapshot?, List<Post>>>){
         getFirstPostPage(callback, 5)
     }
@@ -334,6 +384,20 @@ class Fire {
 
     fun getPostPage(lastSeen: DocumentSnapshot, callback: Callback<Pair<DocumentSnapshot?, List<Post>>>) {
         getPostPage(lastSeen, callback, 5)
+    }
+
+    fun getHotPost(callback: Callback<Pair<DocumentSnapshot?, List<Post>>>){
+        fs().collection(POSTS)
+                .orderBy("totalLikes", Query.Direction.DESCENDING)
+                .limit(9)
+                .get()
+                .addOnSuccessListener { qs ->
+                    callback.onResult(Pair(qs.documents.lastOrNull(), qs.documents.map {
+                        it.toObject(Post::class.java)!!.apply {
+                            this.id = it.id
+                        }
+                    }))
+                }
     }
 
     fun postDetail(postId: String, callback: Callback<Post>) {

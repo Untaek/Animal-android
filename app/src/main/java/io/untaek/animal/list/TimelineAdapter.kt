@@ -138,6 +138,8 @@ class TimelineAdapter(private val context: Context) : RecyclerView.Adapter<Timel
         }
 
         private val likeButtonClickCallback = object : Fire.Callback<Pair<Boolean, Long>> {
+
+
             override fun onResult(data: Pair<Boolean, Long>) {
                 when(data.first) {
                     true -> imageView_like.setImageResource(R.drawable.ic_favorite_black_24dp)

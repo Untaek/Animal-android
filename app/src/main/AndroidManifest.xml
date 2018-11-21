@@ -50,7 +50,7 @@
         <activity
             android:name=".PreferenceActivity"
             android:label="Preference"
-            android:theme="@style/ActionBarTheme" />
+            android:theme="@style/ActionBarTheme1" />
         <activity android:name=".LoginActivity"></activity>
     </application>
 

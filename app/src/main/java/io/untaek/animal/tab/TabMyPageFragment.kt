@@ -5,17 +5,13 @@ import android.content.Intent
 import android.support.v4.app.Fragment
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.OvalShape
-import android.graphics.drawable.shapes.Shape
-import android.os.Build
 import android.os.Bundle
-import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.GridLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import io.untaek.animal.PreferenceActivity
 import io.untaek.animal.R
@@ -73,7 +69,7 @@ class TabMyPageFragment: Fragment() {
                         val userDetail = snapshot.toObject(UserDetail::class.java)
                         textView_likes.text = userDetail?.totalLikes.toString()
                         textView_posts.text = userDetail?.totalPosts.toString()
-                        textView_follows.text = userDetail?.totalFollows.toString()
+                        textView_follows.text = userDetail?.totalFollowers.toString()
                     } else {
                         Log.d(TAG, "Current data: null")
                     }

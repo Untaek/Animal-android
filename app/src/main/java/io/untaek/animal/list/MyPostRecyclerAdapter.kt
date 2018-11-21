@@ -21,12 +21,18 @@ import kotlinx.android.synthetic.main.item_my_post.view.*
 import java.lang.Exception
 
 class MyPostRecyclerAdapter(val context: Context): RecyclerView.Adapter<MyPostRecyclerAdapter.ViewHolder>(), Fire.Callback<Pair<DocumentSnapshot?, List<Post>>> {
+
+
     override fun onResult(data: Pair<DocumentSnapshot?, List<Post>>) {
         items.addAll(data.second)
         notifyDataSetChanged()
     }
 
     override fun onFail(e: Exception) {
+    }
+
+    fun update() {
+        Fire.getInstance().getFirstPostPage(this, 15)
     }
 
     private val items = arrayListOf<Post>()
@@ -44,10 +50,6 @@ class MyPostRecyclerAdapter(val context: Context): RecyclerView.Adapter<MyPostRe
 
         Fire.getInstance().loadThumbnail(item.content, context, holder.imageView_preview, Fire.ThumbSize.M256, RequestOptions().centerCrop().override(512), null)
         holder.textView_likes.text = item.totalLikes.toString()
-    }
-
-    fun update() {
-        Fire.getInstance().getFirstPostPage(this, 15)
     }
 
     class ViewHolder(itemView: View, items: ArrayList<Post>): RecyclerView.ViewHolder(itemView) {

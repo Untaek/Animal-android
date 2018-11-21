@@ -153,6 +153,8 @@ class UploadActivity : AppCompatActivity() {
     }
 
     class StepWriteDetail: Fragment(), RequestListener<Drawable>, Fire.Callback<Any> {
+
+
         private lateinit var contentUri: Uri
         private var isImageLoading = true
 

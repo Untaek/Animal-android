@@ -46,7 +46,6 @@ class TabRankingUserRankRecyclerViewAdapter (val context: Context, val user : Us
         val userPostImage = itemView.imageView_tab_rank_userrank_item
         init {
             userPostImage.setOnClickListener {
-                Log.e("ㅋㅋㅋ", "이동 !")
                 val intent = Intent(parent.context, TimelineDetailActivity::class.java).apply {
                     putExtra("data", posts[adapterPosition])
                 }
